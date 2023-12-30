@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:king_cache/enums.dart';
 import 'package:king_cache/king_cache.dart';
 
 void main() {
@@ -11,9 +12,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'King Cache Example',
       theme: ThemeData(),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'King Cache Example'),
     );
   }
 }
@@ -41,10 +42,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 KingCache.storeLog('Call Json Place Holder API');
                 await KingCache.storeCacheViaRest(
                   'https://jsonplaceholder.typicode.com/todos/1',
-                  (data) {
-                    print(data);
+                  method: HttpMethod.get,
+                  onSuccess: (data) {
+                    // This will execute 2 times when you have data in data
+                    debugPrint(data);
                     KingCache.storeLog('Response: $data');
                   },
+                  shouldUpdate: true,
+                  expiryTime: DateTime.now().add(const Duration(seconds: 10)),
                 );
                 KingCache.storeLog('Call Json Place Holder API');
               },
@@ -71,11 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

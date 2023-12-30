@@ -1,39 +1,86 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# King Cache
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
+This package is used to cache apis results so next time when you call the same api, it will return the cached result instead of calling the api again. This will help to reduce the number of api calls and improve the user experience of your app.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
+This package uses file based caching system.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+It give you couple of functions to manage the cache.
+It also have a log function so you can add, remove, clear and share logs.
+It also give you ability to set the cache expiry time.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+![Screenshot 1](screenshots/screenshot_1.png)
+1. Cache api results.
+2. Set cache expiry time.
+3. Manage cache.
+4. Log cache.
+5. Clear cache.
+6. Share cache.
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+1. Add this package to your pubspec.yaml file.
+2. Import the package.
+3. Call the functions.
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+TextButton(
+    onPressed: () async {
+    KingCache.storeLog('Call Json Place Holder API');
+    await KingCache.storeCacheViaRest(
+        'https://jsonplaceholder.typicode.com/todos/1',
+        method: HttpMethod.get,
+        onSuccess: (data) {
+        // This will execute 2 times when you have data in data
+        debugPrint(data);
+        KingCache.storeLog('Response: $data');
+        },
+        shouldUpdate: true,
+        expiryTime: DateTime.now().add(const Duration(seconds: 10)),
+    );
+    KingCache.storeLog('Call Json Place Holder API');
+    },
+    child: const Text('Json Place Holder API'),
+)
+```
+```dart
+TextButton(
+    onPressed: () async {
+    debugPrint(await KingCache.getLog);
+    },
+    child: const Text('Get Logs'),
+)```
+```dart
+TextButton(
+    onPressed: () => KingCache.shareLogs,
+    child: const Text('Share Logs'),
+)```
+```dart
+TextButton(
+    onPressed: () => KingCache.clearLog,
+    child: const Text('Clear Logs'),
+)```
+```dart
+TextButton(
+    onPressed: () => KingCache.clearAllCache,
+    child: const Text('Clear All Cache'),
+)
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+If you have any questions or suggestions, please feel free to contact us at [King Technologies](https://kingtechnologies.dev/).
+
+Please file [GitHub Issues](https://github.com/king-technologies/king_cache/issues)
+for bugs and feature requests.
+
+You can expect responsive replies and fast fixes to any issues that appear.
+
+## License
+
+```
+MIT License
+```

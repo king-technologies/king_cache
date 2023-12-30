@@ -19,9 +19,9 @@ class KingCache {
   static final KingCache _instance = KingCache._internal();
 
   static Future<ResponseModel> storeCacheViaRest(
-    String url,
+    String url, {
     // ignore: avoid_annotating_with_dynamic
-    void Function(dynamic data) onSuccess, {
+    required void Function(dynamic data) onSuccess,
     HttpMethod method = HttpMethod.get,
     Map<String, dynamic>? formData,
     Map<String, String> headers = const {'Content-Type': 'application/json', 'Accept': 'application/json'},
