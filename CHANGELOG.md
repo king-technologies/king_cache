@@ -6,3 +6,7 @@
 * It give you couple of functions to manage the cache.
 * I also added a log function so you can add, remove, clear and share logs.
 * It also give you ability to set the cache expiry time.
+
+## 0.0.2
+
+* Examples updated
