@@ -1,11 +1,11 @@
 name: king_cache
 description: "A Flutter plugin for caching data to disk"
 version: 0.0.1
-homepage: "https://kingtechnologies.dev/"
+homepage: "https://github.com/king-technologies/king_cache"
 
 environment:
   sdk: ">=3.2.3 <4.0.0"
-  flutter: ">=1.17.0"
+  flutter: ">=1.20.0"
 
 dependencies:
   flutter:

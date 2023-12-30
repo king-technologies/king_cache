@@ -52,17 +52,20 @@ TextButton(
     debugPrint(await KingCache.getLog);
     },
     child: const Text('Get Logs'),
-)```
+)
+```
 ```dart
 TextButton(
     onPressed: () => KingCache.shareLogs,
     child: const Text('Share Logs'),
-)```
+)
+```
 ```dart
 TextButton(
     onPressed: () => KingCache.clearLog,
     child: const Text('Clear Logs'),
-)```
+)
+```
 ```dart
 TextButton(
     onPressed: () => KingCache.clearAllCache,
@@ -81,6 +84,9 @@ You can expect responsive replies and fast fixes to any issues that appear.
 
 ## License
 
-```
 MIT License
-```
+
+## Next Steps
+
+- [ ] Add more tests.
+- [ ] More Use Cases.
