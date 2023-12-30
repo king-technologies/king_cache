@@ -1,0 +1,34 @@
+name: king_cache
+description: "A Flutter plugin for caching data to disk"
+version: 0.0.1
+homepage: "https://kingtechnologies.dev/"
+
+environment:
+  sdk: ">=3.2.3 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.1.2
+  path_provider: ^2.1.1
+  share_plus: ^7.2.1
+
+dev_dependencies:
+  flutter_lints: ^3.0.1
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        default_package: com.kingtechnologies.king_cache
+      windows:
+        default_package: king_cache
+      linux:
+        default_package: king_cache
+      macos:
+        default_package: king_cache
+      ios:
+        default_package: king_cache
