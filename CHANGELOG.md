@@ -10,3 +10,9 @@
 ## 0.0.2
 
 * Examples updated
+
+## 0.0.3
+
+* Rename the function `storeCacheViaRest` to `cacheViaRest`
+* New cache callbacks added to get the cache hit and miss.
+* New API response callback added to get the api response and error.

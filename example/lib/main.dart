@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
             TextButton(
               onPressed: () async {
                 KingCache.storeLog('Call Json Place Holder API');
-                await KingCache.storeCacheViaRest(
+                await KingCache.cacheViaRest(
                   'https://jsonplaceholder.typicode.com/todos/1',
                   method: HttpMethod.get,
                   onSuccess: (data) {
@@ -48,8 +48,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     debugPrint(data);
                     KingCache.storeLog('Response: $data');
                   },
-                  shouldUpdate: true,
-                  expiryTime: DateTime.now().add(const Duration(seconds: 10)),
+                  onError: (data) => debugPrint(data.message),
+                  apiResponse: (data) => debugPrint(data.message),
+                  isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),
+                  shouldUpdate: false,
+                  expiryTime: DateTime.now().add(const Duration(hours: 1)),
                 );
                 KingCache.storeLog('Call Json Place Holder API');
               },

@@ -1,17 +1,17 @@
 # King Cache
 
-This package is used to cache apis results so next time when you call the same api, it will return the cached result instead of calling the api again. This will help to reduce the number of api calls and improve the user experience of your app.
+This package is used to cache API results so the next time you call the same API, it will return the cached result instead of calling the API again. This will help reduce the number of api calls and improve your app's user experience.
 
-This package uses file based caching system.
+This package uses a file-based caching system.
 
-It give you couple of functions to manage the cache.
-It also have a log function so you can add, remove, clear and share logs.
-It also give you ability to set the cache expiry time.
+It gives you a couple of functions to manage the cache.
+It also has a log function so you can add, remove, clear and share logs.
+It also gives you the ability to set the cache expiry time.
 
 ## Features
 
-![Screenshot 1](screenshots/screenshot_1.png)
-1. Cache api results.
+![Screenshot 1](https://raw.githubusercontent.com/king-technologies/king_cache/main/screenshots/screenshot_1.png)
+1. Cache API results.
 2. Set cache expiry time.
 3. Manage cache.
 4. Log cache.
@@ -30,7 +30,7 @@ It also give you ability to set the cache expiry time.
 TextButton(
     onPressed: () async {
     KingCache.storeLog('Call Json Place Holder API');
-    await KingCache.storeCacheViaRest(
+    await KingCache.cacheViaRest(
         'https://jsonplaceholder.typicode.com/todos/1',
         method: HttpMethod.get,
         onSuccess: (data) {
@@ -38,13 +38,16 @@ TextButton(
         debugPrint(data);
         KingCache.storeLog('Response: $data');
         },
-        shouldUpdate: true,
-        expiryTime: DateTime.now().add(const Duration(seconds: 10)),
+        onError: (data) => debugPrint(data.message),
+        apiResponse: (data) => debugPrint(data.message),
+        isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),
+        shouldUpdate: false,
+        expiryTime: DateTime.now().add(const Duration(hours: 1)),
     );
     KingCache.storeLog('Call Json Place Holder API');
     },
     child: const Text('Json Place Holder API'),
-)
+),
 ```
 ```dart
 TextButton(
@@ -88,5 +91,6 @@ MIT License
 
 ## Next Steps
 
+- [ ] Data Encryption and Decryption.
 - [ ] Add more tests.
 - [ ] More Use Cases.

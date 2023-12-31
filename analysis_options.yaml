@@ -26,7 +26,7 @@ linter:
     # - always_specify_types
     # - always_use_package_imports # we do this commonly
     - annotate_overrides
-    - avoid_annotating_with_dynamic # conflicts with always_specify_types
+    # - avoid_annotating_with_dynamic # conflicts with always_specify_types
     - avoid_bool_literals_in_conditional_expressions
     - avoid_catches_without_on_clauses # blocked on https://github.com/dart-lang/linter/issues/3023
     # - avoid_catching_errors # blocked on https://github.com/dart-lang/linter/issues/3023
@@ -44,7 +44,7 @@ linter:
     - avoid_js_rounded_ints
     # - avoid_multiple_declarations_per_line # seems to be a stylistic choice we don't subscribe to
     - avoid_null_checks_in_equality_operators
-    - avoid_positional_boolean_parameters # would have been nice to enable this but by now there's too many places that break it
+    # - avoid_positional_boolean_parameters # would have been nice to enable this but by now there's too many places that break it
     - avoid_print
     # - avoid_private_typeDef_functions # we prefer having type def (discussion in https://github.com/flutter/flutter/pull/16356)
     - avoid_redundant_argument_values
