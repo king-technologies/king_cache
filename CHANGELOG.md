@@ -16,3 +16,8 @@
 * Rename the function `storeCacheViaRest` to `cacheViaRest`
 * New cache callbacks added to get the cache hit and miss.
 * New API response callback added to get the api response and error.
+
+## 0.0.4
+
+* Added `justApi` parameter to `cacheViaRest` function to get the api response without caching it. for example, if you just want to get the api response and don't want to cache it, you can set `justApi` to `true` and it will return the api response without caching it.
+

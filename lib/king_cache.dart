@@ -62,6 +62,10 @@ class KingCache {
   /// of the cache. If the cache has expired, it will be deleted and a new cache
   /// will be created. It is an optional parameter and can be null.
   ///
+  /// The [justApi] parameter is a boolean flag indicating whether the cache
+  /// should be used or updated even if it already exists. It is an optional parameter
+  /// and its default value is false.
+  ///
   /// Returns a [Future] of [ResponseModel] representing the API response.
   /// If the cache data is retrieved successfully, the [status] property of the
   /// [ResponseModel] will be true and the [data] property will contain the retrieved data.
@@ -85,32 +89,36 @@ class KingCache {
     },
     bool shouldUpdate = false,
     DateTime? expiryTime,
+    bool justApi = false,
   }) async {
-    final fileName = url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-    var file = await KingCache.localFile(fileName);
-    var gotData = false;
-    if (file.existsSync()) {
-      final data = file.readAsStringSync();
-      if (data.isNotEmpty) {
-        if (isCacheHit != null) {
-          isCacheHit(true);
-        }
-        gotData = true;
-        onSuccess(data);
-      } else {
-        if (isCacheHit != null) {
-          isCacheHit(false);
+    File? file;
+    if (justApi) {
+      final fileName = url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+      file = await KingCache.localFile(fileName);
+      var gotData = false;
+      if (file.existsSync()) {
+        final data = file.readAsStringSync();
+        if (data.isNotEmpty) {
+          if (isCacheHit != null) {
+            isCacheHit(true);
+          }
+          gotData = true;
+          onSuccess(data);
+        } else {
+          if (isCacheHit != null) {
+            isCacheHit(false);
+          }
         }
       }
-    }
-    if (gotData && !shouldUpdate) {
-      return const ResponseModel(status: true, message: 'Got data from cache');
-    }
-
-    // Check if the cache has expired
-    if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
-      file.deleteSync();
-      file = await KingCache.localFile(fileName);
+      if (gotData && !shouldUpdate) {
+        return const ResponseModel(
+            status: true, message: 'Got data from cache');
+      }
+      // Check if the cache has expired
+      if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
+        file.deleteSync();
+        file = await KingCache.localFile(fileName);
+      }
     }
 
     final res = await networkRequest(url,
@@ -119,12 +127,12 @@ class KingCache {
       apiResponse(res);
     }
     if (res.status) {
-      file.writeAsStringSync(res.data.toString());
-      onSuccess(res.data);
-    } else {
-      if (onError != null) {
-        onError(res);
+      if (justApi && file != null) {
+        file.writeAsStringSync(res.data.toString());
       }
+      onSuccess(res.data);
+    } else if (onError != null) {
+      onError(res);
     }
     return res;
   }
