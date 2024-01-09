@@ -94,3 +94,4 @@ MIT License
 - [ ] Data Encryption and Decryption.
 - [ ] Add more tests.
 - [ ] More Use Cases.
+- [ ] Debug Logs

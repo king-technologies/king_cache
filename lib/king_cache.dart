@@ -5,18 +5,22 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 
 import 'enums.dart';
-import 'network_request.dart';
+import 'global_methods.dart';
 import 'response_model.dart';
+
+/// Enum representing different HTTP methods.
+///
+/// The [HttpMethod] enum provides options for common HTTP methods such as GET, POST, PUT, and DELETE.
+enum HttpMethod { get, post, put, delete }
 
 /// A cache management class that provides methods for storing and retrieving cache data.
 ///
 /// The [KingCache] class is designed to store cache data retrieved from a REST API.
 /// It provides a method [cacheViaRest] to store cache data via a REST API endpoint.
-/// The cache data can be retrieved using the [getLog] method.
-/// The class also provides methods to clear the cache and share the log file.
+/// The cache data can be retrieved using by calling the [cacheViaRest] method with the same API endpoint.
+/// The class also provides methods to clear the cache and get the log file.
 class KingCache {
   factory KingCache() => _instance;
 
@@ -29,7 +33,7 @@ class KingCache {
   /// This method is used to store cache data retrieved from a REST API.
   /// It takes a [url] parameter as the API endpoint and several optional parameters
   /// for handling success, error, cache hit, API response, HTTP method, form data,
-  /// headers, cache update, and expiry time.
+  /// headers, cache update, expiry time, and just API.
   ///
   /// The [onSuccess] callback is called when the cache data is successfully retrieved
   /// and stored. It takes a single parameter [data] which represents the retrieved data.
@@ -63,7 +67,7 @@ class KingCache {
   /// will be created. It is an optional parameter and can be null.
   ///
   /// The [justApi] parameter is a boolean flag indicating whether the cache
-  /// should be used or updated even if it already exists. It is an optional parameter
+  /// should be used or update even if it already exists. It is an optional parameter
   /// and its default value is false.
   ///
   /// Returns a [Future] of [ResponseModel] representing the API response.
@@ -75,6 +79,21 @@ class KingCache {
   /// the [status] property will be true and the [message] property will be 'Got data from cache'.
   /// If the cache has expired, it will be deleted and a new cache will be created.
   ///
+  /// Example:
+  /// ```dart
+  /// KingCache.cacheViaRest(
+  ///  'https://jsonplaceholder.typicode.com/todos/1',
+  /// method: HttpMethod.get,
+  /// onSuccess: (data) {
+  ///  // This will execute 2 times when you have data in data
+  /// debugPrint(data);
+  /// },
+  /// onError: (data) => debugPrint(data.message),
+  /// apiResponse: (data) => debugPrint(data.message),
+  /// isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),
+  /// shouldUpdate: false,
+  /// expiryTime: DateTime.now().add(const Duration(hours: 1)),
+  /// );
   static Future<ResponseModel> cacheViaRest(
     String url, {
     required void Function(dynamic data) onSuccess,
@@ -90,13 +109,14 @@ class KingCache {
     bool shouldUpdate = false,
     DateTime? expiryTime,
     bool justApi = false,
+    String? cacheKey,
   }) async {
     File? file;
-    if (justApi) {
-      final fileName = url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+    if (!justApi) {
+      final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
       file = await KingCache.localFile(fileName);
       var gotData = false;
-      if (file.existsSync()) {
+      if (file != null && file.existsSync()) {
         final data = file.readAsStringSync();
         if (data.isNotEmpty) {
           if (isCacheHit != null) {
@@ -115,22 +135,23 @@ class KingCache {
             status: true, message: 'Got data from cache');
       }
       // Check if the cache has expired
-      if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
+      if (expiryTime != null &&
+          DateTime.now().isAfter(expiryTime) &&
+          file != null) {
         file.deleteSync();
         file = await KingCache.localFile(fileName);
       }
     }
-
     final res = await networkRequest(url,
         formData: formData, method: method, headers: headers);
     if (apiResponse != null) {
       apiResponse(res);
     }
     if (res.status) {
-      if (justApi && file != null) {
+      if (!justApi && file != null) {
         file.writeAsStringSync(res.data.toString());
       }
-      onSuccess(res.data);
+      onSuccess(res.data.toString());
     } else if (onError != null) {
       onError(res);
     }
@@ -143,8 +164,18 @@ class KingCache {
   /// If the directory does not exist, it will be created recursively.
   ///
   /// Returns a [Future] that completes with the [File] object.
-  static Future<File> localFile(String fileName) async {
-    final path = await getApplicationCacheDirectory();
+  ///
+  /// Example:
+  /// ```dart
+  /// File? file = await KingCache.localFile('myFile');
+  /// ```
+  static Future<File?> localFile(String fileName) async {
+    if (kIsWeb) {
+      return null;
+    }
+    final path = applicationDocumentSupport
+        ? await getApplicationCacheDirectory()
+        : Directory.current;
     if (path.path.isNotEmpty) {
       final file = File('${path.path}/$fileName');
       if (file.existsSync()) {
@@ -162,8 +193,17 @@ class KingCache {
   /// If the file doesn't exist, a new file is created with the log message as its content.
   ///
   /// Throws an exception if there is an error while reading or writing the file.
+  ///
+  /// Example:
+  /// ```dart
+  /// await KingCache.storeLog('This is a log message');
+  /// ```
   static Future<void> storeLog(String log) async {
     final file = await KingCache.localFile(FilesTypes.log.file);
+    if (file == null) {
+      return;
+    }
+    log = '${DateTime.now().toIso8601String()}: $log';
     if (file.existsSync()) {
       final data = file.readAsStringSync();
       if (data.isNotEmpty) {
@@ -171,16 +211,22 @@ class KingCache {
       } else {
         file.writeAsStringSync(log);
       }
-    } else {
-      file.writeAsStringSync(log);
     }
   }
 
   /// Retrieves the log data from the local file system.
   /// Returns a Future that completes with a String containing the log data,
   /// or an empty string if the file does not exist or is empty.
-  static Future<String> get getLog async {
+  ///
+  /// Example:
+  /// ```dart
+  /// String log = await KingCache.getLogs;
+  /// ```
+  static Future<String> get getLogs async {
     final file = await KingCache.localFile(FilesTypes.log.file);
+    if (file == null) {
+      return '';
+    }
     if (file.existsSync()) {
       final data = file.readAsStringSync();
       if (data.isNotEmpty) {
@@ -202,6 +248,9 @@ class KingCache {
   /// ```
   static Future<void> get clearLog async {
     final file = await KingCache.localFile(FilesTypes.log.file);
+    if (file == null) {
+      return;
+    }
     if (file.existsSync()) {
       file.writeAsStringSync('');
     }
@@ -212,8 +261,18 @@ class KingCache {
   /// This method deletes all the files and directories present in the application cache directory.
   ///
   /// Throws an exception if there is an error while deleting the cache.
+  ///
+  /// Example:
+  /// ```dart
+  /// await KingCache.clearAllCache;
+  /// ```
   static Future<void> get clearAllCache async {
-    final path = await getApplicationCacheDirectory();
+    if (kIsWeb) {
+      return;
+    }
+    final path = applicationDocumentSupport
+        ? await getApplicationCacheDirectory()
+        : Directory.current;
     if (path.path.isNotEmpty) {
       final dir = Directory(path.path);
       if (dir.existsSync()) {
@@ -222,15 +281,119 @@ class KingCache {
     }
   }
 
-  /// Retrieves the logs file and shares it using the ShareXFiles plugin.
-  /// Returns a Future<File> representing the shared file.
-  /// If the sharing is successful, it prints a debug message.
-  static Future<File?> get shareLogs async {
-    final file = await KingCache.localFile(FilesTypes.log.file);
-    final x = await Share.shareXFiles([XFile(file.path)]);
-    if (x.status == ShareResultStatus.success) {
-      debugPrint('File Shared Successfully');
+  /// Retrieves the logs file
+  /// Returns a Future<File?> representing the shared file.
+  /// If the file does not exist, it returns null.
+  /// The log file path is determined by the [FilesTypes.log.file] constant.
+  /// This method returns a [Future] that resolves to a [File] object representing the log file.
+  ///
+  /// Example:
+  /// ```dart
+  /// File? logFile = await getLogFile();
+  /// ```
+  static Future<File?> get getLogFile async =>
+      KingCache.localFile(FilesTypes.log.file);
+
+  /// Retrieves the cached data associated with the given [key].
+  /// Returns the cached data as a [String], or null if the data is not found.
+  ///
+  /// The [key] parameter specifies the unique identifier for the cached data.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// String? cachedData = await KingCache.getCacheViaKey('myKey');
+  /// if (cachedData != null) {
+  ///   // Use the cached data
+  /// } else {
+  ///   // Data not found in cache
+  /// }
+  /// ```
+  static Future<String?> getCacheViaKey(String key) async {
+    final file = await KingCache.localFile(key);
+    if (file == null) {
+      return null;
+    }
+    if (file.existsSync()) {
+      final data = file.readAsStringSync();
+      if (data.isNotEmpty) {
+        return data;
+      }
     }
     return null;
+  }
+
+  /// Sets the cache data for a given key.
+  ///
+  /// The [key] parameter specifies the unique identifier for the cache data.
+  /// The [data] parameter specifies the data to be stored in the cache.
+  ///
+  /// This method is asynchronous and returns a [Future] that completes when the cache is set.
+  /// If the file corresponding to the [key] does not exist, this method does nothing.
+  /// If the file exists, it overwrites the existing data with the new [data].
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await KingCache.setCacheViaKey('user_data', '{"name": "John", "age": 30}');
+  /// ```
+  static Future<void> setCacheViaKey(String key, String data) async {
+    final file = await KingCache.localFile(key);
+    if (file == null) {
+      return;
+    }
+    if (file.existsSync()) {
+      file.writeAsStringSync(data);
+    }
+  }
+
+  /// Removes the cache file associated with the given [key].
+  ///
+  /// If the cache file does not exist, this method does nothing.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await KingCache.removeCacheViaKey('myKey');
+  /// ```
+  static Future<void> removeCacheViaKey(String key) async {
+    final file = await KingCache.localFile(key);
+    if (file == null) {
+      return;
+    }
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+  }
+
+  /// Retrieves a list of cache keys from the application cache directory.
+  ///
+  /// Returns a [Future] that completes with a [List] of [String] cache keys.
+  /// The cache keys represent the names of the files in the application cache directory
+  /// that have a '.json' extension.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// List<String> cacheKeys = await getCacheKeys();
+  /// print(cacheKeys);
+  /// ```
+  static Future<List<String>> getCacheKeys() async {
+    final keys = <String>[];
+    if (kIsWeb) {
+      return keys;
+    }
+    final path = applicationDocumentSupport
+        ? await getApplicationCacheDirectory()
+        : Directory.current;
+    if (path.path.isNotEmpty) {
+      final dir = Directory(path.path);
+      if (dir.existsSync()) {
+        final list = dir.listSync();
+        for (final file in list) {
+          debugPrint(file.path);
+          if (file.path.endsWith('.json')) {
+            keys.add(file.path.split('/').last);
+          }
+        }
+      }
+    }
+    return keys;
   }
 }

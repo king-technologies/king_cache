@@ -1,8 +1,3 @@
-/// Enum representing different HTTP methods.
-///
-/// The [HttpMethod] enum provides options for common HTTP methods such as GET, POST, PUT, and DELETE.
-enum HttpMethod { get, post, put, delete }
-
 /// Enum representing the types of files.
 enum FilesTypes { log }
 
