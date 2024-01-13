@@ -34,3 +34,8 @@
 * Added `getCacheKeys` function to get all the cache keys.
   
 * Added `removeCacheViaKey` function to remove the cache with a specific key. for example, if you want to remove the cache with a specific key, you can set `cacheKey` to `your_key` and it will remove the cache with the key `your_key`.
+
+## 0.0.6
+
+* Debug Prints added
+* Added `baseUrl` setter to set the base url so you don't ned to pass the base url every time you call the `cacheViaRest` function.

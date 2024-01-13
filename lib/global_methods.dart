@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart';
 
 import 'king_cache.dart';
@@ -23,6 +24,12 @@ Future<ResponseModel> networkRequest(
   },
 }) async {
   try {
+    if (kDebugMode) {
+      debugPrint('URL: $url');
+      debugPrint('Headers: $headers');
+      debugPrint('Method: $method');
+      debugPrint('Body: $formData');
+    }
     Response response;
     switch (method) {
       case HttpMethod.get:
@@ -44,6 +51,9 @@ Future<ResponseModel> networkRequest(
         ? jsonDecode(const Utf8Decoder().convert(response.bodyBytes))
             as Map<String, dynamic>
         : {'message': 'Success'};
+    if (kDebugMode) {
+      debugPrint('Response of $url: $res');
+    }
     if (response.statusCode < 400) {
       return ResponseModel(
         statusCode: response.statusCode,

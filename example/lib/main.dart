@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:king_cache/king_cache.dart';
 
 void main() {
+  KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
   runApp(const MyApp());
 }
 
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 onPressed: () async {
                   await KingCache.storeLog('Call Json Place Holder API');
                   await KingCache.cacheViaRest(
-                    'https://jsonplaceholder.typicode.com/todos/1',
+                    'todos/1',
                     onSuccess: (data) {
                       debugPrint(data.toString());
                       KingCache.storeLog('Response: $data');

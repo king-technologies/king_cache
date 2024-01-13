@@ -81,7 +81,7 @@ void main() {
         },
       );
       expect(result.status, isTrue);
-      expect(result.data, equals(res200.data));
+      expect(result.data, equals(res200.data.toString()));
 
       // Clean up
       if (file == null) {
@@ -115,8 +115,6 @@ void main() {
       expect(result.status, isTrue);
       expect(result.message, equals('Got data from cache'));
       expect(file.existsSync(), true);
-
-      // Clean up
       await file.delete();
     });
   });

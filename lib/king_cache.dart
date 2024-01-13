@@ -28,6 +28,12 @@ class KingCache {
 
   static final KingCache _instance = KingCache._internal();
 
+  static String baseUrl = '';
+
+  static void setBaseUrl(String url) {
+    baseUrl = url;
+  }
+
   /// Stores cache via REST API.
   ///
   /// This method is used to store cache data retrieved from a REST API.
@@ -96,7 +102,7 @@ class KingCache {
   /// );
   static Future<ResponseModel> cacheViaRest(
     String url, {
-    required void Function(dynamic data) onSuccess,
+    void Function(dynamic data)? onSuccess,
     void Function(bool isHit)? isCacheHit,
     void Function(ResponseModel data)? onError,
     void Function(ResponseModel data)? apiResponse,
@@ -112,33 +118,32 @@ class KingCache {
     String? cacheKey,
   }) async {
     File? file;
+    if (baseUrl.isNotEmpty) {
+      url = baseUrl + url;
+    }
     if (!justApi) {
       final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
       file = await KingCache.localFile(fileName);
-      var gotData = false;
+      var data = '';
       if (file != null && file.existsSync()) {
-        final data = file.readAsStringSync();
+        data = file.readAsStringSync();
         if (data.isNotEmpty) {
           if (isCacheHit != null) {
             isCacheHit(true);
           }
-          gotData = true;
-          onSuccess(data);
+
+          onSuccess?.call(data);
         } else {
-          if (isCacheHit != null) {
-            isCacheHit(false);
-          }
+          isCacheHit?.call(false);
         }
       }
-      if (gotData && !shouldUpdate) {
-        return const ResponseModel(
-            status: true, message: 'Got data from cache');
+      if (data.isNotEmpty && !shouldUpdate) {
+        return ResponseModel(
+            status: true, message: 'Got data from cache', data: data);
       }
       // Check if the cache has expired
-      if (expiryTime != null &&
-          DateTime.now().isAfter(expiryTime) &&
-          file != null) {
-        file.deleteSync();
+      if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
+        file?.deleteSync();
         file = await KingCache.localFile(fileName);
       }
     }
@@ -148,12 +153,12 @@ class KingCache {
       apiResponse(res);
     }
     if (res.status) {
-      if (!justApi && file != null) {
-        file.writeAsStringSync(res.data.toString());
+      if (!justApi) {
+        file?.writeAsStringSync(res.data.toString());
       }
-      onSuccess(res.data.toString());
-    } else if (onError != null) {
-      onError(res);
+      onSuccess?.call(res.data.toString());
+    } else {
+      onError?.call(res);
     }
     return res;
   }
