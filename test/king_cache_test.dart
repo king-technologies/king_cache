@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:king_cache/king_cache.dart';
-import 'package:king_cache/response_model.dart';
 import 'package:mockito/mockito.dart';
 
 class MockNetworkMethods extends Mock implements Client {}
@@ -116,6 +115,29 @@ void main() {
       expect(result.message, equals('Got data from cache'));
       expect(file.existsSync(), true);
       await file.delete();
+    });
+
+    test('set base url', () async {
+      KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
+      expect(KingCache.baseUrl, 'https://jsonplaceholder.typicode.com/');
+    });
+
+    test('set base url and check with api', () async {
+      KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
+      await KingCache.cacheViaRest(
+        'todos/1',
+        onSuccess: (data) {
+          expect(data, equals(res200.data.toString()));
+        },
+        apiResponse: (data) {
+          expect(data.data, equals(res200.data));
+        },
+      );
+    });
+
+    test('set headers', () async {
+      KingCache.setHeaders({'Content-Type': 'application/json'});
+      expect(KingCache.newHeaders, {'Content-Type': 'application/json'});
     });
   });
 }

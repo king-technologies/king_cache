@@ -1,3 +1,5 @@
+part of '../king_cache.dart';
+
 class ResponseModel {
   const ResponseModel(
       {required this.status,

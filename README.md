@@ -27,6 +27,13 @@ It also gives you the ability to set the cache expiry time.
 ## Usage
 
 ```dart
+KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
+```
+```dart
+KingCache.setHeaders({'Content-Type': 'application/json'});
+```
+
+```dart
 TextButton(
     onPressed: () async {
     KingCache.storeLog('Call Json Place Holder API');
@@ -92,6 +99,3 @@ MIT License
 ## Next Steps
 
 - [ ] Data Encryption and Decryption.
-- [ ] Add more tests.
-- [ ] More Use Cases.
-- [ ] Debug Logs
