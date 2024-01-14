@@ -44,3 +44,8 @@
 
 * Added `setHeaders` to set the headers so you don't need to pass the headers every time you call the `cacheViaRest` function.
 * Test Updated
+
+## 0.0.8
+
+* Added `appendFormData` to append the form data so you don't need to pass the form data every time you call the `cacheViaRest` function.
+* Test Updated with more cleanup

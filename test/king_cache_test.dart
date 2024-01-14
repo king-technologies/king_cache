@@ -19,10 +19,18 @@ void main() {
   const url = 'https://jsonplaceholder.typicode.com/todos/1';
 
   group('cacheViaRest', () {
-    test(
-        'Should return data from the api as expected',
-        () async => KingCache.cacheViaRest(url,
-            onSuccess: (data) => expect(data, equals(response.toString()))));
+    test('Should return data from the api as expected', () async {
+      await KingCache.cacheViaRest(url,
+          onSuccess: (data) => expect(data, equals(response.toString())));
+      final file =
+          await KingCache.localFile('httpsjsonplaceholdertypicodecomtodos1');
+      if (file == null) {
+        expect(true, isFalse);
+        return;
+      }
+      expect(await file.readAsString(), equals(response.toString()));
+      file.deleteSync();
+    });
 
     test('should return data from API and cache it if cache is not available',
         () async {
@@ -50,6 +58,8 @@ void main() {
       file.writeAsStringSync(res200.data.toString());
       await KingCache.cacheViaRest(url,
           onSuccess: onSuccess, shouldUpdate: true);
+
+      await file.delete();
     });
 
     test('should return error if API response is not successful', () async {
@@ -65,6 +75,13 @@ void main() {
           expect(data.status, equals(res400.status));
         },
       );
+
+      final file =
+          await KingCache.localFile('httpsjsonplaeholdertypicodecomtodos1');
+      if (file == null) {
+        return;
+      }
+      file.deleteSync();
     });
 
     test('should update cache if shouldUpdate is true', () async {
@@ -80,7 +97,7 @@ void main() {
         },
       );
       expect(result.status, isTrue);
-      expect(result.data, equals(res200.data.toString()));
+      expect(result.data.toString(), equals(res200.data.toString()));
 
       // Clean up
       if (file == null) {
@@ -132,12 +149,18 @@ void main() {
         apiResponse: (data) {
           expect(data.data, equals(res200.data));
         },
+        justApi: true,
       );
     });
 
     test('set headers', () async {
       KingCache.setHeaders({'Content-Type': 'application/json'});
       expect(KingCache.newHeaders, {'Content-Type': 'application/json'});
+    });
+
+    test('append form data', () {
+      KingCache.appendFormData({'token': '1234567890'});
+      expect(KingCache.newFormData, {'token': '1234567890'});
     });
   });
 }

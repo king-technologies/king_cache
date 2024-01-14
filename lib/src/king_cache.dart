@@ -58,6 +58,29 @@ class KingCache {
     newHeaders = headers;
   }
 
+  /// A static map that stores form data.
+  ///
+  /// This map is used to store key-value pairs of form data. The keys are strings
+  /// and the values can be of any type. This map is intended to be used as a
+  /// cache for form data, allowing easy access and retrieval of form data
+  /// throughout the application.
+  static Map<String, dynamic> newFormData = {};
+
+  /// Appends the provided [data] to the existing form data.
+  ///
+  /// The [data] parameter is a map of key-value pairs, where the keys are strings
+  /// and the values can be of any type. The provided data will be added to the
+  /// existing form data.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// Map<String, dynamic> data = {'name': 'John', 'age': 25};
+  /// appendFormData(data);
+  /// ```
+  static void appendFormData(Map<String, dynamic> data) {
+    newFormData.addAll(data);
+  }
+
   /// Performs a network request with the given [url].
   ///
   /// The [formData] parameter is an optional map of key-value pairs representing the request body.
@@ -79,10 +102,7 @@ class KingCache {
   static Future<ResponseModel> networkRequest(String url,
       {Map<String, dynamic>? formData,
       HttpMethod method = HttpMethod.get,
-      Map<String, String> headers = const {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      }}) async {
+      Map<String, String> headers = const {}}) async {
     try {
       if (kDebugMode) {
         debugPrint('URL: $url');
@@ -91,6 +111,15 @@ class KingCache {
         debugPrint('Body: $formData');
       }
       Response response;
+
+      if (formData == null || formData.isEmpty) {
+        formData = newFormData;
+      }
+
+      if (headers.isEmpty) {
+        headers = newHeaders;
+      }
+
       switch (method) {
         case HttpMethod.get:
           response = await get(Uri.parse(url), headers: headers);
@@ -252,7 +281,7 @@ class KingCache {
       url,
       formData: formData,
       method: method,
-      headers: headers.isNotEmpty ? headers : newHeaders,
+      headers: headers,
     );
     if (apiResponse != null) {
       apiResponse(res);

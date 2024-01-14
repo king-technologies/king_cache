@@ -37,6 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     KingCache.setHeaders({'Content-Type': 'application/json'});
+    KingCache.appendFormData({'token': '1234567890'});
   }
 
   @override
