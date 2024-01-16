@@ -49,3 +49,8 @@
 
 * Added `appendFormData` to append the form data so you don't need to pass the form data every time you call the `cacheViaRest` function.
 * Test Updated with more cleanup
+
+## 0.0.9
+
+* Cache File type added to the cache file name so you can easily identify the cache file type.
+* Test Updated with more cleanup

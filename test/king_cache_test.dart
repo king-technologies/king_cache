@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
@@ -17,67 +19,58 @@ void main() {
   const res200 = ResponseModel(status: true, data: response, message: 'null');
   const res400 = ResponseModel(status: false, data: response, message: 'null');
   const url = 'https://jsonplaceholder.typicode.com/todos/1';
+  const fileName = 'httpsjsonplaceholdertypicodecomtodos1.json';
 
   group('cacheViaRest', () {
     test('Should return data from the api as expected', () async {
       await KingCache.cacheViaRest(url,
-          onSuccess: (data) => expect(data, equals(response.toString())));
-      final file =
-          await KingCache.localFile('httpsjsonplaceholdertypicodecomtodos1');
+          onSuccess: (data) =>
+              expect(jsonEncode(data), equals(jsonEncode(response))));
+      final file = await KingCache.localFile(fileName);
       if (file == null) {
         expect(true, isFalse);
         return;
       }
-      expect(await file.readAsString(), equals(response.toString()));
+      expect(file.readAsStringSync(), equals(jsonEncode(response)));
       file.deleteSync();
     });
 
     test('should return data from API and cache it if cache is not available',
         () async {
       await KingCache.cacheViaRest(url,
-          onSuccess: (data) {
-            expect(data, equals(res200.data.toString()));
-          },
+          onSuccess: (data) => expect(data, equals(res200.data)),
           justApi: true,
-          apiResponse: (data) {
-            expect(data.data, equals(res200.data));
-          });
+          apiResponse: (data) =>
+              expect(jsonEncode(data.data), equals(jsonEncode(response))));
     });
 
     test('onSuccess callback should execute 2 times with should update true',
         () async {
-      // Arrange
-      const url = 'https://jsonplaceholder.typicode.com/todos/2';
-      final onSuccess = expectAsync1((x) {}, count: 2);
-      final file =
-          await KingCache.localFile('httpsjsonplaceholdertypicodecomtodos2');
+      final onSuccess =
+          expectAsync1((x) => expect(x, equals(res200.data)), count: 2);
+      final file = await KingCache.localFile(fileName);
       if (file == null) {
         expect(true, isFalse);
         return;
       }
-      file.writeAsStringSync(res200.data.toString());
+      file.writeAsStringSync(jsonEncode(res200.data));
       await KingCache.cacheViaRest(url,
           onSuccess: onSuccess, shouldUpdate: true);
-
-      await file.delete();
+      expect(file.readAsStringSync(), equals(jsonEncode(res200.data)));
+      file.deleteSync();
     });
 
     test('should return error if API response is not successful', () async {
-      // Arrange
       const url = 'https://jsonplaeholder.typicode.com/todos/1';
-      // Act
       await KingCache.cacheViaRest(
         url,
         onSuccess: (x) {},
         onError: (data) => expect(data.status, equals(res400.status)),
-        apiResponse: (data) {
-          // Assert
-          expect(data.status, equals(res400.status));
-        },
+        apiResponse: (data) => expect(data.status, equals(res400.status)),
       );
 
-      final file =
-          await KingCache.localFile('httpsjsonplaeholdertypicodecomtodos1');
+      final file = await KingCache.localFile(
+          'httpsjsonplaeholdertypicodecomtodos1.json');
       if (file == null) {
         return;
       }
@@ -85,53 +78,44 @@ void main() {
     });
 
     test('should update cache if shouldUpdate is true', () async {
-      final file =
-          await KingCache.localFile('httpsjsonplaceholdertypicodecomtodos1');
+      final file = await KingCache.localFile(fileName);
       final result = await KingCache.cacheViaRest(
         url,
-        onSuccess: (data) {
-          expect(data, equals(res200.data.toString()));
-        },
-        apiResponse: (data) {
-          expect(data.data, equals(res200.data));
-        },
+        onSuccess: (data) => expect(data, equals(res200.data)),
+        shouldUpdate: true,
+        apiResponse: (data) =>
+            expect(jsonEncode(data.data), equals(jsonEncode(res200.data))),
       );
       expect(result.status, isTrue);
-      expect(result.data.toString(), equals(res200.data.toString()));
+      expect(jsonEncode(result.data), equals(jsonEncode(res200.data)));
 
       // Clean up
       if (file == null) {
         expect(true, isFalse);
         return;
       }
-      expect(await file.readAsString(), equals(res200.data.toString()));
-      await file.delete();
+      expect(file.readAsStringSync(), equals(jsonEncode(res200.data)));
+      file.deleteSync();
     });
 
     test('should delete cache if expiryTime is provided and cache has expired',
         () async {
-      const url = 'https://jsonplaceholder.typicode.com/todos/1';
       final expiryTime = DateTime.now().subtract(const Duration(hours: 1));
-      final file =
-          await KingCache.localFile('httpsjsonplaceholdertypicodecomtodos1');
+      final file = await KingCache.localFile(fileName);
       if (file == null) {
         expect(true, isFalse);
         return;
       }
-      await file.writeAsString(res200.data.toString());
-
+      file.writeAsStringSync(jsonEncode(res200.data));
       final result = await KingCache.cacheViaRest(
         url,
-        onSuccess: (data) {
-          expect(data, equals(res200.data.toString()));
-        },
+        onSuccess: (data) => expect(data, equals(res200.data)),
         expiryTime: expiryTime,
       );
-
       expect(result.status, isTrue);
       expect(result.message, equals('Got data from cache'));
       expect(file.existsSync(), true);
-      await file.delete();
+      file.deleteSync();
     });
 
     test('set base url', () async {
@@ -143,12 +127,8 @@ void main() {
       KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
       await KingCache.cacheViaRest(
         'todos/1',
-        onSuccess: (data) {
-          expect(data, equals(res200.data.toString()));
-        },
-        apiResponse: (data) {
-          expect(data.data, equals(res200.data));
-        },
+        onSuccess: (data) => expect(data, equals(res200.data)),
+        apiResponse: (data) => expect(data.data, equals(res200.data)),
         justApi: true,
       );
     });
