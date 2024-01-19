@@ -118,11 +118,6 @@ void main() {
       file.deleteSync();
     });
 
-    test('set base url', () async {
-      KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
-      expect(KingCache.baseUrl, 'https://jsonplaceholder.typicode.com/');
-    });
-
     test('set base url and check with api', () async {
       KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
       await KingCache.cacheViaRest(
@@ -131,8 +126,15 @@ void main() {
         apiResponse: (data) => expect(data.data, equals(res200.data)),
         justApi: true,
       );
+      await KingCache.clearLog;
     });
+  });
 
+  group('Setters Test', () {
+    test('set base url', () async {
+      KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
+      expect(KingCache.baseUrl, 'https://jsonplaceholder.typicode.com/');
+    });
     test('set headers', () async {
       KingCache.setHeaders({'Content-Type': 'application/json'});
       expect(KingCache.newHeaders, {'Content-Type': 'application/json'});
@@ -141,6 +143,42 @@ void main() {
     test('append form data', () {
       KingCache.appendFormData({'token': '1234567890'});
       expect(KingCache.newFormData, {'token': '1234567890'});
+    });
+  });
+
+  group('Log Tests', () {
+    test('store & get logs', () async {
+      await KingCache.storeLog('Call Json Place Holder API');
+      final logs = await KingCache.getLogs;
+      expect(logs.contains('Call Json Place Holder API'), isTrue);
+      await KingCache.clearLog;
+    });
+
+    test('clear log', () async {
+      await KingCache.storeLog('Call Json Place Holder API');
+      await KingCache.clearLog;
+      final logs = await KingCache.getLogs;
+      expect(logs, '');
+    });
+
+    test('Check Time', () async {
+      await KingCache.storeLog('Call Json Place Holder API');
+      final logs = await KingCache.getLogs;
+      final time = logs.split('\n')[0].split(': ')[0];
+      expect(time, isNotNull);
+      final date = DateTime.parse(time);
+      expect(date, isNotNull);
+      expect(date.isBefore(DateTime.now()), isTrue);
+      expect(date.year, DateTime.now().year);
+      expect(date.month, DateTime.now().month);
+      expect(date.day, DateTime.now().day);
+      expect(date.hour, DateTime.now().hour);
+      expect(date.minute, DateTime.now().minute);
+      expect(date.second, DateTime.now().second);
+      //  2024-01-19 22:18:48
+      // Format of the date should be like this
+      expect(time, matches(RegExp(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$')));
+      await KingCache.clearLog;
     });
   });
 }

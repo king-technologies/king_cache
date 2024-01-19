@@ -2,19 +2,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:king_cache/king_cache.dart';
 
-void main() {
-  KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
-  runApp(const MyApp());
-}
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  Widget build(BuildContext context) => const MaterialApp(
         title: 'King Cache Example',
-        theme: ThemeData(),
-        home: const MyHomePage(title: 'King Cache Example'),
+        home: MyHomePage(title: 'King Cache Example'),
       );
 }
 
@@ -36,6 +32,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
     KingCache.setHeaders({'Content-Type': 'application/json'});
     KingCache.appendFormData({'token': '1234567890'});
   }
@@ -67,15 +64,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text('Json Place Holder API'),
               ),
               TextButton(
-                onPressed: () async {
-                  debugPrint(await KingCache.getLogs);
-                },
+                onPressed: () async => debugPrint(await KingCache.getLogs),
                 child: const Text('Get Logs'),
-              ),
-              TextButton(
-                onPressed: () => KingCache.getLogFile
-                    .then((value) => debugPrint(value?.path)),
-                child: const Text('Get Log File'),
               ),
               TextButton(
                 onPressed: () => KingCache.clearLog,

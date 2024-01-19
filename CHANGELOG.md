@@ -54,3 +54,8 @@
 
 * Cache File type added to the cache file name so you can easily identify the cache file type.
 * Test Updated with more cleanup
+
+## 0.0.10
+
+* Date Format in logs updated to `yyyy-MM-dd HH:mm:ss`
+* On Success will not called twice if the cache and api data is same

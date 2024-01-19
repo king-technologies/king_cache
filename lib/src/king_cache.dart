@@ -252,10 +252,10 @@ class KingCache {
     if (baseUrl.isNotEmpty) {
       url = baseUrl + url;
     }
+    var data = '';
     if (!justApi) {
       final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
       file = await KingCache.localFile('$fileName.json');
-      var data = '';
       if (file != null && file.existsSync()) {
         data = file.readAsStringSync();
         if (data.isNotEmpty) {
@@ -286,7 +286,9 @@ class KingCache {
       if (!justApi) {
         file?.writeAsStringSync(jsonEncode(res.data));
       }
-      onSuccess?.call(res.data);
+      if (data.isEmpty || jsonDecode(data) != res.data) {
+        onSuccess?.call(res.data);
+      }
     } else {
       onError?.call(res);
     }
@@ -338,7 +340,11 @@ class KingCache {
     if (file == null) {
       return;
     }
-    log = '${DateTime.now().toIso8601String()}: $log';
+    final date = DateTime.now().toLocal();
+    final datePart = date.toString().split(' ')[0];
+    final timePart =
+        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
+    log = '$datePart $timePart: $log';
     if (file.existsSync()) {
       final data = file.readAsStringSync();
       if (data.isNotEmpty) {
