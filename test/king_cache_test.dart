@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -16,8 +17,20 @@ void main() {
     'title': 'delectus aut autem',
     'completed': false
   };
-  const res200 = ResponseModel(status: true, data: response, message: 'null');
-  const res400 = ResponseModel(status: false, data: response, message: 'null');
+
+  final res200 = ResponseModel(
+    status: true,
+    data: response,
+    message: 'null',
+    bodyBytes: Uint8List(0),
+  );
+
+  final res400 = ResponseModel(
+    status: false,
+    data: response,
+    message: 'null',
+    bodyBytes: Uint8List(0),
+  );
   const url = 'https://jsonplaceholder.typicode.com/todos/1';
   const fileName = 'httpsjsonplaceholdertypicodecomtodos1.json';
 

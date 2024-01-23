@@ -149,22 +149,34 @@ class KingCache {
           status: true,
           message: res['message'].toString(),
           data: res,
+          bodyBytes: response.bodyBytes,
         );
       } else {
         return ResponseModel(
           statusCode: response.statusCode,
           status: false,
           message: res['message'].toString(),
+          bodyBytes: response.bodyBytes,
         );
       }
     } on TimeoutException catch (e) {
       return ResponseModel(
-          message: e.message.toString(), status: false, statusCode: 408);
+          message: e.message.toString(),
+          status: false,
+          statusCode: 408,
+          bodyBytes: Uint8List(0));
     } on SocketException catch (e) {
-      return ResponseModel(message: e.message, status: false, statusCode: 408);
+      return ResponseModel(
+          message: e.message,
+          status: false,
+          statusCode: 408,
+          bodyBytes: Uint8List(0));
     } on Exception {
-      return const ResponseModel(
-          message: 'Connection Problem! 😐', status: false, statusCode: 500);
+      return ResponseModel(
+          message: 'Connection Problem! 😐',
+          status: false,
+          statusCode: 500,
+          bodyBytes: Uint8List(0));
     }
   }
 
@@ -269,7 +281,10 @@ class KingCache {
       }
       if (data.isNotEmpty && !shouldUpdate) {
         return ResponseModel(
-            status: true, message: 'Got data from cache', data: data);
+            status: true,
+            message: 'Got data from cache',
+            data: data,
+            bodyBytes: Uint8List(0));
       }
       // Check if the cache has expired
       if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {

@@ -59,3 +59,7 @@
 
 * Date Format in logs updated to `yyyy-MM-dd HH:mm:ss`
 * On Success will not called twice if the cache and api data is same
+
+## 0.0.11
+
+* Added response bodyBytes to the response model so you can get the response body bytes.
