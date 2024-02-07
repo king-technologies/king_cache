@@ -104,20 +104,25 @@ class KingCache {
       HttpMethod method = HttpMethod.get,
       Map<String, String> headers = const {}}) async {
     try {
+      Response response;
+
+      if (formData == null || formData.isEmpty) {
+        formData = newFormData;
+      } else {
+        formData.addAll(newFormData);
+      }
+
+      if (headers.isEmpty) {
+        headers = newHeaders;
+      } else {
+        headers.addAll(newHeaders);
+      }
+
       if (kDebugMode) {
         debugPrint('URL: $url');
         debugPrint('Headers: $headers');
         debugPrint('Method: $method');
         debugPrint('Body: $formData');
-      }
-      Response response;
-
-      if (formData == null || formData.isEmpty) {
-        formData = newFormData;
-      }
-
-      if (headers.isEmpty) {
-        headers = newHeaders;
       }
 
       switch (method) {

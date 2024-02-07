@@ -63,3 +63,7 @@
 ## 0.0.11
 
 * Added response bodyBytes to the response model so you can get the response body bytes.
+
+## 0.0.12
+
+* Fix Logging and Update Form data 
