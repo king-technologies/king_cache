@@ -3,7 +3,7 @@ part of '../king_cache.dart';
 /// Enum representing different HTTP methods.
 ///
 /// The [HttpMethod] enum provides options for common HTTP methods such as GET, POST, PUT, and DELETE.
-enum HttpMethod { get, post, put, delete }
+enum HttpMethod { get, post, put, delete, patch }
 
 /// A cache management class that provides methods for storing and retrieving cache data.
 ///
@@ -139,6 +139,10 @@ class KingCache {
           break;
         case HttpMethod.delete:
           response = await delete(Uri.parse(url), headers: headers);
+          break;
+        case HttpMethod.patch:
+          response = await patch(Uri.parse(url),
+              body: jsonEncode(formData), headers: headers);
           break;
       }
       final res = response.body.isNotEmpty

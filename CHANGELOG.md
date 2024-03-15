@@ -67,3 +67,7 @@
 ## 0.0.12
 
 * Fix Logging and Update Form data 
+
+## 0.0.13
+
+* Added Patch Method
