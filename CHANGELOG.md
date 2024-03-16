@@ -71,3 +71,7 @@
 ## 0.0.13
 
 * Added Patch Method
+
+## 0.0.14
+
+* Tests Updated

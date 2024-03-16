@@ -194,4 +194,84 @@ void main() {
       await KingCache.clearLog;
     });
   });
+
+  group('Checking Network Request', () {
+    test('Check Get Network Request', () async {
+      final res = await KingCache.networkRequest(url);
+      expect(res.status, isTrue);
+      expect(jsonEncode(res.data), equals(jsonEncode(res200.data)));
+    });
+
+    test('False Test on Network request', () async {
+      const url = 'https://jsonplaeholder.typicode.com/todos/1';
+      final res = await KingCache.networkRequest(url);
+      expect(res.status, isFalse);
+    });
+
+    test('Check Post Network Request', () async {
+      final res = await KingCache.networkRequest(
+          'https://jsonplaceholder.typicode.com/posts',
+          method: HttpMethod.post,
+          formData: {
+            'title': 'foo',
+            'body': 'bar',
+          });
+      expect(res.status, isTrue);
+      expect(res.data.toString(), contains('101'));
+    });
+
+    test('Check Put Network Request', () async {
+      final res = await KingCache.networkRequest(
+          'https://jsonplaceholder.typicode.com/posts/1',
+          method: HttpMethod.put,
+          formData: {
+            'title': 'foo',
+          });
+      expect(res.status, isTrue);
+    });
+
+    test('Check Put Network Request', () async {
+      final res = await KingCache.networkRequest(
+          'https://jsonplaceholder.typicode.com/posts/1',
+          method: HttpMethod.patch,
+          formData: {
+            'title': 'foo',
+          });
+      expect(res.status, isTrue);
+    });
+
+    test('Check Delete Network Request', () async {
+      final res = await KingCache.networkRequest(
+          'https://jsonplaceholder.typicode.com/posts/1',
+          method: HttpMethod.delete);
+      expect(res.status, isTrue);
+    });
+  });
+
+  group('Cache Testings', () {
+    test('Check Cache', () async {
+      await KingCache.setCache('posts/1', jsonEncode({'title': 'foo'}));
+      final res = await KingCache.getCache('posts/1');
+      expect(res, jsonEncode({'title': 'foo'}));
+    });
+
+    test('Remove Cache', () async {
+      await KingCache.setCache('posts/1', jsonEncode({'title': 'foo'}));
+      await KingCache.removeCache('posts/1');
+      final res = await KingCache.getCache('posts/1');
+      expect(res, null);
+    });
+
+    test('Check Cache Exists', () async {
+      await KingCache.setCache('posts/1', jsonEncode({'title': 'foo'}));
+      final res = await KingCache.hasCache('posts/1');
+      expect(res, true);
+    });
+
+    test('Get Cache Keys', () async {
+      final res = await KingCache.getCacheKeys();
+      expect(res, isNotNull);
+      expect(res, isA<List<String>>());
+    });
+  });
 }

@@ -105,7 +105,6 @@ class KingCache {
       Map<String, String> headers = const {}}) async {
     try {
       Response response;
-
       if (formData == null || formData.isEmpty) {
         formData = newFormData;
       } else {
@@ -147,8 +146,9 @@ class KingCache {
       }
       final res = response.body.isNotEmpty
           ? jsonDecode(const Utf8Decoder().convert(response.bodyBytes))
-              as Map<String, dynamic>
           : {'message': 'Success'};
+      final type = res.runtimeType.toString().toLowerCase().contains('list');
+
       if (kDebugMode) {
         debugPrint('Response of $url: $res');
       }
@@ -156,7 +156,9 @@ class KingCache {
         return ResponseModel(
           statusCode: response.statusCode,
           status: true,
-          message: res['message'].toString(),
+          message: type
+              ? 'Success'
+              : (res as Map<String, dynamic>)['message'].toString(),
           data: res,
           bodyBytes: response.bodyBytes,
         );
@@ -164,7 +166,9 @@ class KingCache {
         return ResponseModel(
           statusCode: response.statusCode,
           status: false,
-          message: res['message'].toString(),
+          message: type
+              ? 'Success'
+              : (res as Map<String, dynamic>)['message'].toString(),
           bodyBytes: response.bodyBytes,
         );
       }
@@ -343,7 +347,7 @@ class KingCache {
         return file;
       }
     }
-    return File('${path.path}/$fileName').create(recursive: true);
+    return File('${path.path}/$fileName.json').create(recursive: true);
   }
 
   /// Stores the given log message in a file.
@@ -473,7 +477,7 @@ class KingCache {
   ///   // Data not found in cache
   /// }
   /// ```
-  static Future<String?> getCacheViaKey(String key) async {
+  static Future<String?> getCache(String key) async {
     final file = await KingCache.localFile(key);
     if (file == null) {
       return null;
@@ -500,7 +504,7 @@ class KingCache {
   /// ```dart
   /// await KingCache.setCacheViaKey('user_data', '{"name": "John", "age": 30}');
   /// ```
-  static Future<void> setCacheViaKey(String key, String data) async {
+  static Future<void> setCache(String key, String data) async {
     final file = await KingCache.localFile(key);
     if (file == null) {
       return;
@@ -518,7 +522,7 @@ class KingCache {
   /// ```dart
   /// await KingCache.removeCacheViaKey('myKey');
   /// ```
-  static Future<void> removeCacheViaKey(String key) async {
+  static Future<void> removeCache(String key) async {
     final file = await KingCache.localFile(key);
     if (file == null) {
       return;
@@ -526,6 +530,25 @@ class KingCache {
     if (file.existsSync()) {
       file.deleteSync();
     }
+  }
+
+  /// Checks if the cache file associated with the given [key] exists.
+  /// Returns a [Future] that completes with a boolean value indicating whether the cache file exists.
+  /// If the cache file exists, the [Future] completes with true, otherwise it completes with false.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// bool cacheExists = await KingCache.hasCache('myKey');
+  /// ```
+  static Future<bool> hasCache(String key) async {
+    final file = await KingCache.localFile(key);
+    if (file == null) {
+      return false;
+    }
+    if (file.existsSync()) {
+      return true;
+    }
+    return false;
   }
 
   /// Retrieves a list of cache keys from the application cache directory.
