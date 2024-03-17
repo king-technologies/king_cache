@@ -20,11 +20,11 @@
 <img src="https://img.shields.io/pub/v/king_cache.svg" alt="King Cache"/>
 </a>
 <a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/likes/king_cache" alt="King Cache Likes"/>
+<img src="https://img.shields.io/pub/likes/king_cache" alt="King Cache Likes"/></a>
 <a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/points/king_cache" alt="King Cache Points"/>
+<img src="https://img.shields.io/pub/points/king_cache" alt="King Cache Points"/></a>
 <a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/popularity/king_cache" alt="King Cache Popularity"/>
+<img src="https://img.shields.io/pub/popularity/king_cache" alt="King Cache Popularity"/></a>
 <a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
 <img src="https://img.shields.io/pub/publisher/king_cache" alt="King Cache Publisher"/>
 </a>
