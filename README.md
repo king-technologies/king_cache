@@ -12,19 +12,17 @@
 <p align="center">It gives you a couple of functions to manage the cache. It also has a log function so you can add, remove, clear and share logs. It also gives you the ability to set the cache expiry time.</p>
 
 
-
 <p align="center">
-<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/v/king_cache.svg" alt="King Cache"/>
-</a>
-<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/likes/king_cache" alt="King Cache Likes"/></a>
-<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/points/king_cache" alt="King Cache Points"/></a>
-<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/popularity/king_cache" alt="King Cache Popularity"/></a>
-<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/publisher/king_cache" alt="King Cache Publisher"/>
+<a href="https://pub.dev/packages/king_cache"title="PubDev">
+<img src="https://img.shields.io/pub/v/king_cache.svg?label=Pub&logo=Dart&style=flat-square" alt="King Cache"/></a>
+<a href="https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/likes/king_cache?label=Likes&logo=Dart&style=flat-square" alt="King Cache Likes"/></a>
+<a href="https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/points/king_cache?label=Points&logo=Dart&style=flat-square" alt="King Cache Points"/></a>
+<a href="https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/popularity/king_cache?label=Popularity&logo=Dart&style=flat-square" alt="King Cache Popularity"/></a>
+<a href="https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/publisher/king_cache?label=Publisher&logo=Dart&style=flat-square" alt="King Cache Publisher"/>
 </a>
 </p>
 
