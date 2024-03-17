@@ -1,12 +1,59 @@
 # King Cache
 
-This package is used to cache API results so the next time you call the same API, it will return the cached result instead of calling the API again. This will help reduce the number of api calls and improve your app's user experience.
+<p align="center">
+  <a href="https://github.com/king-technologies/king_cache" title="King Cache">
+    <img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/king_tech.png" width="80px" alt="King Cache"/>
+  </a>
+</p>
 
-This package uses a file-based caching system.
+<h1 align="center">🌟 King Cache 🌟</h1>
+<p align="center">This package is used to cache API results so the next time you call the same API, it will return the cached result instead of calling the API again. This will help reduce the number of api calls and improve your app's user experience. </p>
 
-It gives you a couple of functions to manage the cache.
-It also has a log function so you can add, remove, clear and share logs.
-It also gives you the ability to set the cache expiry time.
+<p align="center">This package uses a file-based caching system.</p>
+
+<p align="center">It gives you a couple of functions to manage the cache. It also has a log function so you can add, remove, clear and share logs. It also gives you the ability to set the cache expiry time.</p>
+
+
+
+<p align="center">
+<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/v/king_cache.svg" alt="King Cache"/>
+</a>
+<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/likes/king_cache" alt="King Cache Likes"/>
+<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/points/king_cache" alt="King Cache Points"/>
+<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/popularity/king_cache" alt="King Cache Popularity"/>
+<a href=" https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/publisher/king_cache" alt="King Cache Publisher"/>
+</a>
+</p>
+
+<p align="center">
+<a href="https://github.com/king-technologies/king_cache/blob/master/LICENSE" title="License">
+<img src="https://img.shields.io/github/license/king-technologies/king_cache?label=License&logo=Github&style=flat-square" alt="King Cache License"/>
+</a>
+<a href="https://github.com/king-technologies/king_cache/fork" title="Forks">
+<img src="https://img.shields.io/github/forks/king-technologies/king_cache?label=Forks&logo=Github&style=flat-square" alt="King Cache Forks"/>
+</a>
+<a href="https://github.com/king-technologies/king_cache/stargazers" title="Stars">
+<img src="https://img.shields.io/github/stars/king-technologies/king_cache?label=Stars&logo=Github&style=flat-square" alt="King Cache Stars"/>
+</a>
+<a href="https://github.com/king-technologies/king_cache/issues" title="Issues">
+<img src="https://img.shields.io/github/issues/king-technologies/king_cache?label=Issues&logo=Github&style=flat-square" alt="King Cache Issues"/>
+</a>
+<a href="https://github.com/king-technologies/king_cache/pulls" title="Pull Requests">
+<img src="https://img.shields.io/github/issues-pr/king-technologies/king_cache?label=Pull%20Requests&logo=Github&style=flat-square" alt="King Cache Pull Requests"/>
+</a>
+<a href="https://github.com/king-technologies/king_cache" title="Repo Size">
+<img src="https://img.shields.io/github/repo-size/king-technologies/king_cache?label=Repo%20Size&logo=Github&style=flat-square" alt="King Cache Repo Size"/>
+</a>
+<a href="https://discord.gg/CJU4UNTaFt" title="Join Community">
+<img src="https://img.shields.io/discord/737854816402800690?color=%236d82cb&label=Join%20Community&logo=discord&logoColor=%23FFFFFF&style=flat-square" alt="Join discord"/>
+</a>
+
+[![Pub][pub_badge]][pub]
 
 ## Features
 
@@ -82,20 +129,28 @@ TextButton(
     child: const Text('Clear All Cache'),
 )
 ```
+## 🧑🏻 Author
 
-## Additional information
+**Rohit Jain**
 
-If you have any questions or suggestions, please feel free to contact us at [King Technologies](https://kingtechnologies.dev/).
+- 🌌 [Profile](https://github.com/Rohit19060 "Rohit Jain")
 
-Please file [GitHub Issues](https://github.com/king-technologies/king_cache/issues)
-for bugs and feature requests.
+- 🏮 [Email](mailto:rohitjain19060@gmail.com?subject=Hi%20from%20King%20Cache "Hi!")
 
-You can expect responsive replies and fast fixes to any issues that appear.
+- 🦁 [Website](https://kingtechnologies.dev "Welcome")
 
-## License
+<h2 align="center">🤝 Support</h2>
+<h3 align="center">You can expect responsive replies and fast fixes to any issues that appear.</h3>
 
-MIT License
+<p align="center">🎀 Contributions (<a href="https://guides.github.com/introduction/flow" title="GitHub flow">GitHub Flow</a>), 🔥 issues, and 🥮 feature requests are most welcome!</p>
 
-## Next Steps
+<p align="center">💙 If you like this project, Give it a ⭐ and Share it with friends!</p>
+<p align="center">💰 Donations Links</p>
+<p align="center">
+<a href="https://www.paypal.me/kingrohitJ" title="PayPal"><img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/paypal.png" alt="PayPal"/></a>
+<a href="https://www.buymeacoffee.com/rohitjain" title="Buy me a Coffee"><img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/coffee.png" alt="Buy me a Coffee"/></a>
+<a href="https://ko-fi.com/rohitjain" title="Ko-fi"><img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/kofi.png" alt="Ko-fi"/></a>
+<a href="https://www.patreon.com/KingTechnologies" title="Patreon"><img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/patreon.png" alt="Patreon"/></a>
+</p>
 
-- [ ] Data Encryption and Decryption.
+<p align="center">Made with Flutter & ❤️ in India</p>
