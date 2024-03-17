@@ -1,5 +1,3 @@
-# King Cache
-
 <p align="center">
   <a href="https://github.com/king-technologies/king_cache" title="King Cache">
     <img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/king_tech.png" width="80px" alt="King Cache"/>
