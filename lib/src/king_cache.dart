@@ -105,6 +105,11 @@ class KingCache {
       Map<String, String> headers = const {}}) async {
     try {
       Response response;
+
+      if (baseUrl.isNotEmpty) {
+        url = baseUrl + url;
+      }
+
       if (formData == null || formData.isEmpty) {
         formData = newFormData;
       } else {
@@ -274,9 +279,7 @@ class KingCache {
     String? cacheKey,
   }) async {
     File? file;
-    if (baseUrl.isNotEmpty) {
-      url = baseUrl + url;
-    }
+
     var data = '';
     if (!justApi) {
       final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
