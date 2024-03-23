@@ -79,3 +79,7 @@
 ## 0.0.15
 
 * Base URL support is also added for network request method
+
+## 0.0.16
+
+* Read ME Updated
