@@ -275,7 +275,7 @@ class KingCache {
     Map<String, String> headers = const {},
     bool shouldUpdate = false,
     DateTime? expiryTime,
-    bool justApi = false,
+    @Deprecated('Use NetworkRequest instead.') bool justApi = false,
     String? cacheKey,
   }) async {
     File? file;
@@ -343,14 +343,14 @@ class KingCache {
     }
     final path = applicationDocumentSupport
         ? await getApplicationCacheDirectory()
-        : Directory.current;
+        : Directory('${Directory.current.path}/cache');
     if (path.path.isNotEmpty) {
       final file = File('${path.path}/$fileName');
       if (file.existsSync()) {
         return file;
       }
     }
-    return File('${path.path}/$fileName.json').create(recursive: true);
+    return File('${path.path}/$fileName').create(recursive: true);
   }
 
   /// Stores the given log message in a file.
@@ -444,11 +444,10 @@ class KingCache {
     }
     final path = applicationDocumentSupport
         ? await getApplicationCacheDirectory()
-        : Directory.current;
+        : Directory('${Directory.current.path}/cache');
     if (path.path.isNotEmpty) {
-      final dir = Directory(path.path);
-      if (dir.existsSync()) {
-        dir.deleteSync(recursive: true);
+      if (path.existsSync()) {
+        path.deleteSync(recursive: true);
       }
     }
   }
@@ -572,7 +571,7 @@ class KingCache {
     }
     final path = applicationDocumentSupport
         ? await getApplicationCacheDirectory()
-        : Directory.current;
+        : Directory('${Directory.current.path}/cache');
     if (path.path.isNotEmpty) {
       final dir = Directory(path.path);
       if (dir.existsSync()) {

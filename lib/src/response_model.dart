@@ -17,5 +17,5 @@ class ResponseModel {
 
   @override
   String toString() =>
-      'ResponseModel{status: $status, message: $message, data: $data, statusCode: $statusCode}';
+      'Response: {status: $status, message: $message, data: $data, statusCode: $statusCode}';
 }

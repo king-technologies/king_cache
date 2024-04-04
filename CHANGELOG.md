@@ -83,3 +83,7 @@
 ## 0.0.16
 
 * Read ME Updated
+
+## 0.0.17
+
+* Just API Deprecated in respect of network request method

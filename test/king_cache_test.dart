@@ -46,13 +46,13 @@ void main() {
       }
       expect(file.readAsStringSync(), equals(jsonEncode(response)));
       file.deleteSync();
+      await KingCache.clearAllCache;
     });
 
     test('should return data from API and cache it if cache is not available',
         () async {
       await KingCache.cacheViaRest(url,
           onSuccess: (data) => expect(data, equals(res200.data)),
-          justApi: true,
           apiResponse: (data) =>
               expect(jsonEncode(data.data), equals(jsonEncode(response))));
     });
@@ -137,7 +137,6 @@ void main() {
         'todos/1',
         onSuccess: (data) => expect(data, equals(res200.data)),
         apiResponse: (data) => expect(data.data, equals(res200.data)),
-        justApi: true,
       );
       await KingCache.clearLog;
     });
@@ -147,6 +146,7 @@ void main() {
     test('set base url', () async {
       KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
       expect(KingCache.baseUrl, 'https://jsonplaceholder.typicode.com/');
+      KingCache.setBaseUrl('');
     });
     test('set headers', () async {
       KingCache.setHeaders({'Content-Type': 'application/json'});
@@ -272,6 +272,8 @@ void main() {
       final res = await KingCache.getCacheKeys();
       expect(res, isNotNull);
       expect(res, isA<List<String>>());
+      await KingCache.clearLog;
+      await KingCache.clearAllCache;
     });
   });
 }

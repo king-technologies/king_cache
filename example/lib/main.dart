@@ -53,8 +53,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       debugPrint(data.toString());
                       KingCache.storeLog('Response: $data');
                     },
-                    onError: (data) => debugPrint(data.message),
-                    apiResponse: (data) => debugPrint(data.message),
+                    onError: (data) => debugPrint('On Error: $data'),
+                    apiResponse: (data) => debugPrint('Api Response: $data'),
                     isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),
                     shouldUpdate: true,
                     expiryTime: DateTime.now().add(const Duration(hours: 1)),
