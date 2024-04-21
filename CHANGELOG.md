@@ -87,3 +87,9 @@
 ## 0.0.17
 
 * Just API Deprecated in respect of network request method
+
+## 0.0.18
+
+* Just API is removed from the cacheViaRest method
+* Added Log File name text test
+* Added New files for particular methods

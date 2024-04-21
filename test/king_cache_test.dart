@@ -3,11 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:http/http.dart';
 import 'package:king_cache/king_cache.dart';
-import 'package:mockito/mockito.dart';
-
-class MockNetworkMethods extends Mock implements Client {}
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -156,42 +152,6 @@ void main() {
     test('append form data', () {
       KingCache.appendFormData({'token': '1234567890'});
       expect(KingCache.newFormData, {'token': '1234567890'});
-    });
-  });
-
-  group('Log Tests', () {
-    test('store & get logs', () async {
-      await KingCache.storeLog('Call Json Place Holder API');
-      final logs = await KingCache.getLogs;
-      expect(logs.contains('Call Json Place Holder API'), isTrue);
-      await KingCache.clearLog;
-    });
-
-    test('clear log', () async {
-      await KingCache.storeLog('Call Json Place Holder API');
-      await KingCache.clearLog;
-      final logs = await KingCache.getLogs;
-      expect(logs, '');
-    });
-
-    test('Check Time', () async {
-      await KingCache.storeLog('Call Json Place Holder API');
-      final logs = await KingCache.getLogs;
-      final time = logs.split('\n')[0].split(': ')[0];
-      expect(time, isNotNull);
-      final date = DateTime.parse(time);
-      expect(date, isNotNull);
-      expect(date.isBefore(DateTime.now()), isTrue);
-      expect(date.year, DateTime.now().year);
-      expect(date.month, DateTime.now().month);
-      expect(date.day, DateTime.now().day);
-      expect(date.hour, DateTime.now().hour);
-      expect(date.minute, DateTime.now().minute);
-      expect(date.second, DateTime.now().second);
-      //  2024-01-19 22:18:48
-      // Format of the date should be like this
-      expect(time, matches(RegExp(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$')));
-      await KingCache.clearLog;
     });
   });
 

@@ -37,9 +37,7 @@ class KingCache {
   /// The [url] parameter is the base URL to be set.
   /// This method is used to set the base URL for the cache.
   /// It is typically called once at the beginning of the application.
-  static void setBaseUrl(String url) {
-    baseUrl = url;
-  }
+  static void setBaseUrl(String url) => baseUrl = url;
 
   /// A static map of new headers used for HTTP requests.
   ///
@@ -54,9 +52,7 @@ class KingCache {
   ///
   /// The [headers] parameter is a map of key-value pairs representing the headers to be set.
   /// This method updates the [newHeaders] variable with the provided headers.
-  static void setHeaders(Map<String, String> headers) {
-    newHeaders = headers;
-  }
+  static void setHeaders(Map<String, String> headers) => newHeaders = headers;
 
   /// A static map that stores form data.
   ///
@@ -77,9 +73,8 @@ class KingCache {
   /// Map<String, dynamic> data = {'name': 'John', 'age': 25};
   /// appendFormData(data);
   /// ```
-  static void appendFormData(Map<String, dynamic> data) {
-    newFormData.addAll(data);
-  }
+  static void appendFormData(Map<String, dynamic> data) =>
+      newFormData.addAll(data);
 
   /// Performs a network request with the given [url].
   ///
@@ -103,99 +98,23 @@ class KingCache {
       {Map<String, dynamic>? formData,
       HttpMethod method = HttpMethod.get,
       Map<String, String> headers = const {}}) async {
-    try {
-      Response response;
-
-      if (baseUrl.isNotEmpty) {
-        url = baseUrl + url;
-      }
-
-      if (formData == null || formData.isEmpty) {
-        formData = newFormData;
-      } else {
-        formData.addAll(newFormData);
-      }
-
-      if (headers.isEmpty) {
-        headers = newHeaders;
-      } else {
-        headers.addAll(newHeaders);
-      }
-
-      if (kDebugMode) {
-        debugPrint('URL: $url');
-        debugPrint('Headers: $headers');
-        debugPrint('Method: $method');
-        debugPrint('Body: $formData');
-      }
-
-      switch (method) {
-        case HttpMethod.get:
-          response = await get(Uri.parse(url), headers: headers);
-          break;
-        case HttpMethod.post:
-          response = await post(Uri.parse(url),
-              body: jsonEncode(formData), headers: headers);
-          break;
-        case HttpMethod.put:
-          response = await put(Uri.parse(url),
-              body: jsonEncode(formData), headers: headers);
-          break;
-        case HttpMethod.delete:
-          response = await delete(Uri.parse(url), headers: headers);
-          break;
-        case HttpMethod.patch:
-          response = await patch(Uri.parse(url),
-              body: jsonEncode(formData), headers: headers);
-          break;
-      }
-      final res = response.body.isNotEmpty
-          ? jsonDecode(const Utf8Decoder().convert(response.bodyBytes))
-          : {'message': 'Success'};
-      final type = res.runtimeType.toString().toLowerCase().contains('list');
-
-      if (kDebugMode) {
-        debugPrint('Response of $url: $res');
-      }
-      if (response.statusCode < 400) {
-        return ResponseModel(
-          statusCode: response.statusCode,
-          status: true,
-          message: type
-              ? 'Success'
-              : (res as Map<String, dynamic>)['message'].toString(),
-          data: res,
-          bodyBytes: response.bodyBytes,
-        );
-      } else {
-        return ResponseModel(
-          statusCode: response.statusCode,
-          status: false,
-          message: type
-              ? 'Success'
-              : (res as Map<String, dynamic>)['message'].toString(),
-          bodyBytes: response.bodyBytes,
-        );
-      }
-    } on TimeoutException catch (e) {
-      return ResponseModel(
-          message: e.message.toString(),
-          status: false,
-          statusCode: 408,
-          bodyBytes: Uint8List(0));
-    } on SocketException catch (e) {
-      return ResponseModel(
-          message: e.message,
-          status: false,
-          statusCode: 408,
-          bodyBytes: Uint8List(0));
-    } on Exception {
-      return ResponseModel(
-          message: 'Connection Problem! 😐',
-          status: false,
-          statusCode: 500,
-          bodyBytes: Uint8List(0));
+    if (formData == null || formData.isEmpty) {
+      formData = newFormData;
+    } else {
+      formData.addAll(newFormData);
     }
+
+    if (baseUrl.isNotEmpty) {
+      url = baseUrl + url;
+    }
+
+    if (headers.isEmpty) {
+      headers = newHeaders;
+    } else {
+      headers.addAll(newHeaders);
+    }
+    return networkRequestExec(
+        url: url, formData: formData, method: method, headers: headers);
   }
 
   /// Stores cache via REST API.
@@ -275,56 +194,21 @@ class KingCache {
     Map<String, String> headers = const {},
     bool shouldUpdate = false,
     DateTime? expiryTime,
-    @Deprecated('Use NetworkRequest instead.') bool justApi = false,
     String? cacheKey,
-  }) async {
-    File? file;
-
-    var data = '';
-    if (!justApi) {
-      final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-      file = await KingCache.localFile('$fileName.json');
-      if (file != null && file.existsSync()) {
-        data = file.readAsStringSync();
-        if (data.isNotEmpty) {
-          if (isCacheHit != null) {
-            isCacheHit(true);
-          }
-          onSuccess?.call(jsonDecode(data));
-        } else {
-          isCacheHit?.call(false);
-        }
-      }
-      if (data.isNotEmpty && !shouldUpdate) {
-        return ResponseModel(
-            status: true,
-            message: 'Got data from cache',
-            data: data,
-            bodyBytes: Uint8List(0));
-      }
-      // Check if the cache has expired
-      if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
-        file?.deleteSync();
-        file = await KingCache.localFile('$fileName.json');
-      }
-    }
-    final res = await KingCache.networkRequest(url,
-        formData: formData, method: method, headers: headers);
-    if (apiResponse != null) {
-      apiResponse(res);
-    }
-    if (res.status) {
-      if (!justApi) {
-        file?.writeAsStringSync(jsonEncode(res.data));
-      }
-      if (data.isEmpty || jsonDecode(data) != res.data) {
-        onSuccess?.call(res.data);
-      }
-    } else {
-      onError?.call(res);
-    }
-    return res;
-  }
+  }) async =>
+      cacheViaRestExec(
+        url,
+        onSuccess: onSuccess,
+        isCacheHit: isCacheHit,
+        onError: onError,
+        apiResponse: apiResponse,
+        method: method,
+        formData: formData,
+        headers: headers,
+        shouldUpdate: shouldUpdate,
+        expiryTime: expiryTime,
+        cacheKey: cacheKey,
+      );
 
   /// Returns a [File] object representing the local file with the given [fileName].
   /// If the file exists in the application cache directory, it is returned.
@@ -366,25 +250,7 @@ class KingCache {
   /// ```dart
   /// await KingCache.storeLog('This is a log message');
   /// ```
-  static Future<void> storeLog(String log) async {
-    final file = await KingCache.localFile(FilesTypes.log.file);
-    if (file == null) {
-      return;
-    }
-    final date = DateTime.now().toLocal();
-    final datePart = date.toString().split(' ')[0];
-    final timePart =
-        '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
-    log = '$datePart $timePart: $log';
-    if (file.existsSync()) {
-      final data = file.readAsStringSync();
-      if (data.isNotEmpty) {
-        file.writeAsStringSync('$data\n$log');
-      } else {
-        file.writeAsStringSync(log);
-      }
-    }
-  }
+  static Future<void> storeLog(String log) async => storeLogExec(log);
 
   /// Retrieves the log data from the local file system.
   /// Returns a Future that completes with a String containing the log data,

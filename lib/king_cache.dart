@@ -7,12 +7,14 @@
 library king_cache;
 
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'src/cache_via_rest.dart';
+import 'src/log_methods.dart';
+import 'src/network_request.dart';
 
 part 'src/enums.dart';
 part 'src/global_methods.dart';
