@@ -93,3 +93,7 @@
 * Just API is removed from the cacheViaRest method
 * Added Log File name text test
 * Added New files for particular methods
+
+## 0.0.19
+
+* Added Response Headers in Response Model

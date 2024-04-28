@@ -43,6 +43,7 @@ Future<ResponseModel> networkRequestExec({
             body: jsonEncode(formData), headers: headers);
         break;
     }
+    final responseHeaders = response.headers;
     final res = response.body.isNotEmpty
         ? jsonDecode(const Utf8Decoder().convert(response.bodyBytes))
         : {'message': 'Success'};
@@ -60,6 +61,7 @@ Future<ResponseModel> networkRequestExec({
             : (res as Map<String, dynamic>)['message'].toString(),
         data: res,
         bodyBytes: response.bodyBytes,
+        headers: responseHeaders,
       );
     } else {
       return ResponseModel(
@@ -69,22 +71,26 @@ Future<ResponseModel> networkRequestExec({
             ? 'Success'
             : (res as Map<String, dynamic>)['message'].toString(),
         bodyBytes: response.bodyBytes,
+        headers: responseHeaders,
       );
     }
   } on TimeoutException catch (e) {
     return ResponseModel(
+        headers: {},
         message: e.message.toString(),
         status: false,
         statusCode: 408,
         bodyBytes: Uint8List(0));
   } on SocketException catch (e) {
     return ResponseModel(
+        headers: {},
         message: e.message,
         status: false,
         statusCode: 408,
         bodyBytes: Uint8List(0));
   } on Exception {
     return ResponseModel(
+        headers: {},
         message: 'Connection Problem! 😐',
         status: false,
         statusCode: 500,
