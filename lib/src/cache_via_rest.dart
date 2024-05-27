@@ -35,7 +35,6 @@ Future<ResponseModel> cacheViaRestExec(
   }
   if (data.isNotEmpty && !shouldUpdate) {
     return ResponseModel(
-        statusCode: 200,
         headers: {},
         status: true,
         message: 'Got data from cache',
