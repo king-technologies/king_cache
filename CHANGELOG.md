@@ -106,3 +106,20 @@
 * Added Url Launcher for Download app if available from Github Release
 * Added Request Permission Method
 * Above all are helper methods that can be used instantly in any app
+
+## 0.0.21
+
+* Removed Support for Url Launcher
+* Removed Toast Method as Passing Context is not for this package
+
+## 0.0.22
+
+* Update Check for Update Method
+
+## 0.0.23
+
+* Version Tag added in update check method
+
+## 0.0.24
+
+* App Version Tab Widget Added

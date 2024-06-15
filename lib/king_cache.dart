@@ -28,3 +28,4 @@ part 'src/enums.dart';
 part 'src/global_methods.dart';
 part 'src/king_cache.dart';
 part 'src/response_model.dart';
+part 'src/custom_widget.dart';

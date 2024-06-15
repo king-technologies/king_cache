@@ -15,14 +15,9 @@ Future<ResponseModel> networkRequestExec({
 }) async {
   try {
     Response response;
-
     if (kDebugMode) {
       debugPrint('URL: $url');
-      debugPrint('Headers: $headers');
-      debugPrint('Method: $method');
-      debugPrint('Body: $formData');
     }
-
     switch (method) {
       case HttpMethod.get:
         response = await get(Uri.parse(url), headers: headers);
@@ -48,10 +43,6 @@ Future<ResponseModel> networkRequestExec({
         ? jsonDecode(const Utf8Decoder().convert(response.bodyBytes))
         : {'message': 'Success'};
     final type = res.runtimeType.toString().toLowerCase().contains('list');
-
-    if (kDebugMode) {
-      debugPrint('Response of $url: $res');
-    }
     if (response.statusCode < 400) {
       return ResponseModel(
         statusCode: response.statusCode,
