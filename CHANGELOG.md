@@ -97,3 +97,12 @@
 ## 0.0.19
 
 * Added Response Headers in Response Model
+
+## 0.0.20
+
+* Added In App Update Support
+* Added Local Auth Support
+* Added Package Info Support
+* Added Url Launcher for Download app if available from Github Release
+* Added Request Permission Method
+* Above all are helper methods that can be used instantly in any app
