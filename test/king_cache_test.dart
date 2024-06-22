@@ -35,14 +35,10 @@ void main() {
       await KingCache.cacheViaRest(url,
           onSuccess: (data) =>
               expect(jsonEncode(data), equals(jsonEncode(response))));
-      final file = await KingCache.localFile(fileName);
-      if (file == null) {
-        expect(true, isFalse);
-        return;
-      }
+      final file = await KingCache().localFile(fileName);
       expect(file.readAsStringSync(), equals(jsonEncode(response)));
       file.deleteSync();
-      await KingCache.clearAllCache;
+      await KingCache().clearAllCache;
     });
 
     test('should return data from API and cache it if cache is not available',
@@ -57,11 +53,7 @@ void main() {
         () async {
       final onSuccess =
           expectAsync1((x) => expect(x, equals(res200.data)), count: 2);
-      final file = await KingCache.localFile(fileName);
-      if (file == null) {
-        expect(true, isFalse);
-        return;
-      }
+      final file = await KingCache().localFile(fileName);
       file.writeAsStringSync(jsonEncode(res200.data));
       await KingCache.cacheViaRest(url,
           onSuccess: onSuccess, shouldUpdate: true);
@@ -78,16 +70,13 @@ void main() {
         apiResponse: (data) => expect(data.status, equals(res400.status)),
       );
 
-      final file = await KingCache.localFile(
-          'httpsjsonplaeholdertypicodecomtodos1.json');
-      if (file == null) {
-        return;
-      }
+      final file = await KingCache()
+          .localFile('httpsjsonplaeholdertypicodecomtodos1.json');
       file.deleteSync();
     });
 
     test('should update cache if shouldUpdate is true', () async {
-      final file = await KingCache.localFile(fileName);
+      final file = await KingCache().localFile(fileName);
       final result = await KingCache.cacheViaRest(
         url,
         onSuccess: (data) => expect(data, equals(res200.data)),
@@ -97,12 +86,6 @@ void main() {
       );
       expect(result.status, isTrue);
       expect(jsonEncode(result.data), equals(jsonEncode(res200.data)));
-
-      // Clean up
-      if (file == null) {
-        expect(true, isFalse);
-        return;
-      }
       expect(file.readAsStringSync(), equals(jsonEncode(res200.data)));
       file.deleteSync();
     });
@@ -110,11 +93,7 @@ void main() {
     test('should delete cache if expiryTime is provided and cache has expired',
         () async {
       final expiryTime = DateTime.now().subtract(const Duration(hours: 1));
-      final file = await KingCache.localFile(fileName);
-      if (file == null) {
-        expect(true, isFalse);
-        return;
-      }
+      final file = await KingCache().localFile(fileName);
       file.writeAsStringSync(jsonEncode(res200.data));
       final result = await KingCache.cacheViaRest(
         url,
@@ -134,7 +113,7 @@ void main() {
         onSuccess: (data) => expect(data, equals(res200.data)),
         apiResponse: (data) => expect(data.data, equals(res200.data)),
       );
-      await KingCache.clearLog;
+      await KingCache().clearLog;
     });
   });
 
@@ -210,30 +189,30 @@ void main() {
 
   group('Cache Testings', () {
     test('Check Cache', () async {
-      await KingCache.setCache('posts/1', jsonEncode({'title': 'foo'}));
-      final res = await KingCache.getCache('posts/1');
+      await KingCache().setCache('posts/1', jsonEncode({'title': 'foo'}));
+      final res = await KingCache().getCache('posts/1');
       expect(res, jsonEncode({'title': 'foo'}));
     });
 
     test('Remove Cache', () async {
-      await KingCache.setCache('posts/1', jsonEncode({'title': 'foo'}));
-      await KingCache.removeCache('posts/1');
-      final res = await KingCache.getCache('posts/1');
+      await KingCache().setCache('posts/1', jsonEncode({'title': 'foo'}));
+      await KingCache().removeCache('posts/1');
+      final res = await KingCache().getCache('posts/1');
       expect(res, null);
     });
 
     test('Check Cache Exists', () async {
-      await KingCache.setCache('posts/1', jsonEncode({'title': 'foo'}));
-      final res = await KingCache.hasCache('posts/1');
+      await KingCache().setCache('posts/1', jsonEncode({'title': 'foo'}));
+      final res = await KingCache().hasCache('posts/1');
       expect(res, true);
     });
 
     test('Get Cache Keys', () async {
-      final res = await KingCache.getCacheKeys();
+      final res = await KingCache().getCacheKeys();
       expect(res, isNotNull);
       expect(res, isA<List<String>>());
-      await KingCache.clearLog;
-      await KingCache.clearAllCache;
+      await KingCache().clearLog;
+      await KingCache().clearAllCache;
     });
   });
 }

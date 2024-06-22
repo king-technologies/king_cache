@@ -1,11 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart';
-
-import '../king_cache.dart';
+part of '../king_cache.dart';
 
 Future<ResponseModel> networkRequestExec({
   required String url,

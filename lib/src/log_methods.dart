@@ -1,10 +1,7 @@
 import '../king_cache.dart';
 
 Future<void> storeLogExec(String log) async {
-  final file = await KingCache.localFile(FilesTypes.log.file);
-  if (file == null) {
-    return;
-  }
+  final file = await KingCache().localFile(FilesTypes.log.file);
   final date = DateTime.now().toLocal();
   final datePart = date.toString().split(' ')[0];
   final timePart =

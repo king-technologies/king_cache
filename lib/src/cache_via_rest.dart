@@ -21,8 +21,8 @@ Future<ResponseModel> cacheViaRestExec(
 
   var data = '';
   final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-  file = await KingCache.localFile('$fileName.json');
-  if (file != null && file.existsSync()) {
+  file = await KingCache().localFile('$fileName.json');
+  if (file.existsSync()) {
     data = file.readAsStringSync();
     if (data.isNotEmpty) {
       if (isCacheHit != null) {
@@ -43,8 +43,8 @@ Future<ResponseModel> cacheViaRestExec(
   }
   // Check if the cache has expired
   if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
-    file?.deleteSync();
-    file = await KingCache.localFile('$fileName.json');
+    file.deleteSync();
+    file = await KingCache().localFile('$fileName.json');
   }
   final res = await KingCache.networkRequest(url,
       formData: formData, method: method, headers: headers);
@@ -52,7 +52,7 @@ Future<ResponseModel> cacheViaRestExec(
     apiResponse(res);
   }
   if (res.status) {
-    file?.writeAsStringSync(jsonEncode(res.data));
+    file.writeAsStringSync(jsonEncode(res.data));
     if (data.isEmpty || jsonDecode(data) != res.data) {
       onSuccess?.call(res.data);
     }

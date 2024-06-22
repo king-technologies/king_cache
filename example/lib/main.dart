@@ -46,12 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               TextButton(
                 onPressed: () async {
-                  await KingCache.storeLog('Call Json Place Holder API');
+                  await KingCache().storeLog('Call Json Place Holder API');
                   await KingCache.cacheViaRest(
                     'todos/1',
                     onSuccess: (data) {
                       debugPrint(data.toString());
-                      KingCache.storeLog('Response: $data');
+                      KingCache().storeLog('Response: $data');
                     },
                     onError: (data) => debugPrint('On Error: $data'),
                     apiResponse: (data) => debugPrint('Api Response: $data'),
@@ -59,20 +59,20 @@ class _MyHomePageState extends State<MyHomePage> {
                     shouldUpdate: true,
                     expiryTime: DateTime.now().add(const Duration(hours: 1)),
                   );
-                  await KingCache.storeLog('Call Json Place Holder API');
+                  await KingCache().storeLog('Call Json Place Holder API');
                 },
                 child: const Text('Json Place Holder API'),
               ),
               TextButton(
-                onPressed: () async => debugPrint(await KingCache.getLogs),
+                onPressed: () async => debugPrint(await KingCache().getLogs),
                 child: const Text('Get Logs'),
               ),
               TextButton(
-                onPressed: () => KingCache.clearLog,
+                onPressed: () => KingCache().clearLog,
                 child: const Text('Clear Logs'),
               ),
               TextButton(
-                onPressed: () => KingCache.clearAllCache,
+                onPressed: () => KingCache().clearAllCache,
                 child: const Text('Clear All Cache'),
               ),
             ],

@@ -11,7 +11,7 @@ enum HttpMethod { get, post, put, delete, patch }
 /// It provides a method [cacheViaRest] to store cache data via a REST API endpoint.
 /// The cache data can be retrieved using by calling the [cacheViaRest] method with the same API endpoint.
 /// The class also provides methods to clear the cache and get the log file.
-class KingCache {
+class KingCache implements ICacheManager {
   /// Returns the singleton instance of KingCache.
   ///
   /// The [KingCache] class follows the singleton design pattern, meaning that there can only be one instance of it.
@@ -221,10 +221,8 @@ class KingCache {
   /// ```dart
   /// File? file = await KingCache.localFile('myFile');
   /// ```
-  static Future<File?> localFile(String fileName) async {
-    if (kIsWeb) {
-      return null;
-    }
+  @override
+  Future<File> localFile(String fileName) async {
     final path = applicationDocumentSupport
         ? await getApplicationCacheDirectory()
         : Directory('${Directory.current.path}/cache');
@@ -250,7 +248,8 @@ class KingCache {
   /// ```dart
   /// await KingCache.storeLog('This is a log message');
   /// ```
-  static Future<void> storeLog(String log) async => storeLogExec(log);
+  @override
+  Future<void> storeLog(String log) async => storeLogExec(log);
 
   /// Retrieves the log data from the local file system.
   /// Returns a Future that completes with a String containing the log data,
@@ -260,11 +259,9 @@ class KingCache {
   /// ```dart
   /// String log = await KingCache.getLogs;
   /// ```
-  static Future<String> get getLogs async {
-    final file = await KingCache.localFile(FilesTypes.log.file);
-    if (file == null) {
-      return '';
-    }
+  @override
+  Future<String> get getLogs async {
+    final file = await KingCache().localFile(FilesTypes.log.file);
     if (file.existsSync()) {
       final data = file.readAsStringSync();
       if (data.isNotEmpty) {
@@ -284,11 +281,9 @@ class KingCache {
   /// ```dart
   /// await KingCache.clearLog;
   /// ```
-  static Future<void> get clearLog async {
-    final file = await KingCache.localFile(FilesTypes.log.file);
-    if (file == null) {
-      return;
-    }
+  @override
+  Future<void> get clearLog async {
+    final file = await KingCache().localFile(FilesTypes.log.file);
     if (file.existsSync()) {
       file.writeAsStringSync('');
     }
@@ -304,7 +299,8 @@ class KingCache {
   /// ```dart
   /// await KingCache.clearAllCache;
   /// ```
-  static Future<void> get clearAllCache async {
+  @override
+  Future<void> get clearAllCache async {
     if (kIsWeb) {
       return;
     }
@@ -328,8 +324,9 @@ class KingCache {
   /// ```dart
   /// File? logFile = await getLogFile();
   /// ```
-  static Future<File?> get getLogFile async =>
-      KingCache.localFile(FilesTypes.log.file);
+  @override
+  Future<File?> get getLogFile async =>
+      KingCache().localFile(FilesTypes.log.file);
 
   /// Retrieves the cached data associated with the given [key].
   /// Returns the cached data as a [String], or null if the data is not found.
@@ -345,11 +342,9 @@ class KingCache {
   ///   // Data not found in cache
   /// }
   /// ```
-  static Future<String?> getCache(String key) async {
-    final file = await KingCache.localFile(key);
-    if (file == null) {
-      return null;
-    }
+  @override
+  Future<String?> getCache(String key) async {
+    final file = await KingCache().localFile(key);
     if (file.existsSync()) {
       final data = file.readAsStringSync();
       if (data.isNotEmpty) {
@@ -372,11 +367,9 @@ class KingCache {
   /// ```dart
   /// await KingCache.setCacheViaKey('user_data', '{"name": "John", "age": 30}');
   /// ```
-  static Future<void> setCache(String key, String data) async {
-    final file = await KingCache.localFile(key);
-    if (file == null) {
-      return;
-    }
+  @override
+  Future<void> setCache(String key, String data) async {
+    final file = await KingCache().localFile(key);
     if (file.existsSync()) {
       file.writeAsStringSync(data);
     }
@@ -390,11 +383,9 @@ class KingCache {
   /// ```dart
   /// await KingCache.removeCacheViaKey('myKey');
   /// ```
-  static Future<void> removeCache(String key) async {
-    final file = await KingCache.localFile(key);
-    if (file == null) {
-      return;
-    }
+  @override
+  Future<void> removeCache(String key) async {
+    final file = await KingCache().localFile(key);
     if (file.existsSync()) {
       file.deleteSync();
     }
@@ -408,11 +399,9 @@ class KingCache {
   /// ```dart
   /// bool cacheExists = await KingCache.hasCache('myKey');
   /// ```
-  static Future<bool> hasCache(String key) async {
-    final file = await KingCache.localFile(key);
-    if (file == null) {
-      return false;
-    }
+  @override
+  Future<bool> hasCache(String key) async {
+    final file = await KingCache().localFile(key);
     if (file.existsSync()) {
       return true;
     }
@@ -430,7 +419,8 @@ class KingCache {
   /// List<String> cacheKeys = await getCacheKeys();
   /// print(cacheKeys);
   /// ```
-  static Future<List<String>> getCacheKeys() async {
+  @override
+  Future<List<String>> getCacheKeys() async {
     final keys = <String>[];
     if (kIsWeb) {
       return keys;

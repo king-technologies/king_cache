@@ -123,3 +123,8 @@
 ## 0.0.24
 
 * App Version Tab Widget Added
+
+## 0.0.25
+
+* Added abstract for testing
+* Added Couple of Global Extensions
