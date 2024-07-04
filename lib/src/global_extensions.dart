@@ -15,6 +15,12 @@ extension StringExt on String {
       ? replaceAll(RegExp(r'\s+'), '').replaceAll(RegExp(r'[\s\u00A0]+'), '')
       : '';
 
+  String get toIdentifier => split(RegExp('(?=[A-Z])'))
+      .map((e) => e.toCapitalized)
+      .join('_')
+      .replaceAll('  ', ' ')
+      .toUpperCase();
+
   String get toCapitalizedWords => split(RegExp('(?=[A-Z])'))
       .map((e) => e.toCapitalized)
       .join(' ')
@@ -26,13 +32,6 @@ extension StringExt on String {
     }
     return replaceRange(length, this.length, omission);
   }
-
-  String toCurrency(String locale) =>
-      NumberFormat.currency(
-        locale: locale,
-        decimalDigits: 2,
-      ).format(num.parse(this)) +
-      NumberFormat.simpleCurrency(locale: locale).currencySymbol;
 
   String get getInitials {
     final words = split(' ');

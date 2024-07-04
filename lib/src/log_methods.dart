@@ -1,6 +1,11 @@
+import 'package:flutter/foundation.dart';
+
 import '../king_cache.dart';
 
 Future<void> storeLogExec(String log) async {
+  if (kIsWeb) {
+    return;
+  }
   final file = await KingCache().localFile(FilesTypes.log.file);
   final date = DateTime.now().toLocal();
   final datePart = date.toString().split(' ')[0];

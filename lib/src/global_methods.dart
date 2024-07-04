@@ -6,7 +6,8 @@ bool get applicationDocumentSupport =>
     Platform.isFuchsia ||
     Platform.isMacOS;
 
-bool get firebaseCrashlyticsSupport => Platform.isAndroid || Platform.isIOS;
+bool get firebaseCrashlyticsSupport =>
+    (Platform.isAndroid || Platform.isIOS) && kReleaseMode;
 
 bool get windowManagerSupport =>
     Platform.isWindows || Platform.isLinux || Platform.isMacOS;
@@ -48,12 +49,13 @@ Future<bool> ktRequestPermission(Permission permission) async {
 }
 
 Future<
-    ({
-      bool isUpdateAvailable,
-      PackageInfo packageInfo,
-      String downloadUrl,
-      String tag
-    })> ktCheckForUpdate(String repo, String owner, String url) async {
+        ({
+          bool isUpdateAvailable,
+          PackageInfo packageInfo,
+          String downloadUrl,
+          String tag
+        })>
+    ktCheckForGithubReleaseUpdate(String repo, String owner, String url) async {
   final (:packageInfo, :tag) = await ktGetPackageInfo();
   var isUpdateAvailable = false;
   var downloadUrl = '';
@@ -83,14 +85,6 @@ Future<
     } finally {
       httpClient.close();
     }
-  } else if (inAppUpdateSupport) {
-    try {
-      final info = await InAppUpdate.checkForUpdate();
-      isUpdateAvailable =
-          info.updateAvailability == UpdateAvailability.updateAvailable;
-    } on Exception catch (e) {
-      debugPrint('Exception: $e');
-    }
   }
   return (
     tag: tag,
@@ -98,6 +92,11 @@ Future<
     packageInfo: packageInfo,
     downloadUrl: downloadUrl
   );
+}
+
+Future<bool> get ktCheckForPlayStoreUpdate async {
+  final info = await InAppUpdate.checkForUpdate();
+  return info.updateAvailability == UpdateAvailability.updateAvailable;
 }
 
 Future<void> ktFlexibleUpdate() async {

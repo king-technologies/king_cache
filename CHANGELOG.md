@@ -128,3 +128,9 @@
 
 * Added abstract for testing
 * Added Couple of Global Extensions
+
+## 0.0.26
+
+* Added ToIdentifier method to convert enum to String
+* Removed Currency for now as it have some issues
+* Added Web check for log method, Web Support is under development
