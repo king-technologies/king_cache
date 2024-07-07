@@ -56,7 +56,7 @@ Future<
           String tag
         })>
     ktCheckForGithubReleaseUpdate(String repo, String owner, String url) async {
-  final (:packageInfo, :tag) = await ktGetPackageInfo();
+  final (:packageInfo, :tag) = await ktGetPackageInfo;
   var isUpdateAvailable = false;
   var downloadUrl = '';
   if (githubApkReleaseSupport) {
@@ -119,7 +119,7 @@ Future<void> ktFlexibleUpdate() async {
   }
 }
 
-Future<({String tag, PackageInfo packageInfo})> ktGetPackageInfo() async {
+Future<({String tag, PackageInfo packageInfo})> get ktGetPackageInfo async {
   final packageInfo = await PackageInfo.fromPlatform();
   final tag =
       'v${packageInfo.version.substring(0, 4)}${int.parse(packageInfo.buildNumber) % 1000}';
