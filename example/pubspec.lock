@@ -134,7 +134,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.26"
+    version: "0.0.28"
   leak_tracker:
     dependency: transitive
     description:
@@ -179,10 +179,10 @@ packages:
     dependency: transitive
     description:
       name: local_auth_android
-      sha256: b77dc490fef9214e785c326bf11fa733feaa47675d0433f05f48b5caa486c8f7
+      sha256: "6b60f9f545af5b5a11a90af3c2ab4361c47fff170134fa1c6d4c7d52e6537174"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.40"
+    version: "1.0.41"
   local_auth_darwin:
     dependency: transitive
     description:

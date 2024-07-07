@@ -21,7 +21,7 @@ bool get inAppUpdateSupport => Platform.isAndroid && kReleaseMode;
 
 bool get githubApkReleaseSupport => Platform.isAndroid && kReleaseMode;
 
-Future<bool> ktLocallyAuthenticateUser() async {
+Future<bool> get ktLocallyAuthenticateUser async {
   try {
     final auth = LocalAuthentication();
     final isAuthAvailable = await auth.canCheckBiometrics;
@@ -95,11 +95,17 @@ Future<
 }
 
 Future<bool> get ktCheckForPlayStoreUpdate async {
-  final info = await InAppUpdate.checkForUpdate();
-  return info.updateAvailability == UpdateAvailability.updateAvailable;
+  if (inAppUpdateSupport) {
+    final info = await InAppUpdate.checkForUpdate();
+    return info.updateAvailability == UpdateAvailability.updateAvailable;
+  }
+  return false;
 }
 
 Future<void> ktFlexibleUpdate() async {
+  if (!inAppUpdateSupport) {
+    return;
+  }
   try {
     final info = await InAppUpdate.checkForUpdate();
     final isUpdateAvailable =
@@ -121,6 +127,9 @@ Future<({String tag, PackageInfo packageInfo})> ktGetPackageInfo() async {
 }
 
 Future<void> ktImmediateUpdate() async {
+  if (!inAppUpdateSupport) {
+    return;
+  }
   try {
     final info = await InAppUpdate.checkForUpdate();
     final isUpdateAvailable =

@@ -84,62 +84,95 @@ extension StringExt on String {
     return sb.toString();
   }
 
-  double getTextWidth(BuildContext context, String text, TextStyle? style) {
-    final span = TextSpan(text: text, style: style);
-    const constraints = BoxConstraints();
-    final richTextWidget = Text.rich(span).build(context) as RichText;
-    final renderObject = richTextWidget.createRenderObject(context);
-    renderObject.layout(constraints);
-    final renderBoxes = renderObject.getBoxesForSelection(
-      TextSelection(
-        baseOffset: 0,
-        extentOffset: TextSpan(text: text).toPlainText().length,
-      ),
-    );
-    return renderBoxes.last.right;
-  }
-
   bool get isEmail => RegExp(
           r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*)*\.[a-zA-Z]{2,}$')
       .hasMatch(this);
 }
 
+double getTextWidth(BuildContext context, String text, TextStyle? style) {
+  final span = TextSpan(text: text, style: style);
+  const constraints = BoxConstraints();
+  final richTextWidget = Text.rich(span).build(context) as RichText;
+  final renderObject = richTextWidget.createRenderObject(context);
+  renderObject.layout(constraints);
+  final renderBoxes = renderObject.getBoxesForSelection(
+    TextSelection(
+      baseOffset: 0,
+      extentOffset: TextSpan(text: text).toPlainText().length,
+    ),
+  );
+  return renderBoxes.last.right;
+}
+
 extension DateTimeExt on DateTime {
-  String get toDateTime {
-    if (DateTime.now().day == day) {
-      return DateFormat('HH:mm').format(this);
+  String get toMilitaryDateTime {
+    final now = DateTime.now();
+    if (now.day == day && now.month == month && now.year == year) {
+      return toHHmm;
     }
-    if (DateTime.now().year == year) {
-      return DateFormat('dd MMM HH:mm').format(this);
+    if (now.year == year) {
+      return toddMMMHHmm;
     }
-    return DateFormat('dd MMM yy HH:mm').format(this);
+    return toddMMMyyHHmm;
   }
+
+  /// Converts the DateTime to a formatted clock time based on current time comparison:
+  ///
+  /// - If the date is today, it returns the time in 'hh:mm a' format.
+  /// - If the date is in the current year but not today, it returns 'dd MMM hh:mm a'.
+  /// - If the date is not in the current year, it returns 'dd MMM yy hh:mm a'.
+  String get toClockTime {
+    final now = DateTime.now();
+    if (now.day == day && now.month == month && now.year == year) {
+      return tohhmma;
+    }
+    if (now.year == year) {
+      return toddMMMhhmma;
+    }
+    return toddMMMyyhhmma;
+  }
+
+  String get toddMMMyyhhmma => DateFormat('dd MMM yy hh:mm a').format(this);
+  String get tohhmma => DateFormat('hh:mm a').format(this);
+  String get toddMMMhhmma => DateFormat('dd-MM-yy hh:mm a').format(this);
+
+  String get toddMMMHHmm =>
+      DateFormat('dd MMM HH:mm').format(this); // 20 Dec 12:00
+  String get toddMMMyyHHmm =>
+      DateFormat('dd MMM yy HH:mm').format(this); // 20-12-2022 12:00 PM
+  String get toHHmm => DateFormat('HH:mm').format(this); // 12:00
+  String get toddMMyyhhmma =>
+      DateFormat('dd-MM-yy hh:mm a').format(this); // 20-12-2022 12:00 PM
+  String get toddMMyy => DateFormat('dd-MM-yy').format(this); // 20-12-2022
+  String get toddMMM => DateFormat('dd MMM').format(this); // 20 Dec
+  String get toddMMMM => DateFormat('dd MMMM').format(this); // 20 December
+  String get todM => DateFormat('dd MMM').format(this); // 12
 }
 
 extension IntEx on int {
   String get toClockTimer {
     final sb = StringBuffer();
     final seconds = this;
+    if (seconds < 0) {
+      return '00s';
+    }
     final hours = seconds ~/ 3600;
     if (hours > 0) {
-      sb.write('${hours.toString().padLeft(2, '0')}h ');
+      sb.write('${hours.toString().padLeft(2, '0')}h');
     }
     final minutes = (seconds % 3600) ~/ 60;
-    if (minutes > 0) {
+    if (minutes > 0 || hours > 0) {
       if (hours > 0) {
-        sb.write('${minutes.toString().padLeft(2, '0')}m ');
-      } else {
-        sb.write('${minutes}m ');
+        sb.write(' ');
       }
+      sb.write('${minutes.toString().padLeft(2, '0')}m');
     }
     final sec = seconds % 60;
-    if (sec != 0) {
+    if (sec >= 0 && hours == 0) {
       if (minutes > 0) {
-        sb.write(sec.toString().padLeft(2, '0'));
-      } else {
-        sb.write('$sec');
+        sb.write(' ');
       }
-      sb.write('s');
+      sb.write('${sec.toString().padLeft(2, '0')}s');
     }
     return sb.toString();
   }
@@ -147,17 +180,13 @@ extension IntEx on int {
 
 extension DurationExt on Duration {
   String get toMMSS {
-    final sb = StringBuffer();
     final seconds = inSeconds % 60;
     final minutes = inMinutes % 60;
     final hours = inHours;
     if (hours > 0) {
-      sb.write('${hours.toString().padLeft(2, '0')}:');
-      sb.write(minutes.toString().padLeft(2, '0'));
+      return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
     } else {
-      sb.write('${minutes.toString().padLeft(2, '0')}:');
-      sb.write(seconds.toString().padLeft(2, '0'));
+      return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     }
-    return sb.toString();
   }
 }
