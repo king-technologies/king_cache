@@ -142,3 +142,7 @@
 ## 0.0.28
 
 * Function Updates
+
+## 0.0.29
+
+* Added Extension Methods

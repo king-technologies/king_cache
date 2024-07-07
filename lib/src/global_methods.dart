@@ -56,7 +56,7 @@ Future<
           String tag
         })>
     ktCheckForGithubReleaseUpdate(String repo, String owner, String url) async {
-  final (:packageInfo, :tag) = await ktGetPackageInfo();
+  final (:packageInfo, :tag) = await ktGetPackageInfo;
   var isUpdateAvailable = false;
   var downloadUrl = '';
   if (githubApkReleaseSupport) {
@@ -119,7 +119,7 @@ Future<void> ktFlexibleUpdate() async {
   }
 }
 
-Future<({String tag, PackageInfo packageInfo})> ktGetPackageInfo() async {
+Future<({String tag, PackageInfo packageInfo})> get ktGetPackageInfo async {
   final packageInfo = await PackageInfo.fromPlatform();
   final tag =
       'v${packageInfo.version.substring(0, 4)}${int.parse(packageInfo.buildNumber) % 1000}';
@@ -140,4 +140,20 @@ Future<void> ktImmediateUpdate() async {
   } on Exception catch (e) {
     debugPrint('Exception: $e');
   }
+}
+
+
+double getTextWidth(BuildContext context, String text, TextStyle? style) {
+  final span = TextSpan(text: text, style: style);
+  const constraints = BoxConstraints();
+  final richTextWidget = Text.rich(span).build(context) as RichText;
+  final renderObject = richTextWidget.createRenderObject(context);
+  renderObject.layout(constraints);
+  final renderBoxes = renderObject.getBoxesForSelection(
+    TextSelection(
+      baseOffset: 0,
+      extentOffset: TextSpan(text: text).toPlainText().length,
+    ),
+  );
+  return renderBoxes.last.right;
 }
