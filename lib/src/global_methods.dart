@@ -141,3 +141,19 @@ Future<void> ktImmediateUpdate() async {
     debugPrint('Exception: $e');
   }
 }
+
+
+double getTextWidth(BuildContext context, String text, TextStyle? style) {
+  final span = TextSpan(text: text, style: style);
+  const constraints = BoxConstraints();
+  final richTextWidget = Text.rich(span).build(context) as RichText;
+  final renderObject = richTextWidget.createRenderObject(context);
+  renderObject.layout(constraints);
+  final renderBoxes = renderObject.getBoxesForSelection(
+    TextSelection(
+      baseOffset: 0,
+      extentOffset: TextSpan(text: text).toPlainText().length,
+    ),
+  );
+  return renderBoxes.last.right;
+}
