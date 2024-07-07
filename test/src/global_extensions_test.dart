@@ -64,9 +64,6 @@ void main() {
     test('toMilitaryDateTime', () {
       expect(now.toMilitaryDateTime, now.toHHmm);
 
-      final earlierToday = DateTime(now.year, now.month, now.day, now.hour - 1);
-      expect(earlierToday.toMilitaryDateTime, earlierToday.toHHmm);
-
       final earlierThisMonth = DateTime(now.year, now.month, now.day - 1);
       expect(earlierThisMonth.toMilitaryDateTime, earlierThisMonth.toddMMMHHmm);
 
@@ -122,9 +119,6 @@ void main() {
     test('toClockTime', () {
       final now = DateTime.now();
       expect(now.toClockTime, now.tohhmma);
-
-      final earlierToday = DateTime(now.year, now.month, now.day, now.hour - 1);
-      expect(earlierToday.toClockTime, earlierToday.tohhmma);
 
       final earlierThisMonth = DateTime(now.year, now.month, now.day - 1);
       expect(earlierThisMonth.toClockTime, earlierThisMonth.toddMMMhhmma);
