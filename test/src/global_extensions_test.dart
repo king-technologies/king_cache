@@ -55,7 +55,7 @@ void main() {
       expect(DateTime(now.year, now.month, now.day, 12, 20).getTimeStr,
           '12:20 PM');
       expect(DateTime(now.year, now.month, now.day - 1, 10, 30).getTimeStr,
-          '${(now.day - 1).toTwoDigit}/${now.month.toTwoDigit} 10:30 AM');
+          '${(now.day - 1).paddedZero}/${now.month.paddedZero} 10:30 AM');
       expect(DateTime(2023, 7, 2, 10, 30).getTimeStr, '02/07/23 10:30 AM');
       expect(dateTime.getTimeStr, '20/12/23 12:00 PM');
       expect(now.getTimeStr, now.tohhmma);
@@ -222,15 +222,17 @@ void main() {
   });
 
   group('DurationExt tests', () {
-    test('toMMSS', () {
-      expect(const Duration(hours: 1000, minutes: 1, seconds: 1).toMMSS,
+    test('tohhmmORmmss', () {
+      expect(const Duration(hours: 1000, minutes: 1, seconds: 1).tohhmmORmmss,
           '1000:01');
       expect(
-          const Duration(hours: 100, minutes: 1, seconds: 1).toMMSS, '100:01');
-      expect(const Duration(hours: 1, minutes: 1, seconds: 1).toMMSS, '01:01');
-      expect(const Duration(seconds: 3661).toMMSS, '01:01');
-      expect(const Duration(seconds: 59).toMMSS, '00:59');
-      expect(const Duration(seconds: 60).toMMSS, '01:00');
+          const Duration(hours: 100, minutes: 1, seconds: 1).tohhmmORmmss,
+          '100:01');
+      expect(const Duration(hours: 1, minutes: 1, seconds: 1).tohhmmORmmss,
+          '01:01');
+      expect(const Duration(seconds: 3661).tohhmmORmmss, '01:01');
+      expect(const Duration(seconds: 59).tohhmmORmmss, '00:59');
+      expect(const Duration(seconds: 60).tohhmmORmmss, '01:00');
     });
   });
 }

@@ -30,8 +30,11 @@ export 'src/cache_manager.dart';
 
 part 'src/custom_widget.dart';
 part 'src/enums.dart';
+part 'src/extensions/date_time_ext.dart';
+part 'src/extensions/string_ext.dart';
+part 'src/extensions/int_ext.dart';
+part 'src/extensions/duration_ext.dart';
 part 'src/global_methods.dart';
-part 'src/global_extensions.dart';
 part 'src/king_cache.dart';
 part 'src/network_request.dart';
 part 'src/response_model.dart';
