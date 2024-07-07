@@ -433,7 +433,6 @@ class KingCache implements ICacheManager {
       if (dir.existsSync()) {
         final list = dir.listSync();
         for (final file in list) {
-          debugPrint(file.path);
           if (file.path.endsWith('.json')) {
             keys.add(file.path.split('/').last);
           }

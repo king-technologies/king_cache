@@ -1,6 +1,13 @@
-part of '../king_cache.dart';
+part of '../../king_cache.dart';
 
+/// Extensions for [String] manipulation.
 extension StringExt on String {
+  /// Converts the string to title case.
+  ///
+  /// Example:
+  /// ```dart
+  /// final titleCase = 'hello world'.toTitleCase; // Outputs: 'Hello World'
+  /// ```
   String get toTitleCase => replaceAll(RegExp(' +'), ' ')
       .replaceAll('-', ' ')
       .replaceAll('_', ' ')
@@ -8,24 +15,54 @@ extension StringExt on String {
       .map((str) => str.toCapitalized)
       .join(' ');
 
+  /// Capitalizes the first letter of the string.
+  ///
+  /// Example:
+  /// ```dart
+  /// final capitalized = 'hello'.toCapitalized; // Outputs: 'Hello'
+  /// ```
   String get toCapitalized =>
       length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
 
+  /// Removes all spaces from the string.
+  ///
+  /// Example:
+  /// ```dart
+  /// final noSpace = 'hello world'.removeSpace; // Outputs: 'helloworld'
+  /// ```
   String get removeSpace => length > 0
       ? replaceAll(RegExp(r'\s+'), '').replaceAll(RegExp(r'[\s\u00A0]+'), '')
       : '';
 
+  /// Converts the string to an identifier format (e.g., snake_case).
+  ///
+  /// Example:
+  /// ```dart
+  /// final identifier = 'userName'.toIdentifier; // Outputs: 'User_Name'
+  /// ```
   String get toIdentifier => split(RegExp('(?=[A-Z])'))
       .map((e) => e.toCapitalized)
       .join('_')
       .replaceAll('  ', ' ')
       .toUpperCase();
 
+  /// Converts the string from camelCase to capitalized words.
+  ///
+  /// Example:
+  /// ```dart
+  /// final words = 'camelCaseExample'.toCapitalizedWords; // Outputs: 'Camel Case Example'
+  /// ```
   String get toCapitalizedWords => split(RegExp('(?=[A-Z])'))
       .map((e) => e.toCapitalized)
       .join(' ')
       .replaceAll('  ', ' ');
 
+  /// Truncates the string to a specified length with an optional omission string.
+  ///
+  /// Example:
+  /// ```dart
+  /// final truncated = 'This is a long sentence'.truncate(length: 10); // Outputs: 'This is a...'
+  /// ```
   String truncate({int length = 7, String omission = '...'}) {
     if (length >= this.length) {
       return this;
@@ -33,6 +70,12 @@ extension StringExt on String {
     return replaceRange(length, this.length, omission);
   }
 
+  /// Returns the initials of the string.
+  ///
+  /// Example:
+  /// ```dart
+  /// final initials = 'John Doe'.getInitials; // Outputs: 'JD'
+  /// ```
   String get getInitials {
     final words = split(' ');
     var initial = '';
@@ -60,6 +103,12 @@ extension StringExt on String {
     return initial.toUpperCase();
   }
 
+  /// Fixes the text width by truncating it to fit within the specified maximum width.
+  ///
+  /// Example:
+  /// ```dart
+  /// final fixedText = fixText(context, 100.0, style: TextStyle(fontSize: 16)); // Adjusts text to fit within 100.0 width
+  /// ```
   String fixText(BuildContext context, double maxSize, {TextStyle? style}) {
     final sb = StringBuffer();
     final newName = replaceAll(RegExp(r'\(.*?\)'), '');
@@ -84,80 +133,13 @@ extension StringExt on String {
     return sb.toString();
   }
 
-  double getTextWidth(BuildContext context, String text, TextStyle? style) {
-    final span = TextSpan(text: text, style: style);
-    const constraints = BoxConstraints();
-    final richTextWidget = Text.rich(span).build(context) as RichText;
-    final renderObject = richTextWidget.createRenderObject(context);
-    renderObject.layout(constraints);
-    final renderBoxes = renderObject.getBoxesForSelection(
-      TextSelection(
-        baseOffset: 0,
-        extentOffset: TextSpan(text: text).toPlainText().length,
-      ),
-    );
-    return renderBoxes.last.right;
-  }
-
+  /// Checks if the string is a valid email address.
+  ///
+  /// Example:
+  /// ```dart
+  /// final isValidEmail = 'user@example.com'.isEmail; // Outputs: true
+  /// ```
   bool get isEmail => RegExp(
           r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]+(-[a-zA-Z0-9]+)*)*\.[a-zA-Z]{2,}$')
       .hasMatch(this);
-}
-
-extension DateTimeExt on DateTime {
-  String get toDateTime {
-    if (DateTime.now().day == day) {
-      return DateFormat('HH:mm').format(this);
-    }
-    if (DateTime.now().year == year) {
-      return DateFormat('dd MMM HH:mm').format(this);
-    }
-    return DateFormat('dd MMM yy HH:mm').format(this);
-  }
-}
-
-extension IntEx on int {
-  String get toClockTimer {
-    final sb = StringBuffer();
-    final seconds = this;
-    final hours = seconds ~/ 3600;
-    if (hours > 0) {
-      sb.write('${hours.toString().padLeft(2, '0')}h ');
-    }
-    final minutes = (seconds % 3600) ~/ 60;
-    if (minutes > 0) {
-      if (hours > 0) {
-        sb.write('${minutes.toString().padLeft(2, '0')}m ');
-      } else {
-        sb.write('${minutes}m ');
-      }
-    }
-    final sec = seconds % 60;
-    if (sec != 0) {
-      if (minutes > 0) {
-        sb.write(sec.toString().padLeft(2, '0'));
-      } else {
-        sb.write('$sec');
-      }
-      sb.write('s');
-    }
-    return sb.toString();
-  }
-}
-
-extension DurationExt on Duration {
-  String get toMMSS {
-    final sb = StringBuffer();
-    final seconds = inSeconds % 60;
-    final minutes = inMinutes % 60;
-    final hours = inHours;
-    if (hours > 0) {
-      sb.write('${hours.toString().padLeft(2, '0')}:');
-      sb.write(minutes.toString().padLeft(2, '0'));
-    } else {
-      sb.write('${minutes.toString().padLeft(2, '0')}:');
-      sb.write(seconds.toString().padLeft(2, '0'));
-    }
-    return sb.toString();
-  }
 }

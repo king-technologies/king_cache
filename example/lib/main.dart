@@ -49,10 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   await KingCache().storeLog('Call Json Place Holder API');
                   await KingCache.cacheViaRest(
                     'todos/1',
-                    onSuccess: (data) {
-                      debugPrint(data.toString());
-                      KingCache().storeLog('Response: $data');
-                    },
+                    onSuccess: (data) =>
+                        KingCache().storeLog('Response: $data'),
                     onError: (data) => debugPrint('On Error: $data'),
                     apiResponse: (data) => debugPrint('Api Response: $data'),
                     isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),

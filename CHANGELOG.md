@@ -134,3 +134,15 @@
 * Added ToIdentifier method to convert enum to String
 * Removed Currency for now as it have some issues
 * Added Web check for log method, Web Support is under development
+
+## 0.0.27
+
+* Play Store Check Updated
+
+## 0.0.28
+
+* Function Updates
+
+## 0.0.29
+
+* Added Extension Methods

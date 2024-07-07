@@ -14,7 +14,7 @@ class _AppVersionTagState extends State<AppVersionTag> {
   void initState() {
     super.initState();
     if (tag.isEmpty) {
-      ktGetPackageInfo().then((value) {
+      ktGetPackageInfo.then((value) {
         tag = value.tag;
         if (value.packageInfo.packageName.endsWith('dev') ||
             value.packageInfo.packageName.endsWith('development')) {

@@ -8,9 +8,6 @@ Future<ResponseModel> networkRequestExec({
 }) async {
   try {
     Response response;
-    if (kDebugMode) {
-      debugPrint('URL: $url');
-    }
     switch (method) {
       case HttpMethod.get:
         response = await get(Uri.parse(url), headers: headers);
