@@ -43,5 +43,18 @@ void main() {
       expect(file?.path.endsWith('.txt'), isTrue);
       await KingCache().clearLog;
     });
+
+    test('store & get logs with log levels', () async {
+      await KingCache().storeLog('Info log', level: LogLevel.info);
+      await KingCache().storeLog('Debug log', level: LogLevel.debug);
+      await KingCache().storeLog('Warning log', level: LogLevel.warning);
+      await KingCache().storeLog('Error log', level: LogLevel.error);
+      final logs = await KingCache().getLogs;
+      expect(logs.contains('INFO: Info log'), isTrue);
+      expect(logs.contains('DEBUG: Debug log'), isTrue);
+      expect(logs.contains('WARNING: Warning log'), isTrue);
+      expect(logs.contains('ERROR: Error log'), isTrue);
+      await KingCache().clearLog;
+    });
   });
 }
