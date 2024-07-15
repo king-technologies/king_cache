@@ -11,3 +11,11 @@ enum FilesTypes {
   /// The file associated with the enum value.
   final String file;
 }
+
+/// Enum representing different log levels.
+enum LogLevel {
+  debug,
+  info,
+  warning,
+  error,
+}

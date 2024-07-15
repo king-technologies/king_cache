@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../king_cache.dart';
 
-Future<void> storeLogExec(String log) async {
+Future<void> storeLogExec(String log, {LogLevel level = LogLevel.info}) async {
   if (kIsWeb) {
     return;
   }
@@ -11,7 +11,8 @@ Future<void> storeLogExec(String log) async {
   final datePart = date.toString().split(' ')[0];
   final timePart =
       '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
-  log = '$datePart $timePart: $log';
+  final logLevel = level.toString().split('.').last.toUpperCase();
+  log = '$datePart $timePart [$logLevel]: $log';
   if (file.existsSync()) {
     final data = file.readAsStringSync();
     if (data.isNotEmpty) {
