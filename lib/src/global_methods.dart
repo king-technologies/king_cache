@@ -4,7 +4,8 @@ bool get applicationDocumentSupport =>
     Platform.isAndroid ||
     Platform.isIOS ||
     Platform.isFuchsia ||
-    Platform.isMacOS;
+    Platform.isMacOS ||
+    kIsWeb;
 
 bool get firebaseCrashlyticsSupport =>
     (Platform.isAndroid || Platform.isIOS) && kReleaseMode;
@@ -141,7 +142,6 @@ Future<void> ktImmediateUpdate() async {
     debugPrint('Exception: $e');
   }
 }
-
 
 double getTextWidth(BuildContext context, String text, TextStyle? style) {
   final span = TextSpan(text: text, style: style);

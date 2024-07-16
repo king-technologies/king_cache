@@ -1,3 +1,4 @@
+import 'dart:html';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:king_cache/king_cache.dart';
 
@@ -55,6 +56,26 @@ void main() {
       expect(logs.contains('WARNING: Warning log'), isTrue);
       expect(logs.contains('ERROR: Error log'), isTrue);
       await KingCache().clearLog;
+    });
+
+    test('store & get logs in indexed db', () async {
+      await storeLogInIndexedDB('Call Json Place Holder API');
+      final db = await window.indexedDB!.open('logsDB', version: 1);
+      final transaction = db.transaction('logs', 'readonly');
+      final store = transaction.objectStore('logs');
+      final logs = await store.getAll();
+      expect(logs.any((log) => log['log'].contains('Call Json Place Holder API')), isTrue);
+      await KingCache().clearLog;
+    });
+
+    test('clear logs in indexed db', () async {
+      await storeLogInIndexedDB('Call Json Place Holder API');
+      final db = await window.indexedDB!.open('logsDB', version: 1);
+      final transaction = db.transaction('logs', 'readwrite');
+      final store = transaction.objectStore('logs');
+      await store.clear();
+      final logs = await store.getAll();
+      expect(logs.isEmpty, isTrue);
     });
   });
 }
