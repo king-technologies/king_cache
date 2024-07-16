@@ -229,4 +229,77 @@ void main() {
       expect(const Duration(seconds: 60).tohhmmORmmss, '01:00');
     });
   });
+
+  group('Global Methods tests', () {
+    test('applicationDocumentSupport', () {
+      expect(applicationDocumentSupport, isTrue);
+    });
+
+    test('firebaseCrashlyticsSupport', () {
+      expect(firebaseCrashlyticsSupport, isFalse);
+    });
+
+    test('windowManagerSupport', () {
+      expect(windowManagerSupport, isFalse);
+    });
+
+    test('isMobile', () {
+      expect(isMobile, isFalse);
+    });
+
+    test('isDesktop', () {
+      expect(isDesktop, isFalse);
+    });
+
+    test('inAppUpdateSupport', () {
+      expect(inAppUpdateSupport, isFalse);
+    });
+
+    test('githubApkReleaseSupport', () {
+      expect(githubApkReleaseSupport, isFalse);
+    });
+
+    test('ktLocallyAuthenticateUser', () async {
+      final result = await ktLocallyAuthenticateUser;
+      expect(result, isFalse);
+    });
+
+    test('ktRequestPermission', () async {
+      final result = await ktRequestPermission(Permission.camera);
+      expect(result, isFalse);
+    });
+
+    test('ktCheckForGithubReleaseUpdate', () async {
+      final result = await ktCheckForGithubReleaseUpdate(
+          'repo', 'owner', 'https://api.github.com/repos/owner/repo/releases');
+      expect(result.isUpdateAvailable, isFalse);
+    });
+
+    test('ktCheckForPlayStoreUpdate', () async {
+      final result = await ktCheckForPlayStoreUpdate;
+      expect(result, isFalse);
+    });
+
+    test('ktFlexibleUpdate', () async {
+      await ktFlexibleUpdate();
+    });
+
+    test('ktGetPackageInfo', () async {
+      final result = await ktGetPackageInfo;
+      expect(result.tag, isNotNull);
+      expect(result.packageInfo, isNotNull);
+    });
+
+    test('ktImmediateUpdate', () async {
+      await ktImmediateUpdate();
+    });
+
+    test('getTextWidth', () {
+      final context = TestWidgetsFlutterBinding.ensureInitialized().renderViewElement;
+      final text = 'Hello, World!';
+      final style = TextStyle(fontSize: 16);
+      final width = getTextWidth(context, text, style);
+      expect(width, isNotNull);
+    });
+  });
 }
