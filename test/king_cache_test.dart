@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:html';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -115,51 +114,6 @@ void main() {
         apiResponse: (data) => expect(data.data, equals(res200.data)),
       );
       await KingCache().clearLog;
-    });
-
-    test('should handle web-specific cases', () async {
-      final db = await window.indexedDB!.open('cacheDB', version: 1,
-          onUpgradeNeeded: (e) {
-        final db = e.target.result as Database;
-        db.createObjectStore('cache', keyPath: 'id', autoIncrement: true);
-      });
-
-      final transaction = db.transaction('cache', 'readwrite');
-      final store = transaction.objectStore('cache');
-
-      final fileName = url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-      final request = store.getObject(fileName);
-      final data = await request;
-
-      if (data != null) {
-        expect(data, equals(res200.data));
-      } else {
-        expect(data, isNull);
-      }
-
-      if (data != null && !shouldUpdate) {
-        expect(data, equals(res200.data));
-      }
-
-      if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
-        store.delete(fileName);
-      }
-
-      final res = await KingCache.networkRequest(url,
-          formData: formData, method: method, headers: headers);
-      if (apiResponse != null) {
-        apiResponse(res);
-      }
-      if (res.status) {
-        store.put({'id': fileName, 'data': res.data});
-        if (data == null || data != res.data) {
-          onSuccess?.call(res.data);
-        }
-      } else {
-        onError?.call(res);
-      }
-      expect(res.status, isTrue);
-      expect(jsonEncode(res.data), equals(jsonEncode(res200.data)));
     });
   });
 

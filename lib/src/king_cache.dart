@@ -249,7 +249,8 @@ class KingCache implements ICacheManager {
   /// await KingCache.storeLog('This is a log message');
   /// ```
   @override
-  Future<void> storeLog(String log) async => storeLogExec(log);
+  Future<void> storeLog(String log, {LogLevel level = LogLevel.info}) async =>
+      storeLogExec(log, level: level);
 
   /// Retrieves the log data from the local file system.
   /// Returns a Future that completes with a String containing the log data,
@@ -261,6 +262,10 @@ class KingCache implements ICacheManager {
   /// ```
   @override
   Future<String> get getLogs async {
+    if (kIsWeb) {
+      final storage = WebCacheManager();
+      return storage.getLogs;
+    }
     final file = await KingCache().localFile(FilesTypes.log.file);
     if (file.existsSync()) {
       final data = file.readAsStringSync();
@@ -325,7 +330,7 @@ class KingCache implements ICacheManager {
   /// File? logFile = await getLogFile();
   /// ```
   @override
-  Future<File?> get getLogFile async =>
+  Future<File> get getLogFile async =>
       KingCache().localFile(FilesTypes.log.file);
 
   /// Retrieves the cached data associated with the given [key].

@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:king_cache/king_cache.dart';
@@ -47,18 +46,19 @@ class _MyHomePageState extends State<MyHomePage> {
             children: <Widget>[
               TextButton(
                 onPressed: () async {
-                  await storeLogInIndexedDB('Call Json Place Holder API', level: LogLevel.info);
-                  await KingCache.cacheViaRest(
-                    'todos/1',
-                    onSuccess: (data) =>
-                        storeLogInIndexedDB('Response: $data', level: LogLevel.info),
-                    onError: (data) => debugPrint('On Error: $data'),
-                    apiResponse: (data) => debugPrint('Api Response: $data'),
-                    isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),
-                    shouldUpdate: true,
-                    expiryTime: DateTime.now().add(const Duration(hours: 1)),
-                  );
-                  await storeLogInIndexedDB('Call Json Place Holder API', level: LogLevel.info);
+                  await KingCache().storeLog('Call Json Place Holder API');
+                  // await KingCache.cacheViaRest(
+                  //   'todos/1',
+                  //   onSuccess: (data) =>f
+                  //       storeLogInIndexedDB('Response: $data', level: LogLevel.info),
+                  //   onError: (data) => debugPrint('On Error: $data'),
+                  //   apiResponse: (data) => debugPrint('Api Response: $data'),
+                  //   isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),
+                  //   shouldUpdate: true,
+                  //   expiryTime: DateTime.now().add(const Duration(hours: 1)),
+                  // );
+                  final x = await KingCache().getLogs;
+                  debugPrint(x);
                 },
                 child: const Text('Json Place Holder API'),
               ),

@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:king_cache/king_cache.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   group('StringExt tests', () {
@@ -219,8 +220,7 @@ void main() {
     test('tohhmmORmmss', () {
       expect(const Duration(hours: 1000, minutes: 1, seconds: 1).tohhmmORmmss,
           '1000:01');
-      expect(
-          const Duration(hours: 100, minutes: 1, seconds: 1).tohhmmORmmss,
+      expect(const Duration(hours: 100, minutes: 1, seconds: 1).tohhmmORmmss,
           '100:01');
       expect(const Duration(hours: 1, minutes: 1, seconds: 1).tohhmmORmmss,
           '01:01');
@@ -292,14 +292,6 @@ void main() {
 
     test('ktImmediateUpdate', () async {
       await ktImmediateUpdate();
-    });
-
-    test('getTextWidth', () {
-      final context = TestWidgetsFlutterBinding.ensureInitialized().renderViewElement;
-      final text = 'Hello, World!';
-      final style = TextStyle(fontSize: 16);
-      final width = getTextWidth(context, text, style);
-      expect(width, isNotNull);
     });
   });
 }

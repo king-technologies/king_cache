@@ -25,15 +25,16 @@ import 'package:url_launcher/url_launcher.dart';
 import 'src/cache_manager.dart';
 import 'src/cache_via_rest.dart';
 import 'src/log_methods.dart';
+import 'src/web_methods.dart';
 
 export 'src/cache_manager.dart';
 
 part 'src/custom_widget.dart';
 part 'src/enums.dart';
 part 'src/extensions/date_time_ext.dart';
-part 'src/extensions/string_ext.dart';
-part 'src/extensions/int_ext.dart';
 part 'src/extensions/duration_ext.dart';
+part 'src/extensions/int_ext.dart';
+part 'src/extensions/string_ext.dart';
 part 'src/global_methods.dart';
 part 'src/king_cache.dart';
 part 'src/network_request.dart';

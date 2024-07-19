@@ -19,3 +19,10 @@ enum LogLevel {
   warning,
   error,
 }
+
+/// Enum representing different types of indexed db keys.
+enum IndexedDbKeys {
+  logs,
+  cache,
+  apis,
+}

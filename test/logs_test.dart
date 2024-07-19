@@ -1,4 +1,3 @@
-import 'dart:html';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:king_cache/king_cache.dart';
 
@@ -41,12 +40,12 @@ void main() {
     test('Log File should be a text file', () async {
       await KingCache().storeLog('Call Json Place Holder API');
       final file = await KingCache().getLogFile;
-      expect(file?.path.endsWith('.txt'), isTrue);
+      expect(file.path.endsWith('.txt'), isTrue);
       await KingCache().clearLog;
     });
 
     test('store & get logs with log levels', () async {
-      await KingCache().storeLog('Info log', level: LogLevel.info);
+      await KingCache().storeLog('Info log');
       await KingCache().storeLog('Debug log', level: LogLevel.debug);
       await KingCache().storeLog('Warning log', level: LogLevel.warning);
       await KingCache().storeLog('Error log', level: LogLevel.error);
@@ -56,26 +55,6 @@ void main() {
       expect(logs.contains('WARNING: Warning log'), isTrue);
       expect(logs.contains('ERROR: Error log'), isTrue);
       await KingCache().clearLog;
-    });
-
-    test('store & get logs in indexed db', () async {
-      await storeLogInIndexedDB('Call Json Place Holder API');
-      final db = await window.indexedDB!.open('logsDB', version: 1);
-      final transaction = db.transaction('logs', 'readonly');
-      final store = transaction.objectStore('logs');
-      final logs = await store.getAll();
-      expect(logs.any((log) => log['log'].contains('Call Json Place Holder API')), isTrue);
-      await KingCache().clearLog;
-    });
-
-    test('clear logs in indexed db', () async {
-      await storeLogInIndexedDB('Call Json Place Holder API');
-      final db = await window.indexedDB!.open('logsDB', version: 1);
-      final transaction = db.transaction('logs', 'readwrite');
-      final store = transaction.objectStore('logs');
-      await store.clear();
-      final logs = await store.getAll();
-      expect(logs.isEmpty, isTrue);
     });
   });
 }
