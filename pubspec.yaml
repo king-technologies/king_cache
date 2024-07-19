@@ -2,7 +2,7 @@ name: king_cache
 description: "A Flutter package for caching api data to disk and improving app
   performance. It uses the http package to make api calls and use cache
   directory to cache data."
-version: 0.0.30
+version: 0.0.31
 homepage: "https://github.com/king-technologies/king_cache"
 
 environment:
@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^1.2.2
+  idb_shim: ^2.6.0+2
   in_app_update: ^4.2.3
   intl: ^0.19.0
   local_auth: ^2.2.0

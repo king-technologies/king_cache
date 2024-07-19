@@ -4,8 +4,6 @@ import '../king_cache.dart';
 
 Future<void> storeLogExec(String log, {LogLevel level = LogLevel.info}) async {
   if (kIsWeb) {
-    final storage = WebCacheManager();
-    await storage.storeLog(log);
     return;
   }
   final file = await KingCache().localFile(FilesTypes.log.file);

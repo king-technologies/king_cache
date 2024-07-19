@@ -263,8 +263,7 @@ class KingCache implements ICacheManager {
   @override
   Future<String> get getLogs async {
     if (kIsWeb) {
-      final storage = WebCacheManager();
-      return storage.getLogs;
+      return '';
     }
     final file = await KingCache().localFile(FilesTypes.log.file);
     if (file.existsSync()) {
@@ -289,8 +288,6 @@ class KingCache implements ICacheManager {
   @override
   Future<void> get clearLog async {
     if (kIsWeb) {
-      final storage = WebCacheManager();
-      await storage.clearLog;
       return;
     }
     final file = await KingCache().localFile(FilesTypes.log.file);
@@ -312,8 +309,6 @@ class KingCache implements ICacheManager {
   @override
   Future<void> get clearAllCache async {
     if (kIsWeb) {
-      final storage = WebCacheManager();
-      await storage.clearAllCache;
       return;
     }
     final path = applicationDocumentSupport
@@ -357,8 +352,7 @@ class KingCache implements ICacheManager {
   @override
   Future<String?> getCache(String key) async {
     if (kIsWeb) {
-      final storage = WebCacheManager();
-      return storage.getCache(key);
+      return null;
     }
     final file = await KingCache().localFile(key);
     if (file.existsSync()) {
@@ -386,8 +380,6 @@ class KingCache implements ICacheManager {
   @override
   Future<void> setCache(String key, String data) async {
     if (kIsWeb) {
-      final storage = WebCacheManager();
-      await storage.setCache(key, data);
       return;
     }
     final file = await KingCache().localFile(key);

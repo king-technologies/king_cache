@@ -151,3 +151,7 @@
 
 * Added Web Cache Manager
 * Added IndexedDB for Web
+
+## 0.0.31
+
+* Downgraded web to 0.5.0
