@@ -155,3 +155,7 @@
 ## 0.0.31
 
 * Downgraded web to 0.5.0
+
+## 0.0.32
+
+* Removed idm_shim

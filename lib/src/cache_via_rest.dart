@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 
 import '../king_cache.dart';
-import 'cache_via_rest_web.dart';
 
 Future<ResponseModel> cacheViaRestExec(
   String url, {
@@ -19,24 +18,7 @@ Future<ResponseModel> cacheViaRestExec(
   DateTime? expiryTime,
   String? cacheKey,
 }) async {
-  if (kIsWeb) {
-    return cacheViaRestExecWeb(
-      url,
-      onSuccess: onSuccess,
-      isCacheHit: isCacheHit,
-      onError: onError,
-      apiResponse: apiResponse,
-      method: method,
-      formData: formData,
-      headers: headers,
-      shouldUpdate: shouldUpdate,
-      expiryTime: expiryTime,
-      cacheKey: cacheKey,
-    );
-  }
-
   File? file;
-
   var data = '';
   final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
   file = await KingCache().localFile('$fileName.json');
