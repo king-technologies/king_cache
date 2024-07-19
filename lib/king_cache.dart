@@ -28,6 +28,7 @@ import 'src/log_methods.dart';
 import 'src/web_methods.dart';
 
 export 'src/cache_manager.dart';
+export 'src/web_methods.dart';
 
 part 'src/custom_widget.dart';
 part 'src/enums.dart';

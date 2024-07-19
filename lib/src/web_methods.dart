@@ -5,6 +5,18 @@ import 'package:web/web.dart';
 
 import '../king_cache.dart';
 
+abstract class ICacheManagerWeb {
+  Future<String> get getLogs;
+  Future<void> get clearLog;
+  Future<void> get clearAllCache;
+  Future<String?> getCache(String table);
+  Future<void> setCache(String key, String data);
+  Future<void> removeCache(String key);
+  Future<bool> hasCache(String key);
+  Future<List<String>> getCacheKeys();
+  Future<void> storeLog(String log, {LogLevel level = LogLevel.info});
+}
+
 class WebCacheManager implements ICacheManagerWeb {
   WebCacheManager();
   late IDBDatabase _db;
@@ -101,6 +113,7 @@ class WebCacheManager implements ICacheManagerWeb {
   }
 
   Future<void> clear(String table) async {
+    await init();
     final tx = _db.transaction([table.toJS].toJS, 'readwrite');
     final store = tx.objectStore(table);
     final req = store.clear();
@@ -108,6 +121,7 @@ class WebCacheManager implements ICacheManagerWeb {
   }
 
   Future<void> delete(String table, JSAny key) async {
+    await init();
     final tx = _db.transaction([table.toJS].toJS, 'readwrite');
     final store = tx.objectStore(table);
     final req = store.delete(key);
@@ -137,13 +151,11 @@ class WebCacheManager implements ICacheManagerWeb {
     if (db == null) {
       return '';
     }
-    final tx = db.transaction(['logs'.toJS].toJS, 'readonly');
-    final store = tx.objectStore('logs');
+    final tableName = IndexedDbKeys.logs.name;
+    final tx = db.transaction([tableName.toJS].toJS, 'readonly');
+    final store = tx.objectStore(tableName);
     final req = store.getAll();
     final r = await _waitRequest(req);
-    if (r == null) {
-      return '';
-    }
     return (r as List? ?? []).cast<String>().join('\n');
   }
 
@@ -168,16 +180,17 @@ class WebCacheManager implements ICacheManagerWeb {
   }
 
   @override
-  Future<String?> getCache(String tableName) async {
+  Future<String?> getCache(String key) async {
     await init();
+    final tableName = IndexedDbKeys.cache.name;
     final tx = _db.transaction([tableName.toJS].toJS, 'readonly');
     final store = tx.objectStore(tableName);
-    final req = store.getAll();
+    final req = store.get(key.toJS);
     final r = await _waitRequest(req);
     if (r == null) {
       return null;
     }
-    return (r as List? ?? []).cast<String>().join('\n');
+    return r.toString();
   }
 
   @override
@@ -193,9 +206,10 @@ class WebCacheManager implements ICacheManagerWeb {
   @override
   Future<void> removeCache(String key) async {
     await init();
-    final tx = _db.transaction(key as JSAny, 'readwrite');
-    final store = tx.objectStore(key);
-    final req = store.clear();
+    final tableName = IndexedDbKeys.cache.name;
+    final tx = _db.transaction([tableName.toJS].toJS, 'readwrite');
+    final store = tx.objectStore(tableName);
+    final req = store.delete(key.toJS);
     await _waitRequest(req);
   }
 
@@ -219,9 +233,6 @@ class WebCacheManager implements ICacheManagerWeb {
     final store = tx.objectStore(tableName);
     final req = store.getAllKeys();
     final r = await _waitRequest(req);
-    if (r == null) {
-      return [];
-    }
     return (r as List? ?? []).cast<String>();
   }
 

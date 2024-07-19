@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 
 import '../king_cache.dart';
-import 'web_methods.dart';
 
 Future<void> storeLogExec(String log, {LogLevel level = LogLevel.info}) async {
   if (kIsWeb) {

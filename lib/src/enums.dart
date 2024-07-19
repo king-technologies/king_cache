@@ -21,8 +21,4 @@ enum LogLevel {
 }
 
 /// Enum representing different types of indexed db keys.
-enum IndexedDbKeys {
-  logs,
-  cache,
-  apis,
-}
+enum IndexedDbKeys { logs, cache }

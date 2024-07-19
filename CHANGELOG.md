@@ -146,3 +146,8 @@
 ## 0.0.29
 
 * Added Extension Methods
+
+## 0.0.30
+
+* Added Web Cache Manager
+* Added IndexedDB for Web
