@@ -22,6 +22,12 @@ bool get inAppUpdateSupport => Platform.isAndroid && kReleaseMode;
 
 bool get githubApkReleaseSupport => Platform.isAndroid && kReleaseMode;
 
+bool get flutterLocalNotificationsSupport =>
+    Platform.isAndroid ||
+    Platform.isIOS ||
+    Platform.isMacOS ||
+    Platform.isLinux;
+
 Future<bool> get ktLocallyAuthenticateUser async {
   try {
     final auth = LocalAuthentication();

@@ -1,10 +1,16 @@
 part of '../king_cache.dart';
 
 class AppVersionTag extends StatefulWidget {
-  const AppVersionTag({super.key});
+  const AppVersionTag({super.key, this.style});
+  final TextStyle? style;
 
   @override
   State<AppVersionTag> createState() => _AppVersionTagState();
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<TextStyle?>('style', style));
+  }
 }
 
 class _AppVersionTagState extends State<AppVersionTag> {
@@ -46,8 +52,9 @@ class _AppVersionTagState extends State<AppVersionTag> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             'Design & Developed by King Tech\nMade with 💝 in India $tag',
-            style: theme.textTheme.headlineSmall!
-                .copyWith(color: theme.colorScheme.secondary, fontSize: 12),
+            style: widget.style ??
+                theme.textTheme.headlineSmall!
+                    .copyWith(color: theme.colorScheme.secondary, fontSize: 12),
             textAlign: TextAlign.center,
           ),
         ),

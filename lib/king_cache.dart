@@ -10,6 +10,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +30,7 @@ import 'src/log_methods.dart';
 
 export 'src/cache_manager.dart';
 
+part 'src/analytics_engine.dart';
 part 'src/custom_widget.dart';
 part 'src/enums.dart';
 part 'src/extensions/date_time_ext.dart';

@@ -267,6 +267,32 @@ class KingCache implements ICacheManager {
       // return storage.getLogs;
       return '';
     }
+    final info = DeviceInfoPlugin();
+    var deviceInfo = '';
+    if (kIsWeb) {
+      deviceInfo = 'Web: ${(await info.webBrowserInfo).data}';
+    } else if (Platform.isAndroid) {
+      deviceInfo = 'Android: ${(await info.androidInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isIOS) {
+      deviceInfo = 'iOS: ${(await info.iosInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isLinux) {
+      deviceInfo = 'Linux: ${(await info.linuxInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isMacOS) {
+      deviceInfo = 'MacOS: ${(await info.macOsInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isWindows) {
+      deviceInfo = 'Windows: ${(await info.windowsInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    }
+    await KingCache().storeLog('Device Info: $deviceInfo');
     final file = await KingCache().localFile(FilesTypes.log.file);
     if (file.existsSync()) {
       final data = file.readAsStringSync();
@@ -338,8 +364,35 @@ class KingCache implements ICacheManager {
   /// File? logFile = await getLogFile();
   /// ```
   @override
-  Future<File> get getLogFile async =>
-      KingCache().localFile(FilesTypes.log.file);
+  Future<File> get getLogFile async {
+    final info = DeviceInfoPlugin();
+    var deviceInfo = '';
+    if (kIsWeb) {
+      deviceInfo = 'Web: ${(await info.webBrowserInfo).data}';
+    } else if (Platform.isAndroid) {
+      deviceInfo = 'Android: ${(await info.androidInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isIOS) {
+      deviceInfo = 'iOS: ${(await info.iosInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isLinux) {
+      deviceInfo = 'Linux: ${(await info.linuxInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isMacOS) {
+      deviceInfo = 'MacOS: ${(await info.macOsInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    } else if (Platform.isWindows) {
+      deviceInfo = 'Windows: ${(await info.windowsInfo).data}';
+      deviceInfo +=
+          '${Platform.operatingSystem} ${Platform.version} ${Platform.localHostname} ${Platform.localeName}';
+    }
+    await KingCache().storeLog('Device Info: $deviceInfo');
+    return KingCache().localFile(FilesTypes.log.file);
+  }
 
   /// Retrieves the cached data associated with the given [key].
   /// Returns the cached data as a [String], or null if the data is not found.

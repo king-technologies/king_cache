@@ -10,6 +10,7 @@ analyzer:
     strict-raw-types: true
 
   errors:
+    avoid_classes_with_only_static_members: ignore
     close_sinks: ignore
     missing_required_param: error
     missing_return: error

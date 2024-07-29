@@ -159,3 +159,12 @@
 ## 0.0.32
 
 * Removed idm_shim
+
+## 0.0.33
+
+* Added flutter_local_notifications
+
+## 0.0.34
+
+* Added device_info_plus
+* Added Device info in logs
