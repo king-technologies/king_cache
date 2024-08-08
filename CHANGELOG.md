@@ -168,3 +168,7 @@
 
 * Added device_info_plus
 * Added Device info in logs
+
+## 0.0.35
+
+* Updated Device info to a separate method instead of in get all logs method

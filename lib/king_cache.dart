@@ -32,6 +32,7 @@ export 'src/cache_manager.dart';
 
 part 'src/analytics_engine.dart';
 part 'src/custom_widget.dart';
+part 'src/device_info.dart';
 part 'src/enums.dart';
 part 'src/extensions/date_time_ext.dart';
 part 'src/extensions/duration_ext.dart';
