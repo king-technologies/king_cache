@@ -53,6 +53,7 @@ Future<ResponseModel> networkRequestExec({
             : (res as Map<String, dynamic>)['message'].toString(),
         bodyBytes: response.bodyBytes,
         headers: responseHeaders,
+        data: res,
       );
     }
   } on TimeoutException catch (e) {

@@ -172,3 +172,7 @@
 ## 0.0.35
 
 * Updated Device info to a separate method instead of in get all logs method
+
+## 0.0.36
+
+* Added `getAndroidVersion` method to get the android version

@@ -163,3 +163,18 @@ double getTextWidth(BuildContext context, String text, TextStyle? style) {
   );
   return renderBoxes.last.right;
 }
+
+Color hexToColor(String code) =>
+    Color(int.parse(code.substring(1), radix: 16) + 0xFF000000);
+
+Future<void> openAppPageStore() async {
+  if (kIsWeb) {
+    return;
+  }
+  final x = await ktGetPackageInfo;
+  final appId = x.packageInfo.packageName;
+  final url = Uri.parse(Platform.isAndroid
+      ? 'market://details?id=$appId'
+      : 'https://apps.apple.com/app/id$appId');
+  await launchUrl(url, mode: LaunchMode.externalApplication);
+}

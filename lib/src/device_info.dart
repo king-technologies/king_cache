@@ -28,3 +28,14 @@ Future<String> getDeviceInfo() async {
   }
   return deviceInfo;
 }
+
+Future<int> getAndroidVersion() async {
+  if (kIsWeb) {
+    return 0;
+  }
+  if (!Platform.isAndroid) {
+    return 0;
+  }
+  final info =  DeviceInfoPlugin();
+  return int.tryParse((await info.androidInfo).version.release) ?? 0;
+}
