@@ -176,3 +176,7 @@
 ## 0.0.36
 
 * Added `getAndroidVersion` method to get the android version
+
+## 0.0.37
+
+* Updated Dependencies
