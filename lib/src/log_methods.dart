@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
-
-import '../king_cache.dart';
+part of '../king_cache.dart';
 
 Future<void> storeLogExec(String log, {LogLevel level = LogLevel.info}) async {
   if (kIsWeb) {
@@ -22,3 +20,11 @@ Future<void> storeLogExec(String log, {LogLevel level = LogLevel.info}) async {
     }
   }
 }
+
+final logger = Logger(
+  filter: DevelopmentFilter(),
+  level: Logger.level,
+  printer: PrettyPrinter(
+    lineLength: 200,
+  ),
+);

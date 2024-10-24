@@ -4,7 +4,7 @@ class ResponseModel {
   const ResponseModel({
     required this.status,
     required this.message,
-    required this.bodyBytes,
+    this.bodyBytes,
     this.data,
     this.statusCode = 200,
     this.headers = const {},
@@ -14,10 +14,9 @@ class ResponseModel {
   final int statusCode;
   final String message;
   final dynamic data;
-  final Uint8List bodyBytes;
+  final Uint8List? bodyBytes;
   final Map<String, String> headers;
 
   @override
-  String toString() =>
-      'Response: {status: $status, message: $message, data: $data, statusCode: $statusCode, headers: $headers}';
+  String toString() => 'Response: {status: $status, message: $message, data: $data, statusCode: $statusCode, headers: $headers}';
 }

@@ -180,3 +180,8 @@
 ## 0.0.37
 
 * Updated Dependencies
+
+## 0.0.38
+
+* Added Logger and Respective method
+* Updated Dependencies
