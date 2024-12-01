@@ -185,3 +185,16 @@
 
 * Added Logger and Respective method
 * Updated Dependencies
+
+## 0.0.39
+
+* Added prefixBaseUrl flag to add base url conditionally
+* Logger Method Updated to have default values only
+
+## 0.0.40
+
+* Added ktCreateGithubIssue method to create github issue from the app
+
+## 0.0.41
+
+* Dependencies Updated

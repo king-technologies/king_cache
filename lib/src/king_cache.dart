@@ -94,17 +94,20 @@ class KingCache implements ICacheManager {
   ///  .then((res) => print(res.data));
   /// ```
   /// This example performs a GET request to the given URL and prints the response data.
-  static Future<ResponseModel> networkRequest(String url,
-      {Map<String, dynamic>? formData,
-      HttpMethod method = HttpMethod.get,
-      Map<String, String> headers = const {}}) async {
+  static Future<ResponseModel> networkRequest(
+    String url, {
+    Map<String, dynamic>? formData,
+    HttpMethod method = HttpMethod.get,
+    Map<String, String> headers = const {},
+    bool prefixBaseUrl = true,
+  }) async {
     if (formData == null || formData.isEmpty) {
       formData = newFormData;
     } else {
       formData.addAll(newFormData);
     }
 
-    if (baseUrl.isNotEmpty) {
+    if (baseUrl.isNotEmpty && prefixBaseUrl) {
       url = baseUrl + url;
     }
 

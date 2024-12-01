@@ -7,8 +7,7 @@ Future<void> storeLogExec(String log, {LogLevel level = LogLevel.info}) async {
   final file = await KingCache().localFile(FilesTypes.log.file);
   final date = DateTime.now().toLocal();
   final datePart = date.toString().split(' ')[0];
-  final timePart =
-      '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
+  final timePart = '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}:${date.second.toString().padLeft(2, '0')}';
   final logLevel = level.toString().split('.').last.toUpperCase();
   log = '$datePart $timePart [$logLevel]: $log';
   if (file.existsSync()) {
@@ -21,10 +20,4 @@ Future<void> storeLogExec(String log, {LogLevel level = LogLevel.info}) async {
   }
 }
 
-final logger = Logger(
-  filter: DevelopmentFilter(),
-  level: Logger.level,
-  printer: PrettyPrinter(
-    lineLength: 200,
-  ),
-);
+final logger = Logger();

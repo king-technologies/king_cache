@@ -178,3 +178,41 @@ Future<void> openAppPageStore() async {
       : 'https://apps.apple.com/app/id$appId');
   await launchUrl(url, mode: LaunchMode.externalApplication);
 }
+
+Future<ResponseModel> ktCreateGitHubIssue({
+  required String owner,
+  required String repo,
+  required String title,
+  required String body,
+  required String url,
+}) async {
+  final httpClient = HttpClient();
+  ResponseModel res;
+  try {
+    final request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('Content-Type', 'application/x-www-form-urlencoded');
+    request.write(Uri(queryParameters: {
+      'owner': owner,
+      'repo': repo,
+      'title': title,
+      'body': body,
+    }).query);
+    final response = await request.close();
+    res = ResponseModel(
+      statusCode: response.statusCode,
+      status: response.statusCode < 400,
+      message: 'Success',
+      bodyBytes: Uint8List(0),
+    );
+  } on Exception catch (e) {
+    res = ResponseModel(
+      message: e.toString(),
+      status: false,
+      statusCode: 408,
+      bodyBytes: Uint8List(0),
+    );
+  } finally {
+    httpClient.close();
+  }
+  return res;
+}
