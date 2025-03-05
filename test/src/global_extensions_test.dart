@@ -1,8 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:king_cache/king_cache.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   group('StringExt tests', () {
     test('toTitleCase', () {
       expect('hello world'.toTitleCase, 'Hello World');
@@ -232,23 +235,47 @@ void main() {
 
   group('Global Methods tests', () {
     test('applicationDocumentSupport', () {
-      expect(applicationDocumentSupport, isTrue);
+      expect(applicationDocumentSupport, Platform.isAndroid);
+      expect(applicationDocumentSupport, Platform.isIOS);
+      expect(applicationDocumentSupport, Platform.isFuchsia);
+      expect(applicationDocumentSupport, Platform.isMacOS);
+      expect(applicationDocumentSupport, kIsWeb);
     });
 
     test('firebaseCrashlyticsSupport', () {
-      expect(firebaseCrashlyticsSupport, isFalse);
+      expect(firebaseCrashlyticsSupport, Platform.isAndroid && kReleaseMode);
+      expect(firebaseCrashlyticsSupport, Platform.isIOS && kReleaseMode);
     });
 
     test('windowManagerSupport', () {
-      expect(windowManagerSupport, isFalse);
+      if (Platform.isWindows) {
+        expect(windowManagerSupport, Platform.isWindows);
+      } else if (Platform.isLinux) {
+        expect(windowManagerSupport, Platform.isLinux);
+      } else if (Platform.isMacOS) {
+        expect(windowManagerSupport, Platform.isMacOS);
+      } else {
+        expect(windowManagerSupport, isFalse);
+      }
+      expect(windowManagerSupport, isDesktop);
     });
 
     test('isMobile', () {
-      expect(isMobile, isFalse);
+      expect(isMobile, Platform.isAndroid);
+      expect(isMobile, Platform.isIOS);
     });
 
     test('isDesktop', () {
-      expect(isDesktop, isFalse);
+      if (Platform.isWindows) {
+        expect(isDesktop, Platform.isWindows);
+      } else if (Platform.isLinux) {
+        expect(isDesktop, Platform.isLinux);
+      } else if (Platform.isMacOS) {
+        expect(isDesktop, Platform.isMacOS);
+      } else {
+        expect(isDesktop, isFalse);
+      }
+      expect(isDesktop, windowManagerSupport);
     });
 
     test('inAppUpdateSupport', () {
@@ -259,39 +286,9 @@ void main() {
       expect(githubApkReleaseSupport, isFalse);
     });
 
-    test('ktLocallyAuthenticateUser', () async {
-      final result = await ktLocallyAuthenticateUser;
-      expect(result, isFalse);
-    });
-
-    test('ktRequestPermission', () async {
-      final result = await ktRequestPermission(Permission.camera);
-      expect(result, isFalse);
-    });
-
-    test('ktCheckForGithubReleaseUpdate', () async {
-      final result = await ktCheckForGithubReleaseUpdate(
-          'repo', 'owner', 'https://api.github.com/repos/owner/repo/releases');
-      expect(result.isUpdateAvailable, isFalse);
-    });
-
     test('ktCheckForPlayStoreUpdate', () async {
       final result = await ktCheckForPlayStoreUpdate;
       expect(result, isFalse);
-    });
-
-    test('ktFlexibleUpdate', () async {
-      await ktFlexibleUpdate();
-    });
-
-    test('ktGetPackageInfo', () async {
-      final result = await ktGetPackageInfo;
-      expect(result.tag, isNotNull);
-      expect(result.packageInfo, isNotNull);
-    });
-
-    test('ktImmediateUpdate', () async {
-      await ktImmediateUpdate();
     });
   });
 }

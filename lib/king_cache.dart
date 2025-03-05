@@ -15,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:intl/intl.dart';
-import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';

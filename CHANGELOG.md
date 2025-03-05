@@ -202,3 +202,8 @@
 ## 0.0.42
 
 * Dependencies Updated
+
+## 0.0.43
+
+* Removed Local Auth as it's not maintained any more
+* Dependencies Updated
