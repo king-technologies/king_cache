@@ -201,3 +201,18 @@ Future<ResponseModel> ktCreateGitHubIssue({
   }
   return res;
 }
+
+Future<bool> get ktLocallyAuthenticateUser async {
+  try {
+    final auth = LocalAuthentication();
+    final isAuthAvailable = await auth.canCheckBiometrics;
+    if (!isAuthAvailable) {
+      return false;
+    }
+    return await auth.authenticate(
+        localizedReason: 'Please authenticate to use the app');
+  } on PlatformException catch (e) {
+    debugPrint(e.toString());
+    return true;
+  }
+}

@@ -207,3 +207,7 @@
 
 * Removed Local Auth as it's not maintained any more
 * Dependencies Updated
+
+## 0.0.44
+
+* Added Local Auth as Technical debt
