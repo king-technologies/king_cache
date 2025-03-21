@@ -211,3 +211,7 @@
 ## 0.0.44
 
 * Added Local Auth as Technical debt
+
+## 0.0.45
+
+* Dependencies Updated
