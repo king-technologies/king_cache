@@ -215,3 +215,7 @@
 ## 0.0.45
 
 * Dependencies Updated
+
+## 0.0.46
+
+* Fixed Device Info Plus Dependency issue
