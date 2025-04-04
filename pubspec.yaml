@@ -2,7 +2,7 @@ name: king_cache
 description: "A Flutter package for caching api data to disk and improving app
   performance. It uses the http package to make api calls and use cache
   directory to cache data."
-version: 0.0.46
+version: 0.0.47
 homepage: "https://github.com/king-technologies/king_cache"
 
 environment:
@@ -11,7 +11,7 @@ environment:
 
 dependencies:
   device_info_plus: ^11.3.0
-  firebase_analytics: ^11.4.4
+  firebase_analytics: ^11.4.5
   flutter:
     sdk: flutter
   http: ^1.3.0

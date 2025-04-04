@@ -1,9 +1,9 @@
 # This is a generated file; do not edit or check into version control.
 device_info_plus=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\device_info_plus-11.3.0\\
-firebase_analytics=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_analytics-11.4.4\\
-firebase_analytics_web=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_analytics_web-0.5.10+10\\
-firebase_core=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_core-3.12.1\\
-firebase_core_web=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_core_web-2.21.1\\
+firebase_analytics=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_analytics-11.4.5\\
+firebase_analytics_web=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_analytics_web-0.5.10+11\\
+firebase_core=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_core-3.13.0\\
+firebase_core_web=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\firebase_core_web-2.22.0\\
 flutter_plugin_android_lifecycle=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\flutter_plugin_android_lifecycle-2.0.27\\
 in_app_update=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\in_app_update-4.2.3\\
 local_auth=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\local_auth-2.3.0\\
@@ -23,7 +23,7 @@ permission_handler_html=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hoste
 permission_handler_windows=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\permission_handler_windows-0.2.1\\
 url_launcher=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher-6.3.1\\
 url_launcher_android=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_android-6.3.15\\
-url_launcher_ios=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_ios-6.3.2\\
+url_launcher_ios=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_ios-6.3.3\\
 url_launcher_linux=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_linux-3.2.1\\
 url_launcher_macos=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_macos-3.2.2\\
 url_launcher_web=C:\\Users\\Rohit Jain\\AppData\\Local\\Pub\\Cache\\hosted\\pub.dev\\url_launcher_web-2.4.0\\
