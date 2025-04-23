@@ -223,3 +223,13 @@
 ## 0.0.47
 
 * Dependencies Updated
+
+## 0.0.48
+
+* Updated Date Time Extensions
+* Added More Tests
+* Dependencies Updated
+
+## 0.0.49
+
+* Dependencies Updated

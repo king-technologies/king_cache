@@ -38,13 +38,18 @@ extension DateTimeExt on DateTime {
   /// ```
   String get toMilitaryDateTime {
     final now = DateTime.now();
+
+    // Skip showing time if it's midnight (00:00)
+    final isMidnight = hour == 0 && minute == 0;
+    final timeStr = isMidnight ? '' : ' $toHHmm';
+
     if (now.day == day && now.month == month && now.year == year) {
-      return toHHmm;
+      return timeStr.isEmpty ? toddMMM : timeStr.trim();
     }
     if (now.year == year) {
-      return toddMMMHHmm;
+      return toddMMM + timeStr;
     }
-    return toddMMMyyHHmm;
+    return toddMMMyy + timeStr;
   }
 
   /// Converts the DateTime to a formatted clock time based on current time comparison:
@@ -59,13 +64,15 @@ extension DateTimeExt on DateTime {
   /// ```
   String get toClockTime {
     final now = DateTime.now();
+    final isMidnight = hour == 0 && minute == 0;
+    final timeStr = isMidnight ? '' : ' $tohhmma';
     if (now.day == day && now.month == month && now.year == year) {
-      return tohhmma;
+      return timeStr.isEmpty ? toddMMM : timeStr.trim();
     }
     if (now.year == year) {
-      return toddMMMhhmma;
+      return toddMMM + timeStr;
     }
-    return toddMMMyyhhmma;
+    return toddMMMyy + timeStr;
   }
 
   /// Returns the time formatted as 'HH:mm', e.g., '12:00'.
@@ -165,5 +172,29 @@ extension DateTimeExt on DateTime {
   /// ```dart
   /// final dayOfMonth = DateTime.now().todM; // Outputs: '07'
   /// ```
-  String get todM => DateFormat('dd').format(this);
+  String get todd => DateFormat('dd').format(this);
+
+  /// Returns the month formatted as 'ddMMMyy'.
+  ///
+  /// Example:
+  /// ```dart
+  /// final monthYear = DateTime.now().todMMMyy; // Outputs: '07 Jul 23'
+  /// /// ```
+  String get toddMMMyy => DateFormat('dd MMM yy').format(this);
+
+  /// Returns the month formatted as 'M'.
+  ///
+  /// Example:
+  /// ```dart
+  /// final month = DateTime.now().todM; // Outputs: 'Apr'
+  ///
+  String get toMMM => DateFormat('MMM').format(this);
+
+  /// Returns the year formatted as 'yy'.
+  /// /// Example:
+  /// ```dart
+  /// final year = DateTime.now().toyy; // Outputs: '23'
+  /// /// ```
+  /// String get toyy => DateFormat('yy').format(this);
+  String get toyy => DateFormat('yy').format(this);
 }

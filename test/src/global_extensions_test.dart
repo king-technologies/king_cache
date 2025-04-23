@@ -69,25 +69,25 @@ void main() {
       expect(now.toMilitaryDateTime, now.toHHmm);
 
       final earlierThisMonth = DateTime(now.year, now.month, now.day - 1);
-      expect(earlierThisMonth.toMilitaryDateTime, earlierThisMonth.toddMMMHHmm);
+      expect(earlierThisMonth.toMilitaryDateTime, earlierThisMonth.toddMMM);
 
       final earlierThisYear = DateTime(now.year, now.month - 1, now.day);
-      expect(earlierThisYear.toMilitaryDateTime, earlierThisYear.toddMMMHHmm);
+      expect(earlierThisYear.toMilitaryDateTime, earlierThisYear.toddMMM);
 
       final lastYear = DateTime(now.year - 1, now.month, now.day);
-      expect(lastYear.toMilitaryDateTime, lastYear.toddMMMyyHHmm);
+      expect(lastYear.toMilitaryDateTime, lastYear.toddMMMyy);
 
       final lastDayOfYear = DateTime(now.year - 1, 12, 31, 23, 59);
       expect(lastDayOfYear.toMilitaryDateTime, lastDayOfYear.toddMMMyyHHmm);
 
       final firstDayOfYear = DateTime(now.year);
-      expect(firstDayOfYear.toMilitaryDateTime, firstDayOfYear.toddMMMHHmm);
+      expect(firstDayOfYear.toMilitaryDateTime, firstDayOfYear.toddMMM);
 
       final leapYearDate = DateTime(2020, 2, 29, 12);
       expect(leapYearDate.toMilitaryDateTime, leapYearDate.toddMMMyyHHmm);
 
       final midnightToday = DateTime(now.year, now.month, now.day);
-      expect(midnightToday.toMilitaryDateTime, midnightToday.toHHmm);
+      expect(midnightToday.toMilitaryDateTime, midnightToday.toddMMM);
 
       final noonToday = DateTime(now.year, now.month, now.day, 12);
       expect(noonToday.toMilitaryDateTime, noonToday.toHHmm);
@@ -103,21 +103,20 @@ void main() {
       expect(dstDate.toMilitaryDateTime, dstDate.toddMMMyyHHmm);
 
       final futureDateThisYear = DateTime(now.year, now.month + 1, now.day);
-      expect(futureDateThisYear.toMilitaryDateTime,
-          futureDateThisYear.toddMMMHHmm);
+      expect(futureDateThisYear.toMilitaryDateTime, futureDateThisYear.toddMMM);
 
       final futureDateNextYear = DateTime(now.year + 1, now.month, now.day);
-      expect(futureDateNextYear.toMilitaryDateTime,
-          futureDateNextYear.toddMMMyyHHmm);
+      expect(
+          futureDateNextYear.toMilitaryDateTime, futureDateNextYear.toddMMMyy);
 
       final farFutureDate = DateTime(now.year + 10, now.month, now.day);
-      expect(farFutureDate.toMilitaryDateTime, farFutureDate.toddMMMyyHHmm);
+      expect(farFutureDate.toMilitaryDateTime, farFutureDate.toddMMMyy);
 
       final pastDateThisYear = DateTime(now.year, now.month - 1, now.day);
-      expect(pastDateThisYear.toMilitaryDateTime, pastDateThisYear.toddMMMHHmm);
+      expect(pastDateThisYear.toMilitaryDateTime, pastDateThisYear.toddMMM);
 
       final farPastDate = DateTime(now.year - 10, now.month, now.day);
-      expect(farPastDate.toMilitaryDateTime, farPastDate.toddMMMyyHHmm);
+      expect(farPastDate.toMilitaryDateTime, farPastDate.toddMMMyy);
     });
 
     test('toClockTime', () {
@@ -125,25 +124,25 @@ void main() {
       expect(now.toClockTime, now.tohhmma);
 
       final earlierThisMonth = DateTime(now.year, now.month, now.day - 1);
-      expect(earlierThisMonth.toClockTime, earlierThisMonth.toddMMMhhmma);
+      expect(earlierThisMonth.toClockTime, earlierThisMonth.toddMMM);
 
       final earlierThisYear = DateTime(now.year, now.month - 1, now.day);
-      expect(earlierThisYear.toClockTime, earlierThisYear.toddMMMhhmma);
+      expect(earlierThisYear.toClockTime, earlierThisYear.toddMMM);
 
       final lastYear = DateTime(now.year - 1, now.month, now.day);
-      expect(lastYear.toClockTime, lastYear.toddMMMyyhhmma);
+      expect(lastYear.toClockTime, lastYear.toddMMMyy);
 
       final lastDayOfYear = DateTime(now.year - 1, 12, 31, 23, 59);
       expect(lastDayOfYear.toClockTime, lastDayOfYear.toddMMMyyhhmma);
 
       final firstDayOfYear = DateTime(now.year);
-      expect(firstDayOfYear.toClockTime, firstDayOfYear.toddMMMhhmma);
+      expect(firstDayOfYear.toClockTime, firstDayOfYear.toddMMM);
 
       final leapYearDate = DateTime(2020, 2, 29, 12);
       expect(leapYearDate.toClockTime, leapYearDate.toddMMMyyhhmma);
 
       final midnightToday = DateTime(now.year, now.month, now.day);
-      expect(midnightToday.toClockTime, midnightToday.tohhmma);
+      expect(midnightToday.toClockTime, midnightToday.toddMMM);
 
       final noonToday = DateTime(now.year, now.month, now.day, 12);
       expect(noonToday.toClockTime, noonToday.tohhmma);
@@ -159,19 +158,19 @@ void main() {
       expect(dstDate.toClockTime, dstDate.toddMMMyyhhmma);
 
       final futureDateThisYear = DateTime(now.year, now.month + 1, now.day);
-      expect(futureDateThisYear.toClockTime, futureDateThisYear.toddMMMhhmma);
+      expect(futureDateThisYear.toClockTime, futureDateThisYear.toddMMM);
 
       final futureDateNextYear = DateTime(now.year + 1, now.month, now.day);
-      expect(futureDateNextYear.toClockTime, futureDateNextYear.toddMMMyyhhmma);
+      expect(futureDateNextYear.toClockTime, futureDateNextYear.toddMMMyy);
 
       final farFutureDate = DateTime(now.year + 10, now.month, now.day);
-      expect(farFutureDate.toClockTime, farFutureDate.toddMMMyyhhmma);
+      expect(farFutureDate.toClockTime, farFutureDate.toddMMMyy);
 
       final pastDateThisYear = DateTime(now.year, now.month - 1, now.day);
-      expect(pastDateThisYear.toClockTime, pastDateThisYear.toddMMMhhmma);
+      expect(pastDateThisYear.toClockTime, pastDateThisYear.toddMMM);
 
       final farPastDate = DateTime(now.year - 10, now.month, now.day);
-      expect(farPastDate.toClockTime, farPastDate.toddMMMyyhhmma);
+      expect(farPastDate.toClockTime, farPastDate.toddMMMyy);
     });
 
     test('ddMMyyHHmma', () {
@@ -194,8 +193,8 @@ void main() {
       expect(dateTime.toddMMMM, '20 December');
     });
 
-    test('todM', () {
-      expect(dateTime.todM, '20');
+    test('todd', () {
+      expect(dateTime.todd, '20');
     });
   });
 
