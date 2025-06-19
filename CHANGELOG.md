@@ -233,3 +233,7 @@
 ## 0.0.49
 
 * Dependencies Updated
+
+## 0.0.50
+
+* Dependencies Updated
