@@ -470,4 +470,19 @@ class KingCache implements ICacheManager {
     }
     return keys;
   }
+
+  @override
+  Future<void> clearOldLogs({int? maxLogCount = 1000}) async {
+    if (kIsWeb) {
+      return;
+    }
+    final file = await KingCache().localFile(FilesTypes.log.file);
+    if (file.existsSync()) {
+      file.writeAsStringSync(file
+          .readAsStringSync()
+          .split('\n')
+          .take(maxLogCount ?? 1000)
+          .join('\n'));
+    }
+  }
 }

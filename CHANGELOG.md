@@ -237,3 +237,7 @@
 ## 0.0.50
 
 * Dependencies Updated
+
+## 0.0.51
+
+* Added ClearOldLogs Methods

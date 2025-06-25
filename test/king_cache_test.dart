@@ -214,5 +214,32 @@ void main() {
       await KingCache().clearLog;
       await KingCache().clearAllCache;
     });
+
+    test('Clear Old Logs', () async {
+      await KingCache().clearLog;
+      await KingCache().clearAllCache;
+      final getLogs = await KingCache().getLogs;
+      expect(getLogs, isNotNull);
+      expect(getLogs, '');
+      expect(getLogs.isEmpty, isTrue);
+      final twoThousandLogs = List.generate(2000, (index) => 'Log $index');
+      await KingCache().storeLog(
+        twoThousandLogs.join('\n'),
+      );
+      final res = await KingCache().getLogs;
+      expect(res, isNotNull);
+      expect(res.isNotEmpty, isTrue);
+      expect(res.split('\n').length, equals(2000));
+      expect(res, isA<String>());
+      await KingCache().clearOldLogs();
+      final res2 = await KingCache().getLogs;
+      expect(res2, isNotNull);
+      expect(res2.isNotEmpty, isTrue);
+      expect(res2.split('\n').length, equals(1000));
+      expect(res2, isA<String>());
+      expect(res2, isNotEmpty);
+      await KingCache().clearLog;
+      await KingCache().clearAllCache;
+    });
   });
 }

@@ -14,4 +14,5 @@ abstract class ICacheManager {
   Future<bool> hasCache(String key);
   Future<List<String>> getCacheKeys();
   Future<void> storeLog(String log, {LogLevel level = LogLevel.info});
+  Future<void> clearOldLogs({int? maxLogCount = 1000});
 }
