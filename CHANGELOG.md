@@ -241,3 +241,7 @@
 ## 0.0.51
 
 * Added ClearOldLogs Methods
+
+## 0.0.52
+
+* Packages Updated
