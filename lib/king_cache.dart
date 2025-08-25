@@ -42,3 +42,4 @@ part 'src/king_cache.dart';
 part 'src/log_methods.dart';
 part 'src/network_request.dart';
 part 'src/response_model.dart';
+part 'src/tech_book_models.dart';

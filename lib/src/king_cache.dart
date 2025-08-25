@@ -11,7 +11,7 @@ enum HttpMethod { get, post, put, delete, patch }
 /// It provides a method [cacheViaRest] to store cache data via a REST API endpoint.
 /// The cache data can be retrieved using by calling the [cacheViaRest] method with the same API endpoint.
 /// The class also provides methods to clear the cache and get the log file.
-class KingCache implements ICacheManager {
+class KingCache implements ICacheManager, IMarkdownCacheManager {
   /// Returns the singleton instance of KingCache.
   ///
   /// The [KingCache] class follows the singleton design pattern, meaning that there can only be one instance of it.
@@ -508,5 +508,352 @@ class KingCache implements ICacheManager {
           .take(maxLogCount ?? 1000)
           .join('\n'));
     }
+  }
+
+  // Markdown caching methods implementation
+
+  /// Caches markdown content with optional expiry date.
+  ///
+  /// The [key] parameter specifies the unique identifier for the markdown content.
+  /// The [markdownContent] parameter contains the raw markdown text to be cached.
+  /// The optional [expiryDate] parameter sets when the cached content should expire.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await KingCache().cacheMarkdown(
+  ///   'chapter-1',
+  ///   '# Chapter 1\n\nThis is the first chapter...',
+  ///   expiryDate: DateTime.now().add(Duration(days: 7)),
+  /// );
+  /// ```
+  @override
+  Future<void> cacheMarkdown(String key, String markdownContent, {DateTime? expiryDate}) async {
+    final content = MarkdownContent(
+      content: markdownContent,
+      cacheKey: key,
+      title: MarkdownContent.extractTitle(markdownContent),
+      headers: MarkdownContent.extractHeaders(markdownContent),
+      cachedDate: DateTime.now(),
+      expiryDate: expiryDate,
+    );
+
+    final cacheKey = 'markdown_$key';
+    if (kIsWeb) {
+      final storage = WebCacheManager();
+      await storage.setCache(cacheKey, jsonEncode(content.toJson()));
+    } else {
+      final file = await localFile('$cacheKey.json');
+      file.writeAsStringSync(jsonEncode(content.toJson()));
+    }
+    
+    await storeLog('Cached markdown content with key: $key', level: LogLevel.info);
+  }
+
+  /// Retrieves cached markdown content by key.
+  ///
+  /// Returns the [MarkdownContent] if found and not expired, otherwise returns null.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final content = await KingCache().getMarkdownContent('chapter-1');
+  /// if (content != null && !content.isExpired) {
+  ///   print(content.title);
+  ///   print(content.content);
+  /// }
+  /// ```
+  @override
+  Future<MarkdownContent?> getMarkdownContent(String key) async {
+    final cacheKey = 'markdown_$key';
+    String? data;
+    
+    if (kIsWeb) {
+      final storage = WebCacheManager();
+      data = await storage.getCache(cacheKey);
+    } else {
+      final file = await localFile('$cacheKey.json');
+      if (file.existsSync()) {
+        data = file.readAsStringSync();
+      }
+    }
+
+    if (data != null && data.isNotEmpty) {
+      try {
+        final content = MarkdownContent.fromJson(jsonDecode(data));
+        if (content.isExpired) {
+          await removeMarkdownContent(key);
+          return null;
+        }
+        return content;
+      } catch (e) {
+        await storeLog('Error parsing markdown content for key $key: $e', level: LogLevel.error);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /// Removes cached markdown content by key.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await KingCache().removeMarkdownContent('chapter-1');
+  /// ```
+  @override
+  Future<void> removeMarkdownContent(String key) async {
+    final cacheKey = 'markdown_$key';
+    if (kIsWeb) {
+      final storage = WebCacheManager();
+      await storage.removeCache(cacheKey);
+    } else {
+      final file = await localFile('$cacheKey.json');
+      if (file.existsSync()) {
+        file.deleteSync();
+      }
+    }
+    
+    await storeLog('Removed markdown content with key: $key', level: LogLevel.info);
+  }
+
+  /// Checks if markdown content exists for the given key.
+  ///
+  /// Returns true if the content exists and is not expired, false otherwise.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final exists = await KingCache().hasMarkdownContent('chapter-1');
+  /// ```
+  @override
+  Future<bool> hasMarkdownContent(String key) async {
+    final content = await getMarkdownContent(key);
+    return content != null && !content.isExpired;
+  }
+
+  /// Gets all markdown cache keys.
+  ///
+  /// Returns a list of all markdown content keys that are currently cached.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final keys = await KingCache().getMarkdownKeys();
+  /// for (final key in keys) {
+  ///   print('Cached markdown: $key');
+  /// }
+  /// ```
+  @override
+  Future<List<String>> getMarkdownKeys() async {
+    final allKeys = await getCacheKeys();
+    return allKeys
+        .where((key) => key.startsWith('markdown_'))
+        .map((key) => key.substring(9)) // Remove 'markdown_' prefix
+        .toList();
+  }
+
+  /// Caches tech book metadata.
+  ///
+  /// The [metadata] parameter contains all the information about the tech book
+  /// including title, author, chapters, etc.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final metadata = TechBookMetadata(
+  ///   title: 'Flutter Development Guide',
+  ///   author: 'John Doe',
+  ///   version: '1.0',
+  ///   description: 'A comprehensive guide to Flutter development',
+  ///   chapters: [],
+  ///   cachedDate: DateTime.now(),
+  /// );
+  /// await KingCache().cacheTechBook(metadata);
+  /// ```
+  @override
+  Future<void> cacheTechBook(TechBookMetadata metadata) async {
+    final cacheKey = 'techbook_${metadata.title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}';
+    
+    if (kIsWeb) {
+      final storage = WebCacheManager();
+      await storage.setCache(cacheKey, jsonEncode(metadata.toJson()));
+    } else {
+      final file = await localFile('$cacheKey.json');
+      file.writeAsStringSync(jsonEncode(metadata.toJson()));
+    }
+    
+    await storeLog('Cached tech book: ${metadata.title}', level: LogLevel.info);
+  }
+
+  /// Retrieves tech book metadata by title.
+  ///
+  /// Returns the [TechBookMetadata] if found, otherwise returns null.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final book = await KingCache().getTechBook('Flutter Development Guide');
+  /// if (book != null) {
+  ///   print('Author: ${book.author}');
+  ///   print('Chapters: ${book.chapters.length}');
+  /// }
+  /// ```
+  @override
+  Future<TechBookMetadata?> getTechBook(String title) async {
+    final cacheKey = 'techbook_${title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}';
+    String? data;
+    
+    if (kIsWeb) {
+      final storage = WebCacheManager();
+      data = await storage.getCache(cacheKey);
+    } else {
+      final file = await localFile('$cacheKey.json');
+      if (file.existsSync()) {
+        data = file.readAsStringSync();
+      }
+    }
+
+    if (data != null && data.isNotEmpty) {
+      try {
+        return TechBookMetadata.fromJson(jsonDecode(data));
+      } catch (e) {
+        await storeLog('Error parsing tech book metadata for $title: $e', level: LogLevel.error);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  /// Caches a tech book chapter's content.
+  ///
+  /// The [bookTitle] parameter identifies which book this chapter belongs to.
+  /// The [chapterId] parameter identifies the specific chapter.
+  /// The [markdownContent] parameter contains the chapter's markdown content.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await KingCache().cacheTechBookChapter(
+  ///   'Flutter Development Guide',
+  ///   'chapter-1',
+  ///   '# Getting Started\n\nWelcome to Flutter...',
+  /// );
+  /// ```
+  @override
+  Future<void> cacheTechBookChapter(String bookTitle, String chapterId, String markdownContent) async {
+    final chapterKey = 'techbook_${bookTitle.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}_chapter_$chapterId';
+    await cacheMarkdown(chapterKey, markdownContent);
+    
+    await storeLog('Cached chapter $chapterId for book: $bookTitle', level: LogLevel.info);
+  }
+
+  /// Retrieves a tech book chapter's content.
+  ///
+  /// Returns the [MarkdownContent] of the chapter if found, otherwise returns null.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final chapter = await KingCache().getTechBookChapter('Flutter Development Guide', 'chapter-1');
+  /// if (chapter != null) {
+  ///   print(chapter.title);
+  ///   print(chapter.content);
+  /// }
+  /// ```
+  @override
+  Future<MarkdownContent?> getTechBookChapter(String bookTitle, String chapterId) async {
+    final chapterKey = 'techbook_${bookTitle.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}_chapter_$chapterId';
+    return await getMarkdownContent(chapterKey);
+  }
+
+  /// Gets all cached tech books.
+  ///
+  /// Returns a list of all [TechBookMetadata] that are currently cached.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// final books = await KingCache().getAllTechBooks();
+  /// for (final book in books) {
+  ///   print('Book: ${book.title} by ${book.author}');
+  /// }
+  /// ```
+  @override
+  Future<List<TechBookMetadata>> getAllTechBooks() async {
+    final allKeys = await getCacheKeys();
+    final techBookKeys = allKeys.where((key) => key.startsWith('techbook_') && !key.contains('_chapter_'));
+    
+    final books = <TechBookMetadata>[];
+    for (final key in techBookKeys) {
+      String? data;
+      
+      if (kIsWeb) {
+        final storage = WebCacheManager();
+        data = await storage.getCache(key);
+      } else {
+        final file = await localFile('$key.json');
+        if (file.existsSync()) {
+          data = file.readAsStringSync();
+        }
+      }
+
+      if (data != null && data.isNotEmpty) {
+        try {
+          books.add(TechBookMetadata.fromJson(jsonDecode(data)));
+        } catch (e) {
+          await storeLog('Error parsing tech book metadata for key $key: $e', level: LogLevel.error);
+        }
+      }
+    }
+    
+    return books;
+  }
+
+  /// Removes a tech book and all its chapters from cache.
+  ///
+  /// The [title] parameter identifies which book to remove.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await KingCache().removeTechBook('Flutter Development Guide');
+  /// ```
+  @override
+  Future<void> removeTechBook(String title) async {
+    final normalizedTitle = title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
+    final allKeys = await getCacheKeys();
+    
+    // Remove book metadata and all chapters
+    final keysToRemove = allKeys.where((key) => key.startsWith('techbook_$normalizedTitle'));
+    
+    for (final key in keysToRemove) {
+      if (kIsWeb) {
+        final storage = WebCacheManager();
+        await storage.removeCache(key);
+      } else {
+        final file = await localFile('$key.json');
+        if (file.existsSync()) {
+          file.deleteSync();
+        }
+      }
+    }
+    
+    await storeLog('Removed tech book: $title', level: LogLevel.info);
+  }
+
+  /// Clears all cached markdown content including tech books.
+  ///
+  /// Example usage:
+  /// ```dart
+  /// await KingCache().clearAllMarkdownCache();
+  /// ```
+  @override
+  Future<void> clearAllMarkdownCache() async {
+    final allKeys = await getCacheKeys();
+    final markdownKeys = allKeys.where((key) => key.startsWith('markdown_') || key.startsWith('techbook_'));
+    
+    for (final key in markdownKeys) {
+      if (kIsWeb) {
+        final storage = WebCacheManager();
+        await storage.removeCache(key);
+      } else {
+        final file = await localFile('$key.json');
+        if (file.existsSync()) {
+          file.deleteSync();
+        }
+      }
+    }
+    
+    await storeLog('Cleared all markdown cache', level: LogLevel.info);
   }
 }
