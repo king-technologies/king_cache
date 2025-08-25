@@ -198,8 +198,9 @@ class KingCache implements ICacheManager {
     bool shouldUpdate = false,
     DateTime? expiryTime,
     String? cacheKey,
-  }) async =>
-      cacheViaRestExec(
+  }) async {
+    if (kIsWeb) {
+      return cacheViaRestExecWeb(
         url,
         onSuccess: onSuccess,
         isCacheHit: isCacheHit,
@@ -212,6 +213,21 @@ class KingCache implements ICacheManager {
         expiryTime: expiryTime,
         cacheKey: cacheKey,
       );
+    }
+    return cacheViaRestExec(
+      url,
+      onSuccess: onSuccess,
+      isCacheHit: isCacheHit,
+      onError: onError,
+      apiResponse: apiResponse,
+      method: method,
+      formData: formData,
+      headers: headers,
+      shouldUpdate: shouldUpdate,
+      expiryTime: expiryTime,
+      cacheKey: cacheKey,
+    );
+  }
 
   /// Returns a [File] object representing the local file with the given [fileName].
   /// If the file exists in the application cache directory, it is returned.

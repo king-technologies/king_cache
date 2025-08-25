@@ -18,6 +18,12 @@ King Cache now supports storing logs and cache data in IndexedDB when running on
 - **Other platforms**: Cache data continues to be stored as files in the cache directory
 - **Same API**: All cache methods work identically across platforms
 
+### Network Caching
+- **Web**: API responses are cached in IndexedDB using the `cache` object store
+- **Other platforms**: API responses are cached as JSON files in the cache directory
+- **Cache-first strategy**: Checks cache first before making network requests
+- **Automatic cache management**: Handles cache expiry and updates
+
 ## API Compatibility
 
 The public API remains unchanged. All existing code will work without modifications:
@@ -28,6 +34,15 @@ await KingCache().storeLog('Application started');
 final logs = await KingCache().getLogs;
 await KingCache().setCache('key', 'value');
 final value = await KingCache().getCache('key');
+
+// Network caching also works seamlessly on web
+await KingCache.cacheViaRest(
+  '/api/users',
+  onSuccess: (data) => print('Data: $data'),
+  isCacheHit: (isHit) => print('Cache hit: $isHit'),
+  shouldUpdate: false,
+  expiryTime: DateTime.now().add(Duration(hours: 1)),
+);
 ```
 
 ## Implementation Details
