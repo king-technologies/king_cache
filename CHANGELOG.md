@@ -1,3 +1,18 @@
+## 0.0.54
+
+* Added Support for Markdown Caching for Tech Books
+* New `cacheMarkdown()` method for caching markdown content with automatic title and header extraction
+* New `TechBookMetadata` model for organizing technical books with chapters and sections
+* New `cacheTechBook()` and `cacheTechBookChapter()` methods for structured book content management
+* New `MarkdownContent` model with expiry support and metadata extraction
+* Added methods: `getMarkdownContent()`, `hasMarkdownContent()`, `removeMarkdownContent()`, `getMarkdownKeys()`
+* Added methods: `getTechBook()`, `getTechBookChapter()`, `getAllTechBooks()`, `removeTechBook()`
+* Added `clearAllMarkdownCache()` for comprehensive markdown cache management
+* Web platform support for all new markdown caching features via IndexedDB
+* Comprehensive test suite for markdown caching functionality
+* Updated documentation with markdown caching examples
+* Backward compatible - all existing functionality preserved
+
 ## 0.0.53
 
 * Added Web Support with IndexedDB

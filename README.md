@@ -59,6 +59,7 @@
 5. Clear cache.
 6. Share cache.
 7. **Web Support** - Full IndexedDB support for web platforms.
+8. **Markdown Caching** - Specialized caching for markdown content and tech books.
 
 ## Getting started
 
@@ -67,6 +68,129 @@
 3. Call the functions.
 
 ## Usage
+
+### Basic API Caching
+
+```dart
+import 'package:king_cache/king_cache.dart';
+
+// Cache API responses
+await KingCache.cacheViaRest(
+  'https://api.example.com/data',
+  onSuccess: (data) => print('Data: $data'),
+  isCacheHit: (isHit) => print('Cache hit: $isHit'),
+  shouldUpdate: false,
+  expiryTime: DateTime.now().add(Duration(hours: 1)),
+);
+```
+
+### Markdown Content Caching
+
+King Cache now supports specialized caching for markdown content, perfect for tech books, documentation, and educational content:
+
+```dart
+// Cache markdown content
+await KingCache().cacheMarkdown(
+  'chapter-1',
+  '''# Chapter 1: Introduction
+
+This is the first chapter of our guide.
+
+## Section 1.1: Getting Started
+
+Welcome to the tutorial!
+''',
+  expiryDate: DateTime.now().add(Duration(days: 7)),
+);
+
+// Retrieve markdown content
+final content = await KingCache().getMarkdownContent('chapter-1');
+if (content != null && !content.isExpired) {
+  print('Title: ${content.title}');
+  print('Headers: ${content.headers}');
+  print('Content: ${content.content}');
+}
+```
+
+### Tech Book Management
+
+Organize and cache complete tech books with chapters and metadata:
+
+```dart
+// Create tech book metadata
+final metadata = TechBookMetadata(
+  title: 'Flutter Development Guide',
+  author: 'Expert Developer',
+  version: '1.0',
+  description: 'Complete guide to Flutter development',
+  chapters: [
+    TechBookChapter(
+      title: 'Getting Started',
+      chapterId: 'chapter-1',
+      cacheKey: 'flutter-guide-ch1',
+      description: 'Introduction to Flutter',
+      lastUpdated: DateTime.now(),
+    ),
+  ],
+  cachedDate: DateTime.now(),
+  tags: ['flutter', 'mobile', 'development'],
+);
+
+// Cache the tech book
+await KingCache().cacheTechBook(metadata);
+
+// Cache individual chapters
+await KingCache().cacheTechBookChapter(
+  'Flutter Development Guide',
+  'chapter-1',
+  '# Getting Started\n\nWelcome to Flutter development...',
+);
+
+// Retrieve book information
+final book = await KingCache().getTechBook('Flutter Development Guide');
+final chapter = await KingCache().getTechBookChapter('Flutter Development Guide', 'chapter-1');
+
+// Get all cached books
+final allBooks = await KingCache().getAllTechBooks();
+```
+
+### Cache Management
+
+```dart
+// Check if content exists
+final exists = await KingCache().hasMarkdownContent('chapter-1');
+
+// Get all markdown cache keys
+final keys = await KingCache().getMarkdownKeys();
+
+// Remove specific content
+await KingCache().removeMarkdownContent('chapter-1');
+
+// Remove entire tech book
+await KingCache().removeTechBook('Flutter Development Guide');
+
+// Clear all markdown cache
+await KingCache().clearAllMarkdownCache();
+```
+
+### Traditional Cache Operations
+
+```dart
+// Basic cache operations
+await KingCache().setCache('key', 'value');
+final value = await KingCache().getCache('key');
+await KingCache().removeCache('key');
+final exists = await KingCache().hasCache('key');
+
+// Log operations
+await KingCache().storeLog('Application started');
+final logs = await KingCache().getLogs;
+await KingCache().clearLog;
+```
+
+## Original Usage Examples
+
+For backward compatibility, here are the traditional API caching examples:
 
 ```dart
 KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
@@ -157,5 +281,16 @@ King Cache now supports web platforms with IndexedDB storage! The same API works
 - **API**: Identical across all platforms
 
 See [WEB_SUPPORT.md](WEB_SUPPORT.md) for detailed information about web support features.
+
+## Markdown Caching
+
+King Cache includes specialized support for markdown content and tech book organization:
+
+- **Markdown Content**: Cache markdown with automatic title/header extraction
+- **Tech Books**: Organize content by books, chapters, and sections
+- **Expiry Management**: Automatic content expiration
+- **Platform Support**: Works on all platforms (mobile, desktop, web)
+
+See [MARKDOWN_CACHING.md](MARKDOWN_CACHING.md) for detailed documentation and examples.
 
 <p align="center">Made with Flutter & ❤️ in India</p>
