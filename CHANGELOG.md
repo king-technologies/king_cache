@@ -1,3 +1,12 @@
+## 0.0.53
+
+* Added Web Support with IndexedDB
+* Store logs in IndexedDB on web platforms
+* All cache methods now work on web (getCache, setCache, removeCache, hasCache, getCacheKeys)
+* Maintains consistent log formatting across all platforms
+* Backward compatible - no changes needed for existing code
+* Added web dependency for browser IndexedDB support
+
 ## 0.0.1
 
 * Initial release
