@@ -282,4 +282,15 @@ King Cache now supports web platforms with IndexedDB storage! The same API works
 
 See [WEB_SUPPORT.md](WEB_SUPPORT.md) for detailed information about web support features.
 
+## Markdown Caching
+
+King Cache includes specialized support for markdown content and tech book organization:
+
+- **Markdown Content**: Cache markdown with automatic title/header extraction
+- **Tech Books**: Organize content by books, chapters, and sections
+- **Expiry Management**: Automatic content expiration
+- **Platform Support**: Works on all platforms (mobile, desktop, web)
+
+See [MARKDOWN_CACHING.md](MARKDOWN_CACHING.md) for detailed documentation and examples.
+
 <p align="center">Made with Flutter & ❤️ in India</p>
