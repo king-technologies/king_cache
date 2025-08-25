@@ -7,7 +7,7 @@
 <h1 align="center">🌟 King Cache 🌟</h1>
 <p align="center">This package is used to cache API results so the next time you call the same API, it will return the cached result instead of calling the API again. This will help reduce the number of api calls and improve your app's user experience. </p>
 
-<p align="center">This package uses a file-based caching system.</p>
+<p align="center">This package uses a file-based caching system on mobile/desktop and IndexedDB on web platforms.</p>
 
 <p align="center">It gives you a couple of functions to manage the cache. It also has a log function so you can add, remove, clear and share logs. It also gives you the ability to set the cache expiry time.</p>
 
@@ -58,6 +58,7 @@
 4. Log cache.
 5. Clear cache.
 6. Share cache.
+7. **Web Support** - Full IndexedDB support for web platforms.
 
 ## Getting started
 
@@ -146,5 +147,15 @@ TextButton(
 <a href="https://ko-fi.com/rohitjain" title="Ko-fi"><img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/kofi.png" alt="Ko-fi"/></a>
 <a href="https://www.patreon.com/KingTechnologies" title="Patreon"><img src="https://raw.githubusercontent.com/king-technologies/developer-utilities/main/images/patreon.png" alt="Patreon"/></a>
 </p>
+
+## Web Support
+
+King Cache now supports web platforms with IndexedDB storage! The same API works seamlessly across all platforms:
+
+- **Mobile/Desktop**: File-based storage
+- **Web**: IndexedDB storage
+- **API**: Identical across all platforms
+
+See [WEB_SUPPORT.md](WEB_SUPPORT.md) for detailed information about web support features.
 
 <p align="center">Made with Flutter & ❤️ in India</p>
