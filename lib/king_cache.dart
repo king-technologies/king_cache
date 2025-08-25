@@ -24,6 +24,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'src/cache_manager.dart';
 import 'src/cache_via_rest.dart';
+import 'src/web_methods.dart' if (dart.library.io) 'src/web_methods_stub.dart';
 
 export 'src/cache_manager.dart';
 
