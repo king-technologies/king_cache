@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import '../king_cache.dart';
 
 Future<ResponseModel> cacheViaRestExecWeb(

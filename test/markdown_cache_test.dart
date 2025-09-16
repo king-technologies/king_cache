@@ -4,8 +4,9 @@ import 'package:king_cache/king_cache.dart';
 void main() {
   group('Markdown Caching Tests', () {
     TestWidgetsFlutterBinding.ensureInitialized();
-    
-    const sampleMarkdown = '''# Chapter 1: Getting Started
+
+    const sampleMarkdown = '''
+# Chapter 1: Getting Started
 
 This is the first chapter of our tech book.
 
@@ -25,7 +26,8 @@ Before we begin, make sure you have:
 Let's set up our development environment.
 ''';
 
-    const sampleMarkdown2 = '''# Chapter 2: Advanced Topics
+    const sampleMarkdown2 = '''
+# Chapter 2: Advanced Topics
 
 This chapter covers advanced Flutter concepts.
 
@@ -47,10 +49,10 @@ Understanding state management is crucial.
 
     test('should cache and retrieve markdown content', () async {
       const key = 'test-chapter-1';
-      
+
       // Cache markdown content
       await KingCache().cacheMarkdown(key, sampleMarkdown);
-      
+
       // Retrieve and verify
       final content = await KingCache().getMarkdownContent(key);
       expect(content, isNotNull);
@@ -74,8 +76,9 @@ Understanding state management is crucial.
     test('should extract title correctly from markdown', () async {
       final title = MarkdownContent.extractTitle(sampleMarkdown);
       expect(title, equals('Chapter 1: Getting Started'));
-      
-      const markdownWithoutTitle = '''## This is not a title
+
+      const markdownWithoutTitle = '''
+## This is not a title
 Some content here.
 ''';
       final noTitle = MarkdownContent.extractTitle(markdownWithoutTitle);
@@ -85,18 +88,19 @@ Some content here.
     test('should handle markdown content expiry', () async {
       const key = 'expiring-chapter';
       final expiryDate = DateTime.now().add(const Duration(milliseconds: 100));
-      
+
       // Cache with short expiry
-      await KingCache().cacheMarkdown(key, sampleMarkdown, expiryDate: expiryDate);
-      
+      await KingCache()
+          .cacheMarkdown(key, sampleMarkdown, expiryDate: expiryDate);
+
       // Should be available immediately
       var content = await KingCache().getMarkdownContent(key);
       expect(content, isNotNull);
       expect(content!.isExpired, isFalse);
-      
+
       // Wait for expiry
-      await Future.delayed(const Duration(milliseconds: 150));
-      
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+
       // Should be expired and automatically removed
       content = await KingCache().getMarkdownContent(key);
       expect(content, isNull);
@@ -104,14 +108,14 @@ Some content here.
 
     test('should check if markdown content exists', () async {
       const key = 'existence-test';
-      
+
       // Should not exist initially
       final existsBefore = await KingCache().hasMarkdownContent(key);
       expect(existsBefore, isFalse);
-      
+
       // Cache content
       await KingCache().cacheMarkdown(key, sampleMarkdown);
-      
+
       // Should exist now
       final existsAfter = await KingCache().hasMarkdownContent(key);
       expect(existsAfter, isTrue);
@@ -119,11 +123,11 @@ Some content here.
 
     test('should remove markdown content', () async {
       const key = 'removal-test';
-      
+
       // Cache content
       await KingCache().cacheMarkdown(key, sampleMarkdown);
       expect(await KingCache().hasMarkdownContent(key), isTrue);
-      
+
       // Remove content
       await KingCache().removeMarkdownContent(key);
       expect(await KingCache().hasMarkdownContent(key), isFalse);
@@ -131,12 +135,12 @@ Some content here.
 
     test('should get all markdown keys', () async {
       const keys = ['key1', 'key2', 'key3'];
-      
+
       // Cache multiple markdown contents
       for (final key in keys) {
         await KingCache().cacheMarkdown(key, sampleMarkdown);
       }
-      
+
       // Get all keys
       final retrievedKeys = await KingCache().getMarkdownKeys();
       expect(retrievedKeys.length, equals(3));
@@ -163,12 +167,13 @@ Some content here.
         cachedDate: DateTime.now(),
         tags: ['flutter', 'mobile', 'development'],
       );
-      
+
       // Cache tech book
       await KingCache().cacheTechBook(metadata);
-      
+
       // Retrieve and verify
-      final retrieved = await KingCache().getTechBook('Flutter Development Guide');
+      final retrieved =
+          await KingCache().getTechBook('Flutter Development Guide');
       expect(retrieved, isNotNull);
       expect(retrieved!.title, equals(metadata.title));
       expect(retrieved.author, equals(metadata.author));
@@ -180,12 +185,14 @@ Some content here.
     test('should cache and retrieve tech book chapters', () async {
       const bookTitle = 'Flutter Guide';
       const chapterId = 'chapter-1';
-      
+
       // Cache chapter
-      await KingCache().cacheTechBookChapter(bookTitle, chapterId, sampleMarkdown);
-      
+      await KingCache()
+          .cacheTechBookChapter(bookTitle, chapterId, sampleMarkdown);
+
       // Retrieve and verify
-      final chapter = await KingCache().getTechBookChapter(bookTitle, chapterId);
+      final chapter =
+          await KingCache().getTechBookChapter(bookTitle, chapterId);
       expect(chapter, isNotNull);
       expect(chapter!.content, equals(sampleMarkdown));
       expect(chapter.title, equals('Chapter 1: Getting Started'));
@@ -200,7 +207,7 @@ Some content here.
         chapters: [],
         cachedDate: DateTime.now(),
       );
-      
+
       final metadata2 = TechBookMetadata(
         title: 'Dart Handbook',
         author: 'Author 2',
@@ -209,15 +216,15 @@ Some content here.
         chapters: [],
         cachedDate: DateTime.now(),
       );
-      
+
       // Cache multiple tech books
       await KingCache().cacheTechBook(metadata1);
       await KingCache().cacheTechBook(metadata2);
-      
+
       // Get all books
       final allBooks = await KingCache().getAllTechBooks();
       expect(allBooks.length, equals(2));
-      
+
       final titles = allBooks.map((book) => book.title).toList();
       expect(titles.contains('Flutter Guide'), isTrue);
       expect(titles.contains('Dart Handbook'), isTrue);
@@ -225,7 +232,7 @@ Some content here.
 
     test('should remove tech book and all its chapters', () async {
       const bookTitle = 'Removable Book';
-      
+
       // Cache book metadata
       final metadata = TechBookMetadata(
         title: bookTitle,
@@ -236,29 +243,35 @@ Some content here.
         cachedDate: DateTime.now(),
       );
       await KingCache().cacheTechBook(metadata);
-      
+
       // Cache some chapters
-      await KingCache().cacheTechBookChapter(bookTitle, 'chapter-1', sampleMarkdown);
-      await KingCache().cacheTechBookChapter(bookTitle, 'chapter-2', sampleMarkdown2);
-      
+      await KingCache()
+          .cacheTechBookChapter(bookTitle, 'chapter-1', sampleMarkdown);
+      await KingCache()
+          .cacheTechBookChapter(bookTitle, 'chapter-2', sampleMarkdown2);
+
       // Verify everything exists
       expect(await KingCache().getTechBook(bookTitle), isNotNull);
-      expect(await KingCache().getTechBookChapter(bookTitle, 'chapter-1'), isNotNull);
-      expect(await KingCache().getTechBookChapter(bookTitle, 'chapter-2'), isNotNull);
-      
+      expect(await KingCache().getTechBookChapter(bookTitle, 'chapter-1'),
+          isNotNull);
+      expect(await KingCache().getTechBookChapter(bookTitle, 'chapter-2'),
+          isNotNull);
+
       // Remove the book
       await KingCache().removeTechBook(bookTitle);
-      
+
       // Verify everything is removed
       expect(await KingCache().getTechBook(bookTitle), isNull);
-      expect(await KingCache().getTechBookChapter(bookTitle, 'chapter-1'), isNull);
-      expect(await KingCache().getTechBookChapter(bookTitle, 'chapter-2'), isNull);
+      expect(
+          await KingCache().getTechBookChapter(bookTitle, 'chapter-1'), isNull);
+      expect(
+          await KingCache().getTechBookChapter(bookTitle, 'chapter-2'), isNull);
     });
 
     test('should clear all markdown cache', () async {
       // Cache various content
       await KingCache().cacheMarkdown('standalone-md', sampleMarkdown);
-      
+
       final metadata = TechBookMetadata(
         title: 'Test Book',
         author: 'Test Author',
@@ -268,24 +281,27 @@ Some content here.
         cachedDate: DateTime.now(),
       );
       await KingCache().cacheTechBook(metadata);
-      await KingCache().cacheTechBookChapter('Test Book', 'chapter-1', sampleMarkdown);
-      
+      await KingCache()
+          .cacheTechBookChapter('Test Book', 'chapter-1', sampleMarkdown);
+
       // Verify content exists
       expect(await KingCache().hasMarkdownContent('standalone-md'), isTrue);
       expect(await KingCache().getTechBook('Test Book'), isNotNull);
-      expect(await KingCache().getTechBookChapter('Test Book', 'chapter-1'), isNotNull);
-      
+      expect(await KingCache().getTechBookChapter('Test Book', 'chapter-1'),
+          isNotNull);
+
       // Clear all markdown cache
       await KingCache().clearAllMarkdownCache();
-      
+
       // Verify everything is cleared
       expect(await KingCache().hasMarkdownContent('standalone-md'), isFalse);
       expect(await KingCache().getTechBook('Test Book'), isNull);
-      expect(await KingCache().getTechBookChapter('Test Book', 'chapter-1'), isNull);
-      
+      expect(await KingCache().getTechBookChapter('Test Book', 'chapter-1'),
+          isNull);
+
       final allBooks = await KingCache().getAllTechBooks();
       expect(allBooks.length, equals(0));
-      
+
       final markdownKeys = await KingCache().getMarkdownKeys();
       expect(markdownKeys.length, equals(0));
     });
@@ -316,12 +332,12 @@ Some content here.
         cachedDate: DateTime.parse('2024-01-01T00:00:00.000Z'),
         tags: ['test', 'book'],
       );
-      
+
       // Test serialization
       final json = metadata.toJson();
       expect(json['title'], equals('Test Book'));
       expect(json['chapters'], hasLength(1));
-      
+
       // Test deserialization
       final restored = TechBookMetadata.fromJson(json);
       expect(restored.title, equals(metadata.title));

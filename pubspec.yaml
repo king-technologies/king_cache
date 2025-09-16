@@ -1,5 +1,6 @@
 name: king_cache
-description: "A Flutter package for caching api data and markdown content to disk and improving app
+description:
+  "A Flutter package for caching api data and markdown content to disk and improving app
   performance. It uses the http package to make api calls and use cache
   directory to cache data with specialized support for tech books and documentation."
 version: 0.0.54
@@ -10,20 +11,20 @@ environment:
   flutter: ">=3.22.0"
 
 dependencies:
-  device_info_plus: ^11.5.0
-  firebase_analytics: ^12.0.0
+  device_info_plus: ^12.1.0
+  firebase_analytics: ^12.0.1
   flutter:
     sdk: flutter
   http: ^1.5.0
-  in_app_update: ^4.2.3
+  in_app_update: ^4.2.5
   intl: ^0.20.2
   local_auth: ^2.3.0
   logger: ^2.6.1
-  package_info_plus: ^8.3.1
+  package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   permission_handler: ^12.0.1
   url_launcher: ^6.3.2
-  web: ^1.1.0
+  web: ^1.1.1
 
 dev_dependencies:
   flutter_lints: ^6.0.0

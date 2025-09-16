@@ -156,7 +156,9 @@ class WebCacheManager implements ICacheManagerWeb {
     final store = tx.objectStore(tableName);
     final req = store.getAll();
     final r = await _waitRequest(req);
-    return (r as List? ?? []).cast<String>().join('\n');
+    // r is a JS interop value (likely a JSArray). Convert to Dart using toDart
+    final list = r == null ? <String>[] : (r as JSArray).toDart.cast<String>();
+    return list.join('\n');
   }
 
   @override
@@ -221,8 +223,9 @@ class WebCacheManager implements ICacheManagerWeb {
     final store = tx.objectStore(tableName);
     final req = store.getAllKeys();
     final r = await _waitRequest(req);
-    final keys = r as List? ?? [];
-    return keys.contains(key);
+    // Convert JSArray result to Dart List safely
+    final keys = (r as JSArray?)?.toDart ?? [];
+    return (keys as List).contains(key);
   }
 
   @override
@@ -233,7 +236,9 @@ class WebCacheManager implements ICacheManagerWeb {
     final store = tx.objectStore(tableName);
     final req = store.getAllKeys();
     final r = await _waitRequest(req);
-    return (r as List? ?? []).cast<String>();
+    // Convert JSArray to Dart List using toDart
+    final list = (r as JSArray?)?.toDart ?? [];
+    return (list as List).cast<String>();
   }
 
   @override

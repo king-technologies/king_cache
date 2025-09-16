@@ -527,7 +527,8 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   /// );
   /// ```
   @override
-  Future<void> cacheMarkdown(String key, String markdownContent, {DateTime? expiryDate}) async {
+  Future<void> cacheMarkdown(String key, String markdownContent,
+      {DateTime? expiryDate}) async {
     final content = MarkdownContent(
       content: markdownContent,
       cacheKey: key,
@@ -545,8 +546,8 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
       final file = await localFile('$cacheKey.json');
       file.writeAsStringSync(jsonEncode(content.toJson()));
     }
-    
-    await storeLog('Cached markdown content with key: $key', level: LogLevel.info);
+
+    await storeLog('Cached markdown content with key: $key');
   }
 
   /// Retrieves cached markdown content by key.
@@ -565,7 +566,7 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   Future<MarkdownContent?> getMarkdownContent(String key) async {
     final cacheKey = 'markdown_$key';
     String? data;
-    
+
     if (kIsWeb) {
       final storage = WebCacheManager();
       data = await storage.getCache(cacheKey);
@@ -578,14 +579,16 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
 
     if (data != null && data.isNotEmpty) {
       try {
-        final content = MarkdownContent.fromJson(jsonDecode(data));
+        final content =
+            MarkdownContent.fromJson(jsonDecode(data) as Map<String, dynamic>);
         if (content.isExpired) {
           await removeMarkdownContent(key);
           return null;
         }
         return content;
-      } catch (e) {
-        await storeLog('Error parsing markdown content for key $key: $e', level: LogLevel.error);
+      } on Exception catch (e) {
+        await storeLog('Error parsing markdown content for key $key: $e',
+            level: LogLevel.error);
         return null;
       }
     }
@@ -610,8 +613,8 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
         file.deleteSync();
       }
     }
-    
-    await storeLog('Removed markdown content with key: $key', level: LogLevel.info);
+
+    await storeLog('Removed markdown content with key: $key');
   }
 
   /// Checks if markdown content exists for the given key.
@@ -667,8 +670,9 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   /// ```
   @override
   Future<void> cacheTechBook(TechBookMetadata metadata) async {
-    final cacheKey = 'techbook_${metadata.title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}';
-    
+    final cacheKey =
+        'techbook_${metadata.title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}';
+
     if (kIsWeb) {
       final storage = WebCacheManager();
       await storage.setCache(cacheKey, jsonEncode(metadata.toJson()));
@@ -676,8 +680,8 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
       final file = await localFile('$cacheKey.json');
       file.writeAsStringSync(jsonEncode(metadata.toJson()));
     }
-    
-    await storeLog('Cached tech book: ${metadata.title}', level: LogLevel.info);
+
+    await storeLog('Cached tech book: ${metadata.title}');
   }
 
   /// Retrieves tech book metadata by title.
@@ -694,9 +698,10 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   /// ```
   @override
   Future<TechBookMetadata?> getTechBook(String title) async {
-    final cacheKey = 'techbook_${title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}';
+    final cacheKey =
+        'techbook_${title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}';
     String? data;
-    
+
     if (kIsWeb) {
       final storage = WebCacheManager();
       data = await storage.getCache(cacheKey);
@@ -709,9 +714,11 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
 
     if (data != null && data.isNotEmpty) {
       try {
-        return TechBookMetadata.fromJson(jsonDecode(data));
-      } catch (e) {
-        await storeLog('Error parsing tech book metadata for $title: $e', level: LogLevel.error);
+        return TechBookMetadata.fromJson(
+            jsonDecode(data) as Map<String, dynamic>);
+      } on Exception catch (e) {
+        await storeLog('Error parsing tech book metadata for $title: $e',
+            level: LogLevel.error);
         return null;
       }
     }
@@ -733,11 +740,13 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   /// );
   /// ```
   @override
-  Future<void> cacheTechBookChapter(String bookTitle, String chapterId, String markdownContent) async {
-    final chapterKey = 'techbook_${bookTitle.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}_chapter_$chapterId';
+  Future<void> cacheTechBookChapter(
+      String bookTitle, String chapterId, String markdownContent) async {
+    final chapterKey =
+        'techbook_${bookTitle.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}_chapter_$chapterId';
     await cacheMarkdown(chapterKey, markdownContent);
-    
-    await storeLog('Cached chapter $chapterId for book: $bookTitle', level: LogLevel.info);
+
+    await storeLog('Cached chapter $chapterId for book: $bookTitle');
   }
 
   /// Retrieves a tech book chapter's content.
@@ -753,9 +762,11 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   /// }
   /// ```
   @override
-  Future<MarkdownContent?> getTechBookChapter(String bookTitle, String chapterId) async {
-    final chapterKey = 'techbook_${bookTitle.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}_chapter_$chapterId';
-    return await getMarkdownContent(chapterKey);
+  Future<MarkdownContent?> getTechBookChapter(
+      String bookTitle, String chapterId) async {
+    final chapterKey =
+        'techbook_${bookTitle.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_')}_chapter_$chapterId';
+    return getMarkdownContent(chapterKey);
   }
 
   /// Gets all cached tech books.
@@ -772,12 +783,13 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   @override
   Future<List<TechBookMetadata>> getAllTechBooks() async {
     final allKeys = await getCacheKeys();
-    final techBookKeys = allKeys.where((key) => key.startsWith('techbook_') && !key.contains('_chapter_'));
-    
+    final techBookKeys = allKeys.where(
+        (key) => key.startsWith('techbook_') && !key.contains('_chapter_'));
+
     final books = <TechBookMetadata>[];
     for (final key in techBookKeys) {
       String? data;
-      
+
       if (kIsWeb) {
         final storage = WebCacheManager();
         data = await storage.getCache(key);
@@ -790,13 +802,15 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
 
       if (data != null && data.isNotEmpty) {
         try {
-          books.add(TechBookMetadata.fromJson(jsonDecode(data)));
-        } catch (e) {
-          await storeLog('Error parsing tech book metadata for key $key: $e', level: LogLevel.error);
+          books.add(TechBookMetadata.fromJson(
+              jsonDecode(data) as Map<String, dynamic>));
+        } on Exception catch (e) {
+          await storeLog('Error parsing tech book metadata for key $key: $e',
+              level: LogLevel.error);
         }
       }
     }
-    
+
     return books;
   }
 
@@ -812,10 +826,11 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   Future<void> removeTechBook(String title) async {
     final normalizedTitle = title.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '_');
     final allKeys = await getCacheKeys();
-    
+
     // Remove book metadata and all chapters
-    final keysToRemove = allKeys.where((key) => key.startsWith('techbook_$normalizedTitle'));
-    
+    final keysToRemove =
+        allKeys.where((key) => key.startsWith('techbook_$normalizedTitle'));
+
     for (final key in keysToRemove) {
       if (kIsWeb) {
         final storage = WebCacheManager();
@@ -827,8 +842,8 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
         }
       }
     }
-    
-    await storeLog('Removed tech book: $title', level: LogLevel.info);
+
+    await storeLog('Removed tech book: $title');
   }
 
   /// Clears all cached markdown content including tech books.
@@ -840,8 +855,9 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
   @override
   Future<void> clearAllMarkdownCache() async {
     final allKeys = await getCacheKeys();
-    final markdownKeys = allKeys.where((key) => key.startsWith('markdown_') || key.startsWith('techbook_'));
-    
+    final markdownKeys = allKeys.where(
+        (key) => key.startsWith('markdown_') || key.startsWith('techbook_'));
+
     for (final key in markdownKeys) {
       if (kIsWeb) {
         final storage = WebCacheManager();
@@ -853,7 +869,7 @@ class KingCache implements ICacheManager, IMarkdownCacheManager {
         }
       }
     }
-    
-    await storeLog('Cleared all markdown cache', level: LogLevel.info);
+
+    await storeLog('Cleared all markdown cache');
   }
 }

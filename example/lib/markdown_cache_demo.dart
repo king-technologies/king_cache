@@ -6,22 +6,20 @@ void main() {
 }
 
 class MarkdownCacheDemo extends StatelessWidget {
-  const MarkdownCacheDemo({Key? key}) : super(key: key);
+  const MarkdownCacheDemo({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Markdown Cache Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MarkdownCachePage(),
-    );
-  }
+  Widget build(BuildContext context) => MaterialApp(
+        title: 'Markdown Cache Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MarkdownCachePage(),
+      );
 }
 
 class MarkdownCachePage extends StatefulWidget {
-  const MarkdownCachePage({Key? key}) : super(key: key);
+  const MarkdownCachePage({super.key});
 
   @override
   State<MarkdownCachePage> createState() => _MarkdownCachePageState();
@@ -46,7 +44,8 @@ class _MarkdownCachePageState extends State<MarkdownCachePage> {
 
   Future<void> _createSampleTechBook() async {
     // Sample markdown content for chapters
-    const chapter1Content = '''# Chapter 1: Getting Started with Flutter
+    const chapter1Content = '''
+# Chapter 1: Getting Started with Flutter
 
 Welcome to the comprehensive Flutter development guide! This chapter will introduce you to the basics of Flutter development.
 
@@ -96,7 +95,8 @@ class MyApp extends StatelessWidget {
 This simple app demonstrates the basic structure of a Flutter application.
 ''';
 
-    const chapter2Content = '''# Chapter 2: Widgets and Layouts
+    const chapter2Content = '''
+# Chapter 2: Widgets and Layouts
 
 In this chapter, we'll dive deep into Flutter's widget system and learn how to create beautiful layouts.
 
@@ -135,7 +135,8 @@ These widgets arrange their children in a vertical or horizontal array.
 Learn how to make your Flutter apps look great on different screen sizes.
 ''';
 
-    const chapter3Content = '''# Chapter 3: State Management
+    const chapter3Content = '''
+# Chapter 3: State Management
 
 State management is crucial for building scalable Flutter applications. This chapter covers various approaches.
 
@@ -161,7 +162,8 @@ Riverpod is a reactive caching and data-binding framework for Dart and Flutter.
       title: 'Complete Flutter Development Guide',
       author: 'Flutter Expert',
       version: '2.0',
-      description: 'A comprehensive guide to Flutter development covering basics to advanced topics.',
+      description:
+          'A comprehensive guide to Flutter development covering basics to advanced topics.',
       chapters: [
         TechBookChapter(
           title: 'Getting Started with Flutter',
@@ -174,7 +176,7 @@ Riverpod is a reactive caching and data-binding framework for Dart and Flutter.
           title: 'Widgets and Layouts',
           chapterId: 'chapter-2',
           cacheKey: 'flutter-guide-chapter-2',
-          description: 'Deep dive into Flutter\'s widget system',
+          description: "Deep dive into Flutter's widget system",
           lastUpdated: DateTime.now(),
         ),
         TechBookChapter(
@@ -191,14 +193,18 @@ Riverpod is a reactive caching and data-binding framework for Dart and Flutter.
 
     // Cache the tech book and its chapters
     await KingCache().cacheTechBook(metadata);
-    await KingCache().cacheTechBookChapter(metadata.title, 'chapter-1', chapter1Content);
-    await KingCache().cacheTechBookChapter(metadata.title, 'chapter-2', chapter2Content);
-    await KingCache().cacheTechBookChapter(metadata.title, 'chapter-3', chapter3Content);
+    await KingCache()
+        .cacheTechBookChapter(metadata.title, 'chapter-1', chapter1Content);
+    await KingCache()
+        .cacheTechBookChapter(metadata.title, 'chapter-2', chapter2Content);
+    await KingCache()
+        .cacheTechBookChapter(metadata.title, 'chapter-3', chapter3Content);
 
     // Also cache some standalone markdown content
     await KingCache().cacheMarkdown(
       'quick-reference',
-      '''# Flutter Quick Reference
+      '''
+# Flutter Quick Reference
 
 ## Common Widgets
 - Container: Layout and decoration
@@ -247,7 +253,7 @@ Riverpod is a reactive caching and data-binding framework for Dart and Flutter.
       _currentChapter = null;
     });
     await _updateLogs();
-    
+
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('All markdown cache cleared!')),
@@ -256,194 +262,197 @@ Riverpod is a reactive caching and data-binding framework for Dart and Flutter.
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Markdown Cache Demo'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete),
-            onPressed: _clearAllMarkdownCache,
-            tooltip: 'Clear All Cache',
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Tech Books List
-          Expanded(
-            flex: 2,
-            child: Card(
-              margin: const EdgeInsets.all(8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Cached Tech Books (${_techBooks.length})',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: _techBooks.length,
-                        itemBuilder: (context, index) {
-                          final book = _techBooks[index];
-                          return ExpansionTile(
-                            title: Text(book.title),
-                            subtitle: Text('by ${book.author} • ${book.chapters.length} chapters'),
-                            children: book.chapters.map((chapter) {
-                              return ListTile(
-                                title: Text(chapter.title),
-                                subtitle: Text(chapter.description ?? ''),
-                                onTap: () => _loadChapter(book.title, chapter.chapterId),
-                                trailing: const Icon(Icons.arrow_forward_ios),
-                              );
-                            }).toList(),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Markdown Cache Demo'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.delete),
+              onPressed: _clearAllMarkdownCache,
+              tooltip: 'Clear All Cache',
             ),
-          ),
-          
-          // Current Chapter Content
-          Expanded(
-            flex: 3,
-            child: Card(
-              margin: const EdgeInsets.all(8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _currentChapter != null 
-                        ? 'Chapter: ${_currentChapter!.title ?? "Untitled"}'
-                        : 'Select a chapter to view',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 8),
-                    if (_currentChapter != null) ...[
+          ],
+        ),
+        body: Column(
+          children: [
+            // Tech Books List
+            Expanded(
+              flex: 2,
+              child: Card(
+                margin: const EdgeInsets.all(8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        'Cached: ${_currentChapter!.cachedDate.toString().substring(0, 16)}',
-                        style: Theme.of(context).textTheme.caption,
+                        'Cached Tech Books (${_techBooks.length})',
+                        style: Theme.of(context).textTheme.headlineSmall,
                       ),
-                      if (_currentChapter!.headers.isNotEmpty) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          'Headers: ${_currentChapter!.headers.take(3).join(", ")}${_currentChapter!.headers.length > 3 ? "..." : ""}',
-                          style: Theme.of(context).textTheme.caption,
-                        ),
-                      ],
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       Expanded(
-                        child: SingleChildScrollView(
-                          child: Container(
-                            width: double.infinity,
-                            padding: const EdgeInsets.all(12.0),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[100],
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Text(
-                              _currentChapter!.content,
-                              style: const TextStyle(fontFamily: 'monospace'),
+                        child: ListView.builder(
+                          itemCount: _techBooks.length,
+                          itemBuilder: (context, index) {
+                            final book = _techBooks[index];
+                            return ExpansionTile(
+                              title: Text(book.title),
+                              subtitle: Text(
+                                  'by ${book.author} • ${book.chapters.length} chapters'),
+                              children: book.chapters
+                                  .map((chapter) => ListTile(
+                                        title: Text(chapter.title),
+                                        subtitle:
+                                            Text(chapter.description ?? ''),
+                                        onTap: () => _loadChapter(
+                                            book.title, chapter.chapterId),
+                                        trailing:
+                                            const Icon(Icons.arrow_forward_ios),
+                                      ))
+                                  .toList(),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Current Chapter Content
+            Expanded(
+              flex: 3,
+              child: Card(
+                margin: const EdgeInsets.all(8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _currentChapter != null
+                            ? 'Chapter: ${_currentChapter!.title ?? "Untitled"}'
+                            : 'Select a chapter to view',
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      ),
+                      const SizedBox(height: 8),
+                      if (_currentChapter != null) ...[
+                        Text(
+                          'Cached: ${_currentChapter!.cachedDate.toString().substring(0, 16)}',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        if (_currentChapter!.headers.isNotEmpty) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            'Headers: ${_currentChapter!.headers.take(3).join(", ")}${_currentChapter!.headers.length > 3 ? "..." : ""}',
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                        Expanded(
+                          child: SingleChildScrollView(
+                            child: Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12.0),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[100],
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Text(
+                                _currentChapter!.content,
+                                style: const TextStyle(fontFamily: 'monospace'),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ] else
-                      Expanded(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.book,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                'Select a chapter from above to view its content',
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 16,
+                      ] else
+                        Expanded(
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.book,
+                                  size: 64,
+                                  color: Colors.grey[400],
                                 ),
-                              ),
-                            ],
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Select a chapter from above to view its content',
+                                  style: TextStyle(
+                                    color: Colors.grey[600],
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          
-          // Logs
-          Expanded(
-            flex: 1,
-            child: Card(
-              margin: const EdgeInsets.all(8.0),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          'Cache Logs',
-                          style: Theme.of(context).textTheme.headlineSmall,
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.refresh),
-                          onPressed: _updateLogs,
-                          tooltip: 'Refresh Logs',
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          color: Colors.black87,
-                          borderRadius: BorderRadius.circular(4.0),
-                        ),
-                        child: SingleChildScrollView(
-                          child: Text(
-                            _logs.isEmpty ? 'No logs yet...' : _logs,
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontFamily: 'monospace',
-                              fontSize: 12,
+
+            // Logs
+            Expanded(
+              child: Card(
+                margin: const EdgeInsets.all(8.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            'Cache Logs',
+                            style: Theme.of(context).textTheme.headlineSmall,
+                          ),
+                          const Spacer(),
+                          IconButton(
+                            icon: const Icon(Icons.refresh),
+                            onPressed: _updateLogs,
+                            tooltip: 'Refresh Logs',
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: SingleChildScrollView(
+                            child: Text(
+                              _logs.isEmpty ? 'No logs yet...' : _logs,
+                              style: const TextStyle(
+                                color: Colors.green,
+                                fontFamily: 'monospace',
+                                fontSize: 12,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Demonstrate real-time caching
-          await KingCache().cacheMarkdown(
-            'dynamic-content-${DateTime.now().millisecondsSinceEpoch}',
-            '''# Dynamic Content
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            // Demonstrate real-time caching
+            await KingCache().cacheMarkdown(
+              'dynamic-content-${DateTime.now().millisecondsSinceEpoch}',
+              '''
+# Dynamic Content
 
 This content was cached at: ${DateTime.now()}
 
@@ -453,20 +462,19 @@ This content was cached at: ${DateTime.now()}
 - Header parsing
 - Expiry handling
 ''',
-            expiryDate: DateTime.now().add(const Duration(minutes: 5)),
-          );
-          
-          await _updateLogs();
-          
-          if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Dynamic content cached!')),
+              expiryDate: DateTime.now().add(const Duration(minutes: 5)),
             );
-          }
-        },
-        child: const Icon(Icons.add),
-        tooltip: 'Add Dynamic Content',
-      ),
-    );
-  }
+
+            await _updateLogs();
+
+            if (mounted && context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Dynamic content cached!')),
+              );
+            }
+          },
+          tooltip: 'Add Dynamic Content',
+          child: const Icon(Icons.add),
+        ),
+      );
 }

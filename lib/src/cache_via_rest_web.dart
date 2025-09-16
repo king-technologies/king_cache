@@ -1,8 +1,8 @@
-
 import 'dart:convert';
 import 'dart:typed_data';
 
 import '../king_cache.dart';
+import 'web_methods.dart';
 
 Future<ResponseModel> cacheViaRestExecWeb(
   String url, {
@@ -20,9 +20,9 @@ Future<ResponseModel> cacheViaRestExecWeb(
   final storage = WebCacheManager();
   var data = '';
   final fileName = cacheKey ?? url.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
-  
+
   // Check if cache exists
-  final cachedData = await storage.getCache('${fileName}.json');
+  final cachedData = await storage.getCache('$fileName.json');
   if (cachedData != null && cachedData.isNotEmpty) {
     data = cachedData;
     if (isCacheHit != null) {
@@ -44,7 +44,7 @@ Future<ResponseModel> cacheViaRestExecWeb(
 
   // Check if the cache has expired
   if (expiryTime != null && DateTime.now().isAfter(expiryTime)) {
-    await storage.removeCache('${fileName}.json');
+    await storage.removeCache('$fileName.json');
   }
 
   final res = await KingCache.networkRequest(url,
@@ -53,7 +53,7 @@ Future<ResponseModel> cacheViaRestExecWeb(
     apiResponse(res);
   }
   if (res.status) {
-    await storage.setCache('${fileName}.json', jsonEncode(res.data));
+    await storage.setCache('$fileName.json', jsonEncode(res.data));
     if (data.isEmpty || jsonDecode(data) != res.data) {
       onSuccess?.call(res.data);
     }
