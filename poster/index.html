@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        p {
+            display: block;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+        }
+
+        body {
+            font-family: "Google Sans Text", "Google Sans", "Roboto", sans-serif;
+            background-image: url("hero-bg-static.svg");
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            margin: auto;
+            text-align: center;
+        }
+
+        .home-banner>.text {
+            margin: 1em auto;
+            max-width: 500px;
+            color: #fff;
+            font-size: 18px;
+        }
+
+        .home-banner {
+            text-align: center;
+            padding: 30px 20px 0px 20px;
+        }
+
+        .home-banner>.logo {
+            width: 100%;
+            max-width: 328px;
+            max-height: 70px;
+            margin-bottom: 28px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0175c2;
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .smallText {
+            font-size: 14px;
+            color: white;
+            max-width: 500px;
+            text-align: center;
+            margin: 1em auto;
+        }
+
+        .bold {
+            font-weight: bold;
+            font-size: 26px;
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+    <br>
+    <div class="container home-banner">
+        <img class="logo" src="./pub-dev-logo.svg" alt="" width="328" height="70" role="presentation">
+        <p class="text">The official package repository for <a href="https://dart.dev/" rel="noopener"
+                target="_blank">Dart</a> and <a href="https://flutter.dev/" rel="noopener" target="_blank">Flutter</a>
+            apps.
+        </p>
+        <img src="./supported-by-google-2x.png" alt="Supported by Google" width="218" height="36">
+        <br>
+        <br>
+        <img src="./512x512.png" alt="Supported by Google" width="60">
+        <br>
+        <p class="text">King Technologies's</p>
+        <a class="bold" href="https://pub.dev/packages/king_cache">King Cache v0.0.3</a>
+        <br>
+        <br>
+        <p class=" smallText">This package is used to cache apis results so next time when you call the same api, it
+            will
+            return the
+            cached result instantly to improve the app performance & User Experience.</p>
+    </div>
+
+
+
+</body>
+
+</html>

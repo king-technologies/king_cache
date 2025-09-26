@@ -4,12 +4,9 @@ part of '../king_cache.dart';
 enum FilesTypes {
   /// Log file type.
   log('log.txt'),
-  
+
   /// Markdown file type for tech books.
-  markdown('markdown.md'),
-  
-  /// Tech book metadata file type.
-  techBookMeta('tech_book_meta.json');
+  markdown('markdown.md');
 
   /// Constructor for the enum value.
   const FilesTypes(this.file);
@@ -27,4 +24,4 @@ enum LogLevel {
 }
 
 /// Enum representing different types of indexed db keys.
-enum IndexedDbKeys { logs, cache, markdown, techBookMeta }
+enum IndexedDbKeys { logs, cache }

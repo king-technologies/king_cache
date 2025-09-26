@@ -18,16 +18,11 @@ abstract class ICacheManager {
 }
 
 abstract class IMarkdownCacheManager {
-  Future<void> cacheMarkdown(String key, String markdownContent, {DateTime? expiryDate});
+  Future<void> cacheMarkdown(String key, String markdownContent,
+      {DateTime? expiryDate});
   Future<MarkdownContent?> getMarkdownContent(String key);
   Future<void> removeMarkdownContent(String key);
   Future<bool> hasMarkdownContent(String key);
   Future<List<String>> getMarkdownKeys();
-  Future<void> cacheTechBook(TechBookMetadata metadata);
-  Future<TechBookMetadata?> getTechBook(String title);
-  Future<void> cacheTechBookChapter(String bookTitle, String chapterId, String markdownContent);
-  Future<MarkdownContent?> getTechBookChapter(String bookTitle, String chapterId);
-  Future<List<TechBookMetadata>> getAllTechBooks();
-  Future<void> removeTechBook(String title);
   Future<void> clearAllMarkdownCache();
 }

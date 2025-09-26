@@ -111,49 +111,6 @@ if (content != null && !content.isExpired) {
   print('Content: ${content.content}');
 }
 ```
-
-### Tech Book Management
-
-Organize and cache complete tech books with chapters and metadata:
-
-```dart
-// Create tech book metadata
-final metadata = TechBookMetadata(
-  title: 'Flutter Development Guide',
-  author: 'Expert Developer',
-  version: '1.0',
-  description: 'Complete guide to Flutter development',
-  chapters: [
-    TechBookChapter(
-      title: 'Getting Started',
-      chapterId: 'chapter-1',
-      cacheKey: 'flutter-guide-ch1',
-      description: 'Introduction to Flutter',
-      lastUpdated: DateTime.now(),
-    ),
-  ],
-  cachedDate: DateTime.now(),
-  tags: ['flutter', 'mobile', 'development'],
-);
-
-// Cache the tech book
-await KingCache().cacheTechBook(metadata);
-
-// Cache individual chapters
-await KingCache().cacheTechBookChapter(
-  'Flutter Development Guide',
-  'chapter-1',
-  '# Getting Started\n\nWelcome to Flutter development...',
-);
-
-// Retrieve book information
-final book = await KingCache().getTechBook('Flutter Development Guide');
-final chapter = await KingCache().getTechBookChapter('Flutter Development Guide', 'chapter-1');
-
-// Get all cached books
-final allBooks = await KingCache().getAllTechBooks();
-```
-
 ### Cache Management
 
 ```dart
@@ -165,9 +122,6 @@ final keys = await KingCache().getMarkdownKeys();
 
 // Remove specific content
 await KingCache().removeMarkdownContent('chapter-1');
-
-// Remove entire tech book
-await KingCache().removeTechBook('Flutter Development Guide');
 
 // Clear all markdown cache
 await KingCache().clearAllMarkdownCache();

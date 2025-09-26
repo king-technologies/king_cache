@@ -1,6 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:king_cache/king_cache.dart';
+
+import 'components/Analytics.dart';
+import 'components/Cache.dart';
+import 'components/info.dart';
+import 'components/logger.dart';
+import 'components/network_calls.dart';
+
+const pageWidgets = <Widget>[
+  InfoPage(),
+  LogsPage(),
+  NetworkCalls(),
+  CachePage(),
+  AnalyticsPage(),
+];
+const pages = [
+  'Device Info',
+  'Logger',
+  'Network Calls',
+  'Cache Management',
+  'Analytics',
+];
 
 void main() => runApp(const MyApp());
 
@@ -14,68 +34,72 @@ class MyApp extends StatelessWidget {
       );
 }
 
-class MyHomePage extends StatefulWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Scaffold(
+      body: GridView.builder(
+          shrinkWrap: true,
+          padding: const EdgeInsets.all(25),
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            childAspectRatio: 2,
+            crossAxisSpacing: 20,
+            mainAxisSpacing: 20,
+          ),
+          itemCount: pages.length,
+          itemBuilder: (context, index) => Container(
+                clipBehavior: Clip.antiAlias,
+                decoration: ShapeDecoration(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  shadows: [
+                    BoxShadow(
+                      color: theme.brightness == Brightness.dark
+                          ? const Color(0x3FFFFFFF)
+                          : const Color(0x3F000000),
+                      blurRadius: 2,
+                      offset: const Offset(0, 1),
+                    )
+                  ],
+                ),
+                child: Material(
+                  color: theme.scaffoldBackgroundColor,
+                  clipBehavior: Clip.antiAlias,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: InkWell(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute<Widget>(
+                            builder: (context) => pageWidgets[index])),
+                    borderRadius: const BorderRadius.all(Radius.circular(16)),
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        pages[index],
+                        style: theme.textTheme.titleMedium,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ),
+              )),
+    );
+  }
+
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(StringProperty('title', title));
   }
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  void initState() {
-    super.initState();
-    KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
-    KingCache.setHeaders({'Content-Type': 'application/json'});
-    KingCache.appendFormData({'token': '1234567890'});
-  }
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              TextButton(
-                onPressed: () async {
-                  await KingCache().storeLog('Call Json Place Holder API');
-                  // await KingCache.cacheViaRest(
-                  //   'todos/1',
-                  //   onSuccess: (data) =>f
-                  //       storeLogInIndexedDB('Response: $data', level: LogLevel.info),
-                  //   onError: (data) => debugPrint('On Error: $data'),
-                  //   apiResponse: (data) => debugPrint('Api Response: $data'),
-                  //   isCacheHit: (isHit) => debugPrint('Is Cache Hit: $isHit'),
-                  //   shouldUpdate: true,
-                  //   expiryTime: DateTime.now().add(const Duration(hours: 1)),
-                  // );
-                  final x = await KingCache().getLogs;
-                  debugPrint(x);
-                },
-                child: const Text('Json Place Holder API'),
-              ),
-              TextButton(
-                onPressed: () async => debugPrint(await KingCache().getLogs),
-                child: const Text('Get Logs'),
-              ),
-              TextButton(
-                onPressed: () => KingCache().clearLog,
-                child: const Text('Clear Logs'),
-              ),
-              TextButton(
-                onPressed: () => KingCache().clearAllCache,
-                child: const Text('Clear All Cache'),
-              ),
-            ],
-          ),
-        ),
-      );
 }

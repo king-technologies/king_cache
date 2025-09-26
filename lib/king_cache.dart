@@ -24,10 +24,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'src/cache_manager.dart';
 import 'src/cache_via_rest.dart';
-import 'src/cache_via_rest_web.dart' if (dart.library.io) 'src/cache_via_rest_web_stub.dart';
-import 'src/web_methods.dart' if (dart.library.io) 'src/web_methods_stub.dart';
-
-export 'src/cache_manager.dart';
+import 'src/cache_via_rest_web.dart';
+import 'src/web_methods.dart';
 
 part 'src/analytics_engine.dart';
 part 'src/custom_widget.dart';
@@ -40,6 +38,6 @@ part 'src/extensions/string_ext.dart';
 part 'src/global_methods.dart';
 part 'src/king_cache.dart';
 part 'src/log_methods.dart';
+part 'src/mark_down_content.dart';
 part 'src/network_request.dart';
 part 'src/response_model.dart';
-part 'src/tech_book_models.dart';

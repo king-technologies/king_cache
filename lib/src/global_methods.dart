@@ -7,8 +7,13 @@ bool get applicationDocumentSupport =>
     Platform.isMacOS ||
     kIsWeb;
 
-bool get firebaseCrashlyticsSupport =>
-    (Platform.isAndroid || Platform.isIOS) && kReleaseMode;
+bool get firebaseCrashlyticsSupport {
+  if ((Platform.isAndroid || Platform.isIOS) && kReleaseMode) {
+    return true;
+  }
+  throw Exception(
+      'Firebase Crashlytics support is only available on Android and iOS in release mode');
+}
 
 bool get windowManagerSupport =>
     Platform.isWindows || Platform.isLinux || Platform.isMacOS;

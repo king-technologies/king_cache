@@ -1,271 +1,251 @@
-## 0.0.54
-
-* Added Support for Markdown Caching for Tech Books
-* New `cacheMarkdown()` method for caching markdown content with automatic title and header extraction
-* New `TechBookMetadata` model for organizing technical books with chapters and sections
-* New `cacheTechBook()` and `cacheTechBookChapter()` methods for structured book content management
-* New `MarkdownContent` model with expiry support and metadata extraction
-* Added methods: `getMarkdownContent()`, `hasMarkdownContent()`, `removeMarkdownContent()`, `getMarkdownKeys()`
-* Added methods: `getTechBook()`, `getTechBookChapter()`, `getAllTechBooks()`, `removeTechBook()`
-* Added `clearAllMarkdownCache()` for comprehensive markdown cache management
-* Web platform support for all new markdown caching features via IndexedDB
-* Comprehensive test suite for markdown caching functionality
-* Updated documentation with markdown caching examples
-* Backward compatible - all existing functionality preserved
-
-## 0.0.53
-
-* Added Web Support with IndexedDB
-* Store logs in IndexedDB on web platforms
-* All cache methods now work on web (getCache, setCache, removeCache, hasCache, getCacheKeys)
-* Maintains consistent log formatting across all platforms
-* Backward compatible - no changes needed for existing code
-* Added web dependency for browser IndexedDB support
-
 ## 0.0.1
 
-* Initial release
-* Created this package to cache apis results so next time when you call the same api, it will return the cached result instead of calling the api again. This will help to reduce the number of api calls and improve the user experience of your app.
-* This package uses file based caching system.
-* It give you couple of functions to manage the cache.
-* I also added a log function so you can add, remove, clear and share logs.
-* It also give you ability to set the cache expiry time.
+- Initial release
+- Created this package to cache apis results so next time when you call the same api, it will return the cached result instead of calling the api again. This will help to reduce the number of api calls and improve the user experience of your app.
+- This package uses file based caching system.
+- It give you couple of functions to manage the cache.
+- I also added a log function so you can add, remove, clear and share logs.
+- It also give you ability to set the cache expiry time.
 
 ## 0.0.2
 
-* Examples updated
+- Examples updated
 
 ## 0.0.3
 
-* Rename the function `storeCacheViaRest` to `cacheViaRest`
-* New cache callbacks added to get the cache hit and miss.
-* New API response callback added to get the api response and error.
+- Rename the function `storeCacheViaRest` to `cacheViaRest`
+- New cache callbacks added to get the cache hit and miss.
+- New API response callback added to get the api response and error.
 
 ## 0.0.4
 
-* Added `justApi` parameter to `cacheViaRest` function to get the api response without caching it. for example, if you just want to get the api response and don't want to cache it, you can set `justApi` to `true` and it will return the api response without caching it.
+- Added `justApi` parameter to `cacheViaRest` function to get the api response without caching it. for example, if you just want to get the api response and don't want to cache it, you can set `justApi` to `true` and it will return the api response without caching it.
 
 ## 0.0.5
 
-* Removed share logs as file as this is not a default functionality and adding package increases the package size. If you want to share logs, you can use the `getLogFile` function to get the log file and share it however .
+- Removed share logs as file as this is not a default functionality and adding package increases the package size. If you want to share logs, you can use the `getLogFile` function to get the log file and share it however .
 
-* Added `cacheKey` parameter to `cacheViaRest` function to set the cache key. for example, if you want to cache the api response with a specific key, you can set `cacheKey` to `your_key` and it will cache the api response with the key `your_key`.
-  
-* Added`getCacheViaKey` function to get the cache with a specific key. for example, if you want to get the cache with a specific key, you can set `cacheKey` to `your_key` and it will return the cache with the key `your_key`.
-  
-* Added `setCacheViaKey` function to set the cache with a specific key. for example, if you want to set the cache with a specific key, you can set `cacheKey` to `your_key` and it will set the cache with the key `your_key`.
-  
-* Added `getCacheKeys` function to get all the cache keys.
-  
-* Added `removeCacheViaKey` function to remove the cache with a specific key. for example, if you want to remove the cache with a specific key, you can set `cacheKey` to `your_key` and it will remove the cache with the key `your_key`.
+- Added `cacheKey` parameter to `cacheViaRest` function to set the cache key. for example, if you want to cache the api response with a specific key, you can set `cacheKey` to `your_key` and it will cache the api response with the key `your_key`.
+
+- Added`getCacheViaKey` function to get the cache with a specific key. for example, if you want to get the cache with a specific key, you can set `cacheKey` to `your_key` and it will return the cache with the key `your_key`.
+
+- Added `setCacheViaKey` function to set the cache with a specific key. for example, if you want to set the cache with a specific key, you can set `cacheKey` to `your_key` and it will set the cache with the key `your_key`.
+
+- Added `getCacheKeys` function to get all the cache keys.
+
+- Added `removeCacheViaKey` function to remove the cache with a specific key. for example, if you want to remove the cache with a specific key, you can set `cacheKey` to `your_key` and it will remove the cache with the key `your_key`.
 
 ## 0.0.6
 
-* Debug Prints added
-* Added `baseUrl` setter to set the base url so you don't ned to pass the base url every time you call the `cacheViaRest` function.
+- Debug Prints added
+- Added `baseUrl` setter to set the base url so you don't ned to pass the base url every time you call the `cacheViaRest` function.
 
 ## 0.0.7
 
-* Added `setHeaders` to set the headers so you don't need to pass the headers every time you call the `cacheViaRest` function.
-* Test Updated
+- Added `setHeaders` to set the headers so you don't need to pass the headers every time you call the `cacheViaRest` function.
+- Test Updated
 
 ## 0.0.8
 
-* Added `appendFormData` to append the form data so you don't need to pass the form data every time you call the `cacheViaRest` function.
-* Test Updated with more cleanup
+- Added `appendFormData` to append the form data so you don't need to pass the form data every time you call the `cacheViaRest` function.
+- Test Updated with more cleanup
 
 ## 0.0.9
 
-* Cache File type added to the cache file name so you can easily identify the cache file type.
-* Test Updated with more cleanup
+- Cache File type added to the cache file name so you can easily identify the cache file type.
+- Test Updated with more cleanup
 
 ## 0.0.10
 
-* Date Format in logs updated to `yyyy-MM-dd HH:mm:ss`
-* On Success will not called twice if the cache and api data is same
+- Date Format in logs updated to `yyyy-MM-dd HH:mm:ss`
+- On Success will not called twice if the cache and api data is same
 
 ## 0.0.11
 
-* Added response bodyBytes to the response model so you can get the response body bytes.
+- Added response bodyBytes to the response model so you can get the response body bytes.
 
 ## 0.0.12
 
-* Fix Logging and Update Form data 
+- Fix Logging and Update Form data
 
 ## 0.0.13
 
-* Added Patch Method
+- Added Patch Method
 
 ## 0.0.14
 
-* Tests Updated
+- Tests Updated
 
 ## 0.0.15
 
-* Base URL support is also added for network request method
+- Base URL support is also added for network request method
 
 ## 0.0.16
 
-* Read ME Updated
+- Read ME Updated
 
 ## 0.0.17
 
-* Just API Deprecated in respect of network request method
+- Just API Deprecated in respect of network request method
 
 ## 0.0.18
 
-* Just API is removed from the cacheViaRest method
-* Added Log File name text test
-* Added New files for particular methods
+- Just API is removed from the cacheViaRest method
+- Added Log File name text test
+- Added New files for particular methods
 
 ## 0.0.19
 
-* Added Response Headers in Response Model
+- Added Response Headers in Response Model
 
 ## 0.0.20
 
-* Added In App Update Support
-* Added Local Auth Support
-* Added Package Info Support
-* Added Url Launcher for Download app if available from Github Release
-* Added Request Permission Method
-* Above all are helper methods that can be used instantly in any app
+- Added In App Update Support
+- Added Local Auth Support
+- Added Package Info Support
+- Added Url Launcher for Download app if available from Github Release
+- Added Request Permission Method
+- Above all are helper methods that can be used instantly in any app
 
 ## 0.0.21
 
-* Removed Support for Url Launcher
-* Removed Toast Method as Passing Context is not for this package
+- Removed Support for Url Launcher
+- Removed Toast Method as Passing Context is not for this package
 
 ## 0.0.22
 
-* Update Check for Update Method
+- Update Check for Update Method
 
 ## 0.0.23
 
-* Version Tag added in update check method
+- Version Tag added in update check method
 
 ## 0.0.24
 
-* App Version Tab Widget Added
+- App Version Tab Widget Added
 
 ## 0.0.25
 
-* Added abstract for testing
-* Added Couple of Global Extensions
+- Added abstract for testing
+- Added Couple of Global Extensions
 
 ## 0.0.26
 
-* Added ToIdentifier method to convert enum to String
-* Removed Currency for now as it have some issues
-* Added Web check for log method, Web Support is under development
+- Added ToIdentifier method to convert enum to String
+- Removed Currency for now as it have some issues
+- Added Web check for log method, Web Support is under development
 
 ## 0.0.27
 
-* Play Store Check Updated
+- Play Store Check Updated
 
 ## 0.0.28
 
-* Function Updates
+- Function Updates
 
 ## 0.0.29
 
-* Added Extension Methods
+- Added Extension Methods
 
 ## 0.0.30
 
-* Added Web Cache Manager
-* Added IndexedDB for Web
+- Added Web Cache Manager
+- Added IndexedDB for Web
 
 ## 0.0.31
 
-* Downgraded web to 0.5.0
+- Downgraded web to 0.5.0
 
 ## 0.0.32
 
-* Removed idm_shim
+- Removed idm_shim
 
 ## 0.0.33
 
-* Added flutter_local_notifications
+- Added flutter_local_notifications
 
 ## 0.0.34
 
-* Added device_info_plus
-* Added Device info in logs
+- Added device_info_plus
+- Added Device info in logs
 
 ## 0.0.35
 
-* Updated Device info to a separate method instead of in get all logs method
+- Updated Device info to a separate method instead of in get all logs method
 
 ## 0.0.36
 
-* Added `getAndroidVersion` method to get the android version
+- Added `getAndroidVersion` method to get the android version
 
 ## 0.0.37
 
-* Updated Dependencies
+- Updated Dependencies
 
 ## 0.0.38
 
-* Added Logger and Respective method
-* Updated Dependencies
+- Added Logger and Respective method
+- Updated Dependencies
 
 ## 0.0.39
 
-* Added prefixBaseUrl flag to add base url conditionally
-* Logger Method Updated to have default values only
+- Added prefixBaseUrl flag to add base url conditionally
+- Logger Method Updated to have default values only
 
 ## 0.0.40
 
-* Added ktCreateGithubIssue method to create github issue from the app
+- Added ktCreateGithubIssue method to create github issue from the app
 
 ## 0.0.41
 
-* Dependencies Updated
+- Dependencies Updated
 
 ## 0.0.42
 
-* Dependencies Updated
+- Dependencies Updated
 
 ## 0.0.43
 
-* Removed Local Auth as it's not maintained any more
-* Dependencies Updated
+- Removed Local Auth as it's not maintained any more
+- Dependencies Updated
 
 ## 0.0.44
 
-* Added Local Auth as Technical debt
+- Added Local Auth as Technical debt
 
 ## 0.0.45
 
-* Dependencies Updated
+- Dependencies Updated
 
 ## 0.0.46
 
-* Fixed Device Info Plus Dependency issue
+- Fixed Device Info Plus Dependency issue
 
 ## 0.0.47
 
-* Dependencies Updated
+- Dependencies Updated
 
 ## 0.0.48
 
-* Updated Date Time Extensions
-* Added More Tests
-* Dependencies Updated
+- Updated Date Time Extensions
+- Added More Tests
+- Dependencies Updated
 
 ## 0.0.49
 
-* Dependencies Updated
+- Dependencies Updated
 
 ## 0.0.50
 
-* Dependencies Updated
+- Dependencies Updated
 
 ## 0.0.51
 
-* Added ClearOldLogs Methods
+- Added ClearOldLogs Methods
 
 ## 0.0.52
 
-* Packages Updated
+- Packages Updated
+
+## 0.0.53
+
+- Added Web Support for cache & logs
