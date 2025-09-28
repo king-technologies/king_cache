@@ -11,8 +11,7 @@ bool get firebaseCrashlyticsSupport {
   if ((Platform.isAndroid || Platform.isIOS) && kReleaseMode) {
     return true;
   }
-  throw Exception(
-      'Firebase Crashlytics support is only available on Android and iOS in release mode');
+  return false;
 }
 
 bool get windowManagerSupport =>
@@ -205,6 +204,19 @@ Future<ResponseModel> ktCreateGitHubIssue({
     httpClient.close();
   }
   return res;
+}
+
+Future<File> localFile(String fileName) async {
+  final path = applicationDocumentSupport
+      ? await getApplicationCacheDirectory()
+      : Directory('${Directory.current.path}/cache');
+  if (path.path.isNotEmpty) {
+    final file = File('${path.path}/$fileName');
+    if (file.existsSync()) {
+      return file;
+    }
+  }
+  return File('${path.path}/$fileName').create(recursive: true);
 }
 
 Future<bool> get ktLocallyAuthenticateUser async {

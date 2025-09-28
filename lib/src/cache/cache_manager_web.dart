@@ -3,27 +3,18 @@ import 'dart:js_interop';
 
 import 'package:web/web.dart';
 
-import '../king_cache.dart';
+import '../../king_cache.dart' show IndexedDbKeys, LogLevel;
+import 'cache_manager.dart' show CacheManager;
 
-abstract class ICacheManagerWeb {
-  Future<String> get getLogs;
-  Future<void> get clearLog;
-  Future<void> get clearAllCache;
-  Future<String?> getCache(String table);
-  Future<void> setCache(String key, String data);
-  Future<void> removeCache(String key);
-  Future<bool> hasCache(String key);
-  Future<List<String>> getCacheKeys();
-  Future<void> storeLog(String log, {LogLevel level = LogLevel.info});
-}
-
-class WebCacheManager implements ICacheManagerWeb {
-  WebCacheManager();
+class CacheManagerImpl implements CacheManager {
+  CacheManagerImpl();
   late IDBDatabase _db;
   bool _initiated = false;
   bool get initiated => _initiated;
+
   final String dbName = 'king_cache';
   final int version = 1;
+
   Future<IDBDatabase?> init() async {
     if (_initiated) {
       return _db;
@@ -136,7 +127,7 @@ class WebCacheManager implements ICacheManagerWeb {
     await init();
     final tx = _db.transaction([table.toJS].toJS, 'readonly');
     final store = tx.objectStore(table);
-    final req = query != null && count != null
+    final req = (query != null && count != null)
         ? store.getAllKeys(query, count)
         : query != null
             ? store.getAllKeys(query)
@@ -151,34 +142,25 @@ class WebCacheManager implements ICacheManagerWeb {
     if (db == null) {
       return '';
     }
+
     final tableName = IndexedDbKeys.logs.name;
     final tx = db.transaction([tableName.toJS].toJS, 'readonly');
     final store = tx.objectStore(tableName);
     final req = store.getAll();
     final r = await _waitRequest(req);
-    // r is a JS interop value (likely a JSArray). Convert to Dart using toDart
+
     final list = r == null ? <String>[] : (r as JSArray).toDart.cast<String>();
     return list.join('\n');
   }
 
   @override
   Future<void> get clearLog async {
-    await init();
-    final tableName = IndexedDbKeys.logs.name;
-    final tx = _db.transaction([tableName.toJS].toJS, 'readwrite');
-    final store = tx.objectStore(tableName);
-    final req = store.clear();
-    await _waitRequest(req);
+    await clear(IndexedDbKeys.logs.name);
   }
 
   @override
   Future<void> get clearAllCache async {
-    await init();
-    final tableName = IndexedDbKeys.cache.name;
-    final tx = _db.transaction([tableName.toJS].toJS, 'readwrite');
-    final store = tx.objectStore(tableName);
-    final req = store.clear();
-    await _waitRequest(req);
+    await clear(IndexedDbKeys.cache.name);
   }
 
   @override
@@ -189,68 +171,36 @@ class WebCacheManager implements ICacheManagerWeb {
     final store = tx.objectStore(tableName);
     final req = store.get(key.toJS);
     final r = await _waitRequest(req);
-    if (r == null) {
-      return null;
-    }
-    return r.toString();
+    return r?.toString();
   }
 
   @override
   Future<void> setCache(String key, String data) async {
-    await init();
-    final tableName = IndexedDbKeys.cache.name;
-    final tx = _db.transaction([tableName.toJS].toJS, 'readwrite');
-    final store = tx.objectStore(tableName);
-    final req = store.put(data.toJS, key.toJS);
-    await _waitRequest(req);
+    await put(IndexedDbKeys.cache.name, data.toJS, key: key.toJS);
   }
 
   @override
   Future<void> removeCache(String key) async {
-    await init();
-    final tableName = IndexedDbKeys.cache.name;
-    final tx = _db.transaction([tableName.toJS].toJS, 'readwrite');
-    final store = tx.objectStore(tableName);
-    final req = store.delete(key.toJS);
-    await _waitRequest(req);
+    await delete(IndexedDbKeys.cache.name, key.toJS);
   }
 
   @override
   Future<bool> hasCache(String key) async {
-    await init();
-    final tableName = IndexedDbKeys.cache.name;
-    final tx = _db.transaction([tableName.toJS].toJS, 'readonly');
-    final store = tx.objectStore(tableName);
-    final req = store.getAllKeys();
-    final r = await _waitRequest(req);
-    // Convert JSArray result to Dart List safely
-    final keys = (r as JSArray?)?.toDart ?? [];
-    return (keys as List).contains(key);
+    final keys = await getCacheKeys;
+    return keys.contains(key);
   }
 
   @override
-  Future<List<String>> getCacheKeys() async {
-    await init();
-    final tableName = IndexedDbKeys.cache.name;
-    final tx = _db.transaction([tableName.toJS].toJS, 'readonly');
-    final store = tx.objectStore(tableName);
-    final req = store.getAllKeys();
-    final r = await _waitRequest(req);
-    // Convert JSArray to Dart List using toDart
-    final list = (r as JSArray?)?.toDart ?? [];
-    return (list as List).cast<String>();
+  Future<List<String>> get getCacheKeys async {
+    final r = await getAllKeys(IndexedDbKeys.cache.name);
+    return r.toDart.cast<String>();
   }
 
   @override
   Future<void> storeLog(String log,
       {LogLevel level = LogLevel.info, String? key}) async {
-    await init();
-    final tableName = IndexedDbKeys.logs.name;
-    final tx = _db.transaction([tableName.toJS].toJS, 'readwrite');
-    final x = tx.objectStore(tableName);
-    final keyToBeUsed = key ?? DateTime.now().toIso8601String();
-    final req = x.put(log.toJS, keyToBeUsed.toJS);
-    await _waitRequest(req);
+    final k = key ?? DateTime.now().toIso8601String();
+    await put(IndexedDbKeys.logs.name, log.toJS, key: k.toJS);
   }
 
   Future<bool> makeStoragePersist() async {
@@ -260,5 +210,35 @@ class WebCacheManager implements ICacheManagerWeb {
       persisted = (await storage.persist().toDart).toDart;
     }
     return persisted;
+  }
+
+  @override
+  Future<void> clearOldLogs({int? maxLogCount = 1000}) async {
+    final db = await init();
+    if (db == null) {
+      return;
+    }
+
+    final tableName = IndexedDbKeys.logs.name;
+    final tx = db.transaction([tableName.toJS].toJS, 'readwrite');
+    final store = tx.objectStore(tableName);
+
+    final request = store.getAll();
+    final result = _waitRequest(request) as List<dynamic>?;
+
+    if (result == null || result.isEmpty) {
+      return;
+    }
+
+    final logs = result.cast<String>();
+    final trimmed = logs.take(maxLogCount ?? 1000).toList();
+
+    await _waitRequest(store.clear());
+
+    for (var i = 0; i < trimmed.length; i++) {
+      await _waitRequest(store.put(trimmed[i].toJS, i.toJS));
+    }
+
+    tx.commit();
   }
 }

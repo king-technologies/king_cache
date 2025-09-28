@@ -13,18 +13,28 @@ class LogsPage extends StatelessWidget {
             alignment: Alignment.center,
             child: TextButton(
               onPressed: () async {
-                await KingCache().storeLog('Call Json Place Holder API');
-                final x = await KingCache().getLogs;
-                debugPrint(x);
+                await CacheViaRestService.call(
+                    'https://jsonplaceholder.typicode.com/todos/1');
               },
-              child: const Text('Store & Get Log  '),
+              child: const Text('Store Log'),
             ),
           ),
           Container(
             padding: const EdgeInsets.all(8.0),
             alignment: Alignment.center,
             child: TextButton(
-              onPressed: () async => debugPrint(await KingCache().getLogs),
+              onPressed: () async => debugPrint((await CacheViaRestService.call(
+                      'https://jsonplaceholder.typicode.com/todos/1'))
+                  .data
+                  .toString()),
+              child: const Text('Get API Log'),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            alignment: Alignment.center,
+            child: TextButton(
+              onPressed: () async => debugPrint(await CacheService.getLogs),
               child: const Text('Get Logs'),
             ),
           ),
@@ -32,7 +42,7 @@ class LogsPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             alignment: Alignment.center,
             child: TextButton(
-              onPressed: () => KingCache().clearLog,
+              onPressed: () => CacheService.clearLogs,
               child: const Text('Clear Logs'),
             ),
           ),
@@ -40,7 +50,7 @@ class LogsPage extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             alignment: Alignment.center,
             child: TextButton(
-              onPressed: () => KingCache().clearAllCache,
+              onPressed: () => CacheService.clearAllCache,
               child: const Text('Clear All Cache'),
             ),
           ),

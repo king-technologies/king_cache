@@ -1,4 +1,4 @@
-part of '../king_cache.dart';
+part of '../../king_cache.dart';
 
 class ResponseModel {
   const ResponseModel({
@@ -18,5 +18,6 @@ class ResponseModel {
   final Map<String, String> headers;
 
   @override
-  String toString() => 'Response: {status: $status, message: $message, data: $data, statusCode: $statusCode, headers: $headers}';
+  String toString() =>
+      'Response: {status: $status, message: $message, data: $data, statusCode: $statusCode, headers: $headers}';
 }

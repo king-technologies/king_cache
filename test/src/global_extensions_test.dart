@@ -244,6 +244,7 @@ void main() {
     test('firebaseCrashlyticsSupport', () {
       expect(firebaseCrashlyticsSupport, Platform.isAndroid && kReleaseMode);
       expect(firebaseCrashlyticsSupport, Platform.isIOS && kReleaseMode);
+      expect(!firebaseCrashlyticsSupport, Platform.isWindows);
     });
 
     test('windowManagerSupport', () {

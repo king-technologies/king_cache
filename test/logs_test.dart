@@ -5,22 +5,22 @@ void main() {
   group('Log Tests', () {
     TestWidgetsFlutterBinding.ensureInitialized();
     test('store & get logs', () async {
-      await KingCache().storeLog('Call Json Place Holder API');
-      final logs = await KingCache().getLogs;
+      await CacheService.storeLog('Call Json Place Holder API');
+      final logs = await CacheService.getLogs;
       expect(logs.contains('Call Json Place Holder API'), isTrue);
-      await KingCache().clearLog;
+      await CacheService.clearLogs;
     });
 
     test('clear log', () async {
-      await KingCache().storeLog('Call Json Place Holder API');
-      await KingCache().clearLog;
-      final logs = await KingCache().getLogs;
+      await CacheService.storeLog('Call Json Place Holder API');
+      await CacheService.clearLogs;
+      final logs = await CacheService.getLogs;
       expect(logs, '');
     });
 
     test('Check Time', () async {
-      await KingCache().storeLog('Call Json Place Holder API');
-      final logs = await KingCache().getLogs;
+      await CacheService.storeLog('Call Json Place Holder API');
+      final logs = await CacheService.getLogs;
       final time = logs.split('\n')[0].split(': ')[0].replaceAll(' [INFO]', '');
       expect(time, isNotNull);
       final date = DateTime.parse(time);
@@ -33,24 +33,15 @@ void main() {
       expect(date.minute, DateTime.now().minute);
       expect(date.second, DateTime.now().second);
       expect(time, matches(RegExp(r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$')));
-      await KingCache().clearLog;
-    });
-
-    test('Log File should be a text file', () async {
-      if (isMobile) {
-        await KingCache().storeLog('Call Json Place Holder API');
-        final file = await KingCache().getLogFile;
-        expect(file.path.endsWith('.txt'), isTrue);
-        await KingCache().clearLog;
-      }
+      await CacheService.clearLogs;
     });
 
     test('store & get logs with log levels', () async {
-      await KingCache().storeLog('Info log');
-      await KingCache().storeLog('Debug log', level: LogLevel.debug);
-      await KingCache().storeLog('Warning log', level: LogLevel.warning);
-      await KingCache().storeLog('Error log', level: LogLevel.error);
-      final logs = await KingCache().getLogs;
+      await CacheService.storeLog('Info log');
+      await CacheService.storeLog('Debug log', level: LogLevel.debug);
+      await CacheService.storeLog('Warning log', level: LogLevel.warning);
+      await CacheService.storeLog('Error log', level: LogLevel.error);
+      final logs = await CacheService.getLogs;
       expect(logs.contains('[INFO]: Info log'), isTrue);
       expect(logs.contains('[DEBUG]: Debug log'), isTrue);
       expect(logs.contains('[WARNING]: Warning log'), isTrue);
@@ -59,7 +50,7 @@ void main() {
       expect(logs.contains('[DEBUG]: Other log'), isFalse);
       expect(logs.contains('[WARNING]: Other log'), isFalse);
       expect(logs.contains('[ERROR]: Other log'), isFalse);
-      await KingCache().clearLog;
+      await CacheService.clearLogs;
     });
   });
 }

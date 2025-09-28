@@ -13,7 +13,7 @@ class CachePage extends StatelessWidget {
               const Text('Cache Cache'),
               ElevatedButton(
                 onPressed: () {
-                  KingCache.cacheViaRest(
+                  CacheViaRestService.call(
                       'https://jsonplaceholder.typicode.com/todos/1',
                       onSuccess: (data) {
                     debugPrint('Data: $data');

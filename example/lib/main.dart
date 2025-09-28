@@ -3,19 +3,16 @@ import 'package:flutter/material.dart';
 
 import 'components/Analytics.dart';
 import 'components/Cache.dart';
-import 'components/info.dart';
 import 'components/logger.dart';
 import 'components/network_calls.dart';
 
 const pageWidgets = <Widget>[
-  InfoPage(),
   LogsPage(),
   NetworkCalls(),
   CachePage(),
   AnalyticsPage(),
 ];
 const pages = [
-  'Device Info',
   'Logger',
   'Network Calls',
   'Cache Management',

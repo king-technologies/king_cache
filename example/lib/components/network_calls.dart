@@ -13,7 +13,7 @@ class NetworkCalls extends StatelessWidget {
             alignment: Alignment.center,
             child: TextButton(
               onPressed: () async {
-                final res = await KingCache.networkRequest(
+                final res = await NetworkService.call(
                   'https://jsonplaceholder.typicode.com/todos/1',
                 );
                 if (res.status) {

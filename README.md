@@ -11,7 +11,6 @@
 
 <p align="center">It gives you a couple of functions to manage the cache. It also has a log function so you can add, remove, clear and share logs. It also gives you the ability to set the cache expiry time.</p>
 
-
 <p align="center">
 <a href="https://pub.dev/packages/king_cache"title="PubDev">
 <img src="https://img.shields.io/pub/v/king_cache.svg?label=Pub&logo=Dart&style=flat-square" alt="King Cache"/></a>
@@ -52,6 +51,7 @@
 ## Features
 
 ![Screenshot 1](https://raw.githubusercontent.com/king-technologies/king_cache/main/screenshots/screenshot_1.png)
+
 1. Cache API results.
 2. Set cache expiry time.
 3. Manage cache.
@@ -75,7 +75,7 @@
 import 'package:king_cache/king_cache.dart';
 
 // Cache API responses
-await KingCache.cacheViaRest(
+await CacheViaRestService.call(
   'https://api.example.com/data',
   onSuccess: (data) => print('Data: $data'),
   isCacheHit: (isHit) => print('Cache hit: $isHit'),
@@ -111,6 +111,7 @@ if (content != null && !content.isExpired) {
   print('Content: ${content.content}');
 }
 ```
+
 ### Cache Management
 
 ```dart
@@ -149,6 +150,7 @@ For backward compatibility, here are the traditional API caching examples:
 ```dart
 KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
 ```
+
 ```dart
 KingCache.setHeaders({'Content-Type': 'application/json'});
 ```
@@ -157,7 +159,7 @@ KingCache.setHeaders({'Content-Type': 'application/json'});
 TextButton(
     onPressed: () async {
     KingCache.storeLog('Call Json Place Holder API');
-    await KingCache.cacheViaRest(
+    await CacheViaRestService.call(
         'https://jsonplaceholder.typicode.com/todos/1',
         method: HttpMethod.get,
         onSuccess: (data) {
@@ -176,6 +178,7 @@ TextButton(
     child: const Text('Json Place Holder API'),
 ),
 ```
+
 ```dart
 TextButton(
     onPressed: () async {
@@ -184,24 +187,28 @@ TextButton(
     child: const Text('Get Logs'),
 )
 ```
+
 ```dart
 TextButton(
     onPressed: () => KingCache.shareLogs,
     child: const Text('Share Logs'),
 )
 ```
+
 ```dart
 TextButton(
     onPressed: () => KingCache.clearLog,
     child: const Text('Clear Logs'),
 )
 ```
+
 ```dart
 TextButton(
     onPressed: () => KingCache.clearAllCache,
     child: const Text('Clear All Cache'),
 )
 ```
+
 ## 🧑🏻 Author
 
 **Rohit Jain**

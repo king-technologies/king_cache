@@ -32,18 +32,18 @@ void main() {
 
   group('cacheViaRest', () {
     test('Should return data from the api as expected', () async {
-      await KingCache.cacheViaRest(url,
+      await CacheViaRestService.call(url,
           onSuccess: (data) =>
               expect(jsonEncode(data), equals(jsonEncode(response))));
-      final file = await KingCache().localFile(fileName);
+      final file = await localFile(fileName);
       expect(file.readAsStringSync(), equals(jsonEncode(response)));
       file.deleteSync();
-      await KingCache().clearAllCache;
+      await CacheService.clearAllCache;
     });
 
     test('should return data from API and cache it if cache is not available',
         () async {
-      await KingCache.cacheViaRest(url,
+      await CacheViaRestService.call(url,
           onSuccess: (data) => expect(data, equals(res200.data)),
           apiResponse: (data) =>
               expect(jsonEncode(data.data), equals(jsonEncode(response))));
@@ -53,9 +53,9 @@ void main() {
         () async {
       final onSuccess =
           expectAsync1((x) => expect(x, equals(res200.data)), count: 2);
-      final file = await KingCache().localFile(fileName);
+      final file = await localFile(fileName);
       file.writeAsStringSync(jsonEncode(res200.data));
-      await KingCache.cacheViaRest(url,
+      await CacheViaRestService.call(url,
           onSuccess: onSuccess, shouldUpdate: true);
       expect(file.readAsStringSync(), equals(jsonEncode(res200.data)));
       file.deleteSync();
@@ -63,21 +63,20 @@ void main() {
 
     test('should return error if API response is not successful', () async {
       const url = 'https://jsonplaeholder.typicode.com/todos/1';
-      await KingCache.cacheViaRest(
+      await CacheViaRestService.call(
         url,
         onSuccess: (x) {},
         onError: (data) => expect(data.status, equals(res400.status)),
         apiResponse: (data) => expect(data.status, equals(res400.status)),
       );
 
-      final file = await KingCache()
-          .localFile('httpsjsonplaeholdertypicodecomtodos1.json');
+      final file = await localFile('httpsjsonplaeholdertypicodecomtodos1.json');
       file.deleteSync();
     });
 
     test('should update cache if shouldUpdate is true', () async {
-      final file = await KingCache().localFile(fileName);
-      final result = await KingCache.cacheViaRest(
+      final file = await localFile(fileName);
+      final result = await CacheViaRestService.call(
         url,
         onSuccess: (data) => expect(data, equals(res200.data)),
         shouldUpdate: true,
@@ -93,9 +92,9 @@ void main() {
     test('should delete cache if expiryTime is provided and cache has expired',
         () async {
       final expiryTime = DateTime.now().subtract(const Duration(hours: 1));
-      final file = await KingCache().localFile(fileName);
+      final file = await localFile(fileName);
       file.writeAsStringSync(jsonEncode(res200.data));
-      final result = await KingCache.cacheViaRest(
+      final result = await CacheViaRestService.call(
         url,
         onSuccess: (data) => expect(data, equals(res200.data)),
         expiryTime: expiryTime,
@@ -107,48 +106,48 @@ void main() {
     });
 
     test('set base url and check with api', () async {
-      KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
-      await KingCache.cacheViaRest(
+      NetworkService.setBaseUrl('https://jsonplaceholder.typicode.com/');
+      await CacheViaRestService.call(
         'todos/1',
         onSuccess: (data) => expect(data, equals(res200.data)),
         apiResponse: (data) => expect(data.data, equals(res200.data)),
       );
-      await KingCache().clearLog;
+      await CacheService.clearLogs;
     });
   });
 
   group('Setters Test', () {
     test('set base url', () async {
-      KingCache.setBaseUrl('https://jsonplaceholder.typicode.com/');
-      expect(KingCache.baseUrl, 'https://jsonplaceholder.typicode.com/');
-      KingCache.setBaseUrl('');
+      NetworkService.setBaseUrl('https://jsonplaceholder.typicode.com/');
+      expect(NetworkService.baseUrl, 'https://jsonplaceholder.typicode.com/');
+      NetworkService.setBaseUrl('');
     });
     test('set headers', () async {
-      KingCache.setHeaders({'Content-Type': 'application/json'});
-      expect(KingCache.newHeaders, {'Content-Type': 'application/json'});
+      NetworkService.setHeaders({'Content-Type': 'application/json'});
+      expect(NetworkService.newHeaders, {'Content-Type': 'application/json'});
     });
 
     test('append form data', () {
-      KingCache.appendFormData({'token': '1234567890'});
-      expect(KingCache.newFormData, {'token': '1234567890'});
+      NetworkService.appendFormData({'token': '1234567890'});
+      expect(NetworkService.newFormData, {'token': '1234567890'});
     });
   });
 
   group('Checking Network Request', () {
     test('Check Get Network Request', () async {
-      final res = await KingCache.networkRequest(url);
+      final res = await NetworkService.call(url);
       expect(res.status, isTrue);
       expect(jsonEncode(res.data), equals(jsonEncode(res200.data)));
     });
 
     test('False Test on Network request', () async {
       const url = 'https://jsonplaeholder.typicode.com/todos/1';
-      final res = await KingCache.networkRequest(url);
+      final res = await NetworkService.call(url);
       expect(res.status, isFalse);
     });
 
     test('Check Post Network Request', () async {
-      final res = await KingCache.networkRequest(
+      final res = await NetworkService.call(
           'https://jsonplaceholder.typicode.com/posts',
           method: HttpMethod.post,
           formData: {
@@ -160,7 +159,7 @@ void main() {
     });
 
     test('Check Put Network Request', () async {
-      final res = await KingCache.networkRequest(
+      final res = await NetworkService.call(
           'https://jsonplaceholder.typicode.com/posts/1',
           method: HttpMethod.put,
           formData: {
@@ -170,7 +169,7 @@ void main() {
     });
 
     test('Check Put Network Request', () async {
-      final res = await KingCache.networkRequest(
+      final res = await NetworkService.call(
           'https://jsonplaceholder.typicode.com/posts/1',
           method: HttpMethod.patch,
           formData: {
@@ -180,7 +179,7 @@ void main() {
     });
 
     test('Check Delete Network Request', () async {
-      final res = await KingCache.networkRequest(
+      final res = await NetworkService.call(
           'https://jsonplaceholder.typicode.com/posts/1',
           method: HttpMethod.delete);
       expect(res.status, isTrue);
@@ -189,57 +188,57 @@ void main() {
 
   group('Cache Testings', () {
     test('Check Cache', () async {
-      await KingCache().setCache('posts/1', jsonEncode({'title': 'foo'}));
-      final res = await KingCache().getCache('posts/1');
+      await CacheService.setCache('posts/1', jsonEncode({'title': 'foo'}));
+      final res = await CacheService.getCache('posts/1');
       expect(res, jsonEncode({'title': 'foo'}));
     });
 
     test('Remove Cache', () async {
-      await KingCache().setCache('posts/1', jsonEncode({'title': 'foo'}));
-      await KingCache().removeCache('posts/1');
-      final res = await KingCache().getCache('posts/1');
+      await CacheService.setCache('posts/1', jsonEncode({'title': 'foo'}));
+      await CacheService.removeCache('posts/1');
+      final res = await CacheService.getCache('posts/1');
       expect(res, null);
     });
 
     test('Check Cache Exists', () async {
-      await KingCache().setCache('posts/1', jsonEncode({'title': 'foo'}));
-      final res = await KingCache().hasCache('posts/1');
+      await CacheService.setCache('posts/1', jsonEncode({'title': 'foo'}));
+      final res = await CacheService.hasCache('posts/1');
       expect(res, true);
     });
 
     test('Get Cache Keys', () async {
-      final res = await KingCache().getCacheKeys();
+      final res = await CacheService.getCacheKeys;
       expect(res, isNotNull);
       expect(res, isA<List<String>>());
-      await KingCache().clearLog;
-      await KingCache().clearAllCache;
+      await CacheService.clearLogs;
+      await CacheService.clearAllCache;
     });
 
     test('Clear Old Logs', () async {
-      await KingCache().clearLog;
-      await KingCache().clearAllCache;
-      final getLogs = await KingCache().getLogs;
+      await CacheService.clearLogs;
+      await CacheService.clearAllCache;
+      final getLogs = await CacheService.getLogs;
       expect(getLogs, isNotNull);
       expect(getLogs, '');
       expect(getLogs.isEmpty, isTrue);
       final twoThousandLogs = List.generate(2000, (index) => 'Log $index');
-      await KingCache().storeLog(
+      await CacheService.storeLog(
         twoThousandLogs.join('\n'),
       );
-      final res = await KingCache().getLogs;
+      final res = await CacheService.getLogs;
       expect(res, isNotNull);
       expect(res.isNotEmpty, isTrue);
       expect(res.split('\n').length, equals(2000));
       expect(res, isA<String>());
-      await KingCache().clearOldLogs();
-      final res2 = await KingCache().getLogs;
+      await CacheService.clearOldLogs();
+      final res2 = await CacheService.getLogs;
       expect(res2, isNotNull);
       expect(res2.isNotEmpty, isTrue);
       expect(res2.split('\n').length, equals(1000));
       expect(res2, isA<String>());
       expect(res2, isNotEmpty);
-      await KingCache().clearLog;
-      await KingCache().clearAllCache;
+      await CacheService.clearLogs;
+      await CacheService.clearAllCache;
     });
   });
 }
