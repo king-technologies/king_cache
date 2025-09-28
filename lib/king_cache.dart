@@ -7,8 +7,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart' show DeviceInfoPlugin;
 import 'package:firebase_analytics/firebase_analytics.dart'
     show FirebaseAnalytics;
+import 'package:firebase_crashlytics/firebase_crashlytics.dart'
+    show FirebaseCrashlytics;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +30,7 @@ import 'src/cache/cache_manager_impl.dart' show CacheManagerImpl;
 
 part 'src/analytics_engine.dart';
 part 'src/custom_widget.dart';
+part 'src/device_info.dart';
 part 'src/enums.dart';
 part 'src/extensions/date_time_ext.dart';
 part 'src/extensions/duration_ext.dart';

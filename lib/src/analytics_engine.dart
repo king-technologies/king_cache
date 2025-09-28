@@ -5,6 +5,12 @@ class AnalyticsEngine {
 
   static Future<void> init(String id) async {
     if (firebaseCrashlyticsSupport) {
+      FlutterError.onError =
+          FirebaseCrashlytics.instance.recordFlutterFatalError;
+      PlatformDispatcher.instance.onError = (error, stack) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        return true;
+      };
       await _instance.setAnalyticsCollectionEnabled(true);
       await CacheService.storeLog('id: $id');
       await _instance.setUserId(id: id);

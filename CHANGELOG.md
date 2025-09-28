@@ -249,3 +249,10 @@
 ## 0.0.53
 
 - Added Web Support for cache & logs
+
+## 0.0.54
+
+- Fixed the issues with web
+- Renamed Couple of Functions
+- Updated Example app to have all those
+- if you find any issues, please create an issue on github and we will fix it as soon as possible
