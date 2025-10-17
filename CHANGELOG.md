@@ -256,3 +256,8 @@
 - Renamed Couple of Functions
 - Updated Example app to have all those
 - if you find any issues, please create an issue on github and we will fix it as soon as possible
+
+## 0.0.55
+
+- Fixed Couple of issues
+- Updated Dependencies
