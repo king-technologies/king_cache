@@ -19,9 +19,10 @@
 <a href="https://pub.dev/packages/king_cache" title="Pub Dev">
 <img src="https://img.shields.io/pub/points/king_cache?label=Points&logo=Dart&style=flat-square" alt="King Cache Points"/></a>
 <a href="https://pub.dev/packages/king_cache" title="Pub Dev">
-<img src="https://img.shields.io/pub/popularity/king_cache?label=Popularity&logo=Dart&style=flat-square" alt="King Cache Popularity"/></a>
-<a href="https://pub.dev/packages/king_cache" title="Pub Dev">
 <img src="https://img.shields.io/pub/publisher/king_cache?label=Publisher&logo=Dart&style=flat-square" alt="King Cache Publisher"/>
+</a>
+<a href="https://pub.dev/packages/king_cache" title="Pub Dev">
+<img src="https://img.shields.io/pub/dm/king_cache?label=Monthly%20Downloads&logo=Dart&style=flat-square" alt="King Cache Monthly Downloads"/>
 </a>
 </p>
 
