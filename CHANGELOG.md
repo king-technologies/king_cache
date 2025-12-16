@@ -261,3 +261,7 @@
 
 - Fixed Couple of issues
 - Updated Dependencies
+
+## 0.0.56
+
+- Updated Dependencies
