@@ -1,7 +1,7 @@
 name: king_cache
 description:
   "Flutter package for caching api data and markdown content to disk and improving app performance. It uses the http package to make api calls and use cache directory to cache data"
-version: 0.0.58
+version: 0.0.59
 homepage: "https://github.com/king-technologies/king_cache"
 
 environment:
@@ -18,7 +18,7 @@ dependencies:
   in_app_update: ^4.2.5
   intl: ^0.20.2
   local_auth: ^3.0.1
-  logger: ^2.6.2
+  logger: ^2.7.0
   package_info_plus: ^9.0.0
   path_provider: ^2.1.5
   permission_handler: ^12.0.1
